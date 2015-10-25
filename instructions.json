@@ -1,0 +1,18 @@
+{
+	"main_script": "ConferenceScheduler.js",
+	"icon": "ConferenceScheduler.png",
+	"width": 800,
+	"height": 600,
+	"resize": "free",
+	"dependencies": [
+	],
+	"load": {
+		"value": 4
+	},
+	"title": "ConferenceScheduler",
+	"version": "1.0.0",
+	"description": "SAGE2 application ConferenceScheduler",
+	"keywords": [ "sage2", "ConferenceScheduler" ],
+	"author": "Vishal Doshi <vdoshi3@uic.edu>",
+	"license": "SAGE2-Software-License"
+}
