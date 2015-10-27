@@ -35,8 +35,8 @@ var ConferenceScheduler = SAGE2_App.extend( {
 		this.numberOfColumns =  this.numberOfDays * this.numberOfHalls;
 
 		//Sticky variables
-		this.numberOfThemes = 5;
-		this.stickyReservoirRatio = 4;
+		this.numberOfThemes = 6;
+		this.stickyReservoirRatio = 3;
 
 		//Division ratio
 		this.gridWRatio = 0.7;
@@ -162,7 +162,6 @@ var ConferenceScheduler = SAGE2_App.extend( {
 				var array_sticky = this.array_sticky;
 				array_sticky.push([sticky_x1,sticky_y1,sticky_x2,sticky_y2]);
 				
-
 				//Creating a sticky
 				this.sticky_1= this.paper_main.rect(array_sticky[0][0],array_sticky[0][1],this.postItW,this.postItH).attr({fill: "Pink"});
 
@@ -275,21 +274,21 @@ var ConferenceScheduler = SAGE2_App.extend( {
 
 		//Printing Day1, Day2 etc.
 		for(var k = 0;k<this.numberOfDays;k++){
-			this.dayPartition = this.paper_main.line(cellX, cellY,cellX,paper_tableY2).attr({ stroke: "Pink", strokeWidth: 4});
-			this.headRect = this.paper_main.rect(cellX, cellY, cellW, dayH).attr({
+			var dayPartition = this.paper_main.line(cellX, cellY,cellX,paper_tableY2).attr({ stroke: "Pink", strokeWidth: 4});
+			var headRect = this.paper_main.rect(cellX, cellY, cellW, dayH).attr({
 				fill:        "rgba(68, 48, 255, 0.15)",
 				stroke:      "rgba(68, 48, 255, 0.80)",
 				strokeWidth: 3
 				});
-			this.headText = this.paper_main.text(cellX+(cellW*0.5),cellY+(cellH*0.5),"Day "+(k+1)).attr({fill: "Green", "text-anchor" : "middle"});
+			var dayText = this.paper_main.text(cellX+(cellW*0.5),cellY+(cellH*0.5),"Day "+(k+1)).attr({fill: "Green", "text-anchor" : "middle"});
 			//Add header to the group
-			this.g_gridHeaders.add(this.headRect);
-			this.g_gridHeaders.add(this.dayPartition);
+			this.g_gridHeaders.add(headRect);
+			this.g_gridHeaders.add(dayPartition);
 			cellX += cellW;
 		}
 		//Drawing the last line and add it to the group
-		this.dayPartition = this.paper_main.line(cellX, cellY,cellX,paper_tableY2).attr({ stroke: "Pink", strokeWidth: 4});
-		this.g_gridHeaders.add(this.dayPartition);
+		var dayPartition = this.paper_main.line(cellX, cellY,cellX,paper_tableY2).attr({ stroke: "Pink", strokeWidth: 4});
+		this.g_gridHeaders.add(dayPartition);
 
 
 		
@@ -311,14 +310,14 @@ var ConferenceScheduler = SAGE2_App.extend( {
 		//Session
 		for(var k = 0;k<this.numberOfSessions;k++){
 			
-			this.sessionRect = this.paper_main.rect(cellX, cellY, sessionW, cellH).attr({
+			var sessionRect = this.paper_main.rect(cellX, cellY, sessionW, cellH).attr({
 				fill:        "rgba(68, 48, 255, 0.15)",
 				stroke:      "rgba(68, 48, 255, 0.80)",
 				strokeWidth: 3
 				});
-			this.headText = this.paper_main.text(cellX+(sessionW*0.5),cellY+(cellH*0.5),"Session "+(k+1)).attr({fill: "Green", "text-anchor" : "middle"});
+			var sessionText = this.paper_main.text(cellX+(sessionW*0.5),cellY+(cellH*0.5),"Session "+(k+1)).attr({fill: "Green", "text-anchor" : "middle"});
 			//Add header to the group
-			this.g_gridHeaders.add(this.sessionRect);
+			this.g_gridHeaders.add(sessionRect);
 			cellY += cellH;
 		}
 
@@ -331,14 +330,14 @@ var ConferenceScheduler = SAGE2_App.extend( {
 
 		//Start the loop to print hall names
 		for(var k = 0; k< this.numberOfColumns; k++){
-			this.hallRect = this.paper_main.rect(cellX, cellY, cellW, cellH).attr({
+			var hallRect = this.paper_main.rect(cellX, cellY, cellW, cellH).attr({
 				fill:        "rgba(68, 48, 255, 0.15)",
 				stroke:      "rgba(68, 48, 255, 0.80)",
 				strokeWidth: 3
 				});
-			this.headText = this.paper_main.text(cellX+(cellW*0.5),cellY+(cellH*0.5),"Hall "+(((k)%this.numberOfHalls)+1)).attr({fill: "Green", "text-anchor" : "middle"});
+			var hallText = this.paper_main.text(cellX+(cellW*0.5),cellY+(cellH*0.5),"Hall "+(((k)%this.numberOfHalls)+1)).attr({fill: "Green", "text-anchor" : "middle"});
 			//Add header to the group
-			this.g_gridHeaders.add(this.hallRect);
+			this.g_gridHeaders.add(hallRect);
 			cellX += cellW;
 		}
 
@@ -347,13 +346,13 @@ var ConferenceScheduler = SAGE2_App.extend( {
 		var imgH = dayH+cellH;
 		var imgX = paper_tableX1 - imgW;
 		var imgY = paper_tableY1 - imgH;
-		this.imgRect = this.paper_main.rect(imgX, imgY, imgW, imgH).attr({
+		var imgRect = this.paper_main.rect(imgX, imgY, imgW, imgH).attr({
 				fill:        "rgba(68, 48, 255, 0.15)",
 				// stroke:      "rgba(68, 48, 255, 0.80)",
 				stroke: "Yellow",
 				strokeWidth: 1
 				});
-		this.g_gridHeaders.add(this.imgRect);
+		this.g_gridHeaders.add(imgRect);
 
 
 		//Holds location where the rectangle has to be created
@@ -373,13 +372,13 @@ var ConferenceScheduler = SAGE2_App.extend( {
 		for(i = 0;i<this.numberOfRows;i++){
 			for(j=0;j<this.numberOfColumns;j++ ){
 				//For reference : Paper.rect(x,y,width,height,[rx],[ry])
-				this.cellRect = this.paper_main.rect(cellX, cellY, cellW, cellH).attr({
+				var cellRect = this.paper_main.rect(cellX, cellY, cellW, cellH).attr({
 				fill:        "rgba(68, 48, 255, 0.15)",
 				stroke:      "rgba(68, 48, 255, 0.80)",
 				strokeWidth: 2
 				});
 				//Add the cell to group
-				this.g_gridcells.add(this.cellRect);
+				this.g_gridcells.add(cellRect);
 				//Update value of the x-coordinate
 				cellX +=cellW;
 			}
@@ -406,13 +405,13 @@ var ConferenceScheduler = SAGE2_App.extend( {
 		var paper_mainH = this.paper_mainH;
 
 		//Getting the size of sticky section
-		var paper_stickyW = paper_mainW - paper_gridXEnd;
-		var paper_stickyH = paper_mainH;
+		var paper_stickyW = (paper_mainW - paper_gridXEnd) * 0.8;
+		var paper_stickyH = paper_mainH * 0.8;
 
 		//Creating table
 		//Varibles for looping
-		var i;
-		var j;
+		var sticky_offsetX = (paper_stickyW * 0.1);
+		var sticky_offsetY = (paper_stickyH * 0.1);
 
 		//Holds the width and height of cell
 
@@ -423,32 +422,71 @@ var ConferenceScheduler = SAGE2_App.extend( {
 		var stickyReservoirW = cellW * (this.stickyReservoirRatio);
 
 		//Holds location where the rectangle has to be created
-		var cellX = paper_gridXEnd;
-		var cellY = 0;
+		var cellX = paper_gridXEnd + sticky_offsetX;
+		var cellY = sticky_offsetY;
 
-		//Loop that creates rectangles
-		for(i = 0;i<this.numberOfThemes;i++){
-			for(j=0;j<2;j++ ){
-				//For reference : Paper.rect(x,y,width,height,[rx],[ry])
-				this.cellRect = this.paper_main.rect(cellX, cellY, cellW, cellH).attr({
+		//Creating group for theme headers
+		this.g_themeHeaders = this.paper_main.g();
+
+		//Creating Theme headers
+		for(var k = 0; k<this.numberOfThemes;k++){
+			var themeRect = this.paper_main.rect(cellX, cellY, cellW, cellH).attr({
 				fill:        "rgba(68, 48, 255, 0.15)",
 				stroke:      "rgba(68, 48, 255, 0.80)",
 				strokeWidth: 3
 				});
-
-				//Update value of the x-coordinate
-				cellX += cellW;
-				cellW = stickyReservoirW; 
-			}
-			//Update value of the y-coordinate
+			this.g_themeHeaders.add(themeRect)
 			cellY += cellH;
-			//Reset Value of x-coordinate
-			cellX = paper_gridXEnd;
-			//Reset the width to old
-			cellW = oldCellW;
-		}//End of loop that creates rectangles
+		}
 
-		cellY = 0;
+		//Theme Reservoir Creation
+
+		//Moving the X to right
+		cellX += cellW;
+
+		//Moving the Y back to top
+		cellY = sticky_offsetY;
+
+		//Changing the width of Theme Pool
+		cellW = stickyReservoirW; 
+
+		//Creating group for theme Reservoir
+		this.g_themeReservoir = this.paper_main.g();
+
+		//Creating Theme headers
+		for(var k = 0; k<this.numberOfThemes;k++){
+			var themeRect = this.paper_main.rect(cellX, cellY, cellW, cellH).attr({
+				fill:        "rgba(68, 48, 255, 0.15)",
+				stroke:      "rgba(68, 48, 255, 0.80)",
+				strokeWidth: 3
+				});
+			this.g_themeReservoir.add(themeRect)
+			cellY += cellH;
+		}
+
+		// //Loop that creates rectangles
+		// for(i = 0;i<this.numberOfThemes;i++){
+		// 	for(j=0;j<2;j++ ){
+		// 		//For reference : Paper.rect(x,y,width,height,[rx],[ry])
+		// 		this.cellRect = this.paper_main.rect(cellX, cellY, cellW, cellH).attr({
+		// 		fill:        "rgba(68, 48, 255, 0.15)",
+		// 		stroke:      "rgba(68, 48, 255, 0.80)",
+		// 		strokeWidth: 3
+		// 		});
+
+		// 		//Update value of the x-coordinate
+		// 		cellX += cellW;
+		// 		cellW = stickyReservoirW; 
+		// 	}
+		// 	//Update value of the y-coordinate
+		// 	cellY += cellH;
+		// 	//Reset Value of x-coordinate
+		// 	cellX = paper_gridXEnd;
+		// 	//Reset the width to old
+		// 	cellW = oldCellW;
+		// }//End of loop that creates rectangles
+
+		// cellY = 0;
 
 
 		// //Create an array of stickies
