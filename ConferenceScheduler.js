@@ -435,6 +435,7 @@ var ConferenceScheduler = SAGE2_App.extend( {
 				stroke:      "rgba(68, 48, 255, 0.80)",
 				strokeWidth: 3
 				});
+			var  themeText = this.paper_main.text(cellX+(cellW*0.5),cellY+(cellH*0.5),"Theme "+k).attr({fill: "Green", "text-anchor" : "middle"});
 			this.g_themeHeaders.add(themeRect)
 			cellY += cellH;
 		}
@@ -453,7 +454,7 @@ var ConferenceScheduler = SAGE2_App.extend( {
 		//Creating group for theme Reservoir
 		this.g_themeReservoir = this.paper_main.g();
 
-		//Creating Theme headers
+		//Creating Theme Reservoirs
 		for(var k = 0; k<this.numberOfThemes;k++){
 			var themeRect = this.paper_main.rect(cellX, cellY, cellW, cellH).attr({
 				fill:        "rgba(68, 48, 255, 0.15)",
