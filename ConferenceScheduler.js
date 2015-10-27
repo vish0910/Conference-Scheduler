@@ -4,7 +4,7 @@
 //
 // Copyright (c) 2015
 //
-//Git Curent Branch: vishal1
+//Git Curent Branch: grid1
 
 
 var ConferenceScheduler = SAGE2_App.extend( {
@@ -24,7 +24,7 @@ var ConferenceScheduler = SAGE2_App.extend( {
 
 		this.numberOfDays = 3;
 		this.numberOfHalls = 3;
-		this.numberOfSessions = 5;
+		this.numberOfSessions = 6;
 
 		this.themeNames = ["Robotics","Visualiztion"];
 		//Colors for Sticky
@@ -244,22 +244,125 @@ var ConferenceScheduler = SAGE2_App.extend( {
 		var paper_mainW = this.paper_mainW;
 		var paper_mainH = this.paper_mainH;
 
+		var paper_tableX1 = paper_gridXEnd * 0.2;
+		var paper_tableX2 = paper_gridXEnd *(1-0.1);
+		var paper_tableY1 = paper_gridYEnd * 0.3;
+		var paper_tableY2 = paper_gridYEnd*(1-0.1);
+
+		var paper_tableW = paper_tableX2 - paper_tableX1;
+		var paper_tableH = paper_tableY2 - paper_tableY1;
+
+
 		//Creating table
 		//Varibles for looping
 		var i;
 		var j;
 
+		var cellW = paper_tableW/this.numberOfDays;
+		var cellH = parseInt(Math.min(paper_tableH/this.numberOfRows, cellW),10);
+		var dayH = cellW*0.25;
+
+		var cellX = paper_tableX1;
+		var cellY = paper_tableY1 - cellH - dayH;
+
+		//Variables to hold coordinates of image rectangle
+		var imgX;
+		var imgY;
+		var imgW;
+		var imgH;
+
+
+		//Creating group of headers
+		this.g_gridHeaders = this.paper_main.g();
+
+		//Printing Day1, Day2 etc.
+		for(var k = 0;k<this.numberOfDays;k++){
+			this.dayPartition = this.paper_main.line(cellX, cellY,cellX,paper_tableY2).attr({ stroke: "Pink", strokeWidth: 4});
+			this.headRect = this.paper_main.rect(cellX, cellY, cellW, dayH).attr({
+				fill:        "rgba(68, 48, 255, 0.15)",
+				stroke:      "rgba(68, 48, 255, 0.80)",
+				strokeWidth: 3
+				});
+			//Add header to the group
+			this.g_gridHeaders.add(this.headRect);
+			this.g_gridHeaders.add(this.dayPartition);
+			cellX += cellW;
+		}
+		//Drawing the last line and add it to the group
+		this.dayPartition = this.paper_main.line(cellX, cellY,cellX,paper_tableY2).attr({ stroke: "Pink", strokeWidth: 4});
+		this.g_gridHeaders.add(this.dayPartition);
+
+
+		
+
+		
+
 		//Holds the width and height of cell
-		var cellW = paper_gridXEnd/this.numberOfColumns;
-		// var cellH = paper_gridYEnd/this.numberOfRows;
-		var cellH = parseInt(Math.min(paper_gridYEnd/this.numberOfRows, cellW*0.5),10);
+		cellW = paper_tableW/this.numberOfColumns;
+		cellH = parseInt(Math.min(paper_tableH/this.numberOfRows, cellW),10);
+
+		var sessionW = cellW*2;
+
+
+
+		cellX = paper_tableX1-sessionW;
+		cellY = paper_tableY1;
+
+		//Session
+		for(var k = 0;k<this.numberOfSessions;k++){
+			
+			this.sessionRect = this.paper_main.rect(cellX, cellY, sessionW, cellH).attr({
+				fill:        "rgba(68, 48, 255, 0.15)",
+				stroke:      "rgba(68, 48, 255, 0.80)",
+				strokeWidth: 3
+				});
+			//Add header to the group
+			this.g_gridHeaders.add(this.sessionRect);
+			cellY += cellH;
+		}
+
+		
+		//Halls
+		//Holds location where the rectangle has to be created
+		cellX = paper_tableX1;
+		cellY = paper_tableY1-cellH;
+
+
+		//Start the loop to print hall names
+		for(var k = 0; k< this.numberOfColumns; k++){
+			this.hallRect = this.paper_main.rect(cellX, cellY, cellW, cellH).attr({
+				fill:        "rgba(68, 48, 255, 0.15)",
+				stroke:      "rgba(68, 48, 255, 0.80)",
+				strokeWidth: 3
+				});
+			//Add header to the group
+			this.g_gridHeaders.add(this.hallRect);
+			cellX += cellW;
+		}
+
+		//Print image rect
+		imgW = sessionW;
+		imgH = dayH+cellH;
+		imgX = paper_tableX1 - imgW;
+		imgY = paper_tableY1 - imgH;
+		this.imgRect = this.paper_main.rect(imgX, imgY, imgW, imgH).attr({
+				fill:        "rgba(68, 48, 255, 0.15)",
+				// stroke:      "rgba(68, 48, 255, 0.80)",
+				stroke: "Yellow",
+				strokeWidth: 1
+				});
+		this.g_gridHeaders.add(this.imgRect);
+
 
 		//Holds location where the rectangle has to be created
-		var cellX = 0;
+		cellX = paper_tableX1;
 		// var cellY = 0;
 
 		//If you want the grid to be in center
-		var cellY = paper_gridYEnd*0.35;
+		// var cellY = paper_gridYEnd*0.35;
+		cellY = paper_tableY1;
+
+
 
 		//Create a group for grid cell
 		this.g_gridcells = this.paper_main.g();
@@ -271,7 +374,7 @@ var ConferenceScheduler = SAGE2_App.extend( {
 				this.cellRect = this.paper_main.rect(cellX, cellY, cellW, cellH).attr({
 				fill:        "rgba(68, 48, 255, 0.15)",
 				stroke:      "rgba(68, 48, 255, 0.80)",
-				strokeWidth: 3
+				strokeWidth: 2
 				});
 				//Add the cell to group
 				this.g_gridcells.add(this.cellRect);
@@ -281,7 +384,7 @@ var ConferenceScheduler = SAGE2_App.extend( {
 			//Update value of the y-coordinate
 			cellY += cellH;
 			//Reset Value of x-coordinate
-			cellX = 0;
+			cellX = paper_tableX1;
 		}//End of loop that creates rectangles
 
 
