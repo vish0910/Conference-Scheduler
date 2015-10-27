@@ -281,6 +281,7 @@ var ConferenceScheduler = SAGE2_App.extend( {
 				stroke:      "rgba(68, 48, 255, 0.80)",
 				strokeWidth: 3
 				});
+			this.headText = this.paper_main.text(cellX+(cellW*0.5),cellY+(cellH*0.5),"Day "+(k+1)).attr({fill: "Green", "text-anchor" : "middle"});
 			//Add header to the group
 			this.g_gridHeaders.add(this.headRect);
 			this.g_gridHeaders.add(this.dayPartition);
@@ -315,6 +316,7 @@ var ConferenceScheduler = SAGE2_App.extend( {
 				stroke:      "rgba(68, 48, 255, 0.80)",
 				strokeWidth: 3
 				});
+			this.headText = this.paper_main.text(cellX+(sessionW*0.5),cellY+(cellH*0.5),"Session "+(k+1)).attr({fill: "Green", "text-anchor" : "middle"});
 			//Add header to the group
 			this.g_gridHeaders.add(this.sessionRect);
 			cellY += cellH;
@@ -334,6 +336,7 @@ var ConferenceScheduler = SAGE2_App.extend( {
 				stroke:      "rgba(68, 48, 255, 0.80)",
 				strokeWidth: 3
 				});
+			this.headText = this.paper_main.text(cellX+(cellW*0.5),cellY+(cellH*0.5),"Hall "+(((k)%this.numberOfHalls)+1)).attr({fill: "Green", "text-anchor" : "middle"});
 			//Add header to the group
 			this.g_gridHeaders.add(this.hallRect);
 			cellX += cellW;
