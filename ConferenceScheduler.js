@@ -6,7 +6,7 @@
 //
 //Git Branch: add vishal1
 //Git Branch: master
-//Git Branch: Add master
+//Git Branch: Added master
 
 
 var ConferenceScheduler = SAGE2_App.extend( {
