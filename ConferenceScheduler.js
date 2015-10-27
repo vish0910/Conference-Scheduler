@@ -4,7 +4,7 @@
 //
 // Copyright (c) 2015
 //
-//Git Branch: Vishal1
+//Git Branch: master
 
 var ConferenceScheduler = SAGE2_App.extend( {
 	init: function(data) {
