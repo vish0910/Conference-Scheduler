@@ -245,8 +245,8 @@ var ConferenceScheduler = SAGE2_App.extend( {
 		var paper_mainH = this.paper_mainH;
 
 		var paper_tableX1 = paper_gridXEnd * 0.2;
-		var paper_tableX2 = paper_gridXEnd *(1-0.1);
-		var paper_tableY1 = paper_gridYEnd * 0.3;
+		var paper_tableX2 = paper_gridXEnd *(1-0.05);
+		var paper_tableY1 = paper_gridYEnd * 0.35;
 		var paper_tableY2 = paper_gridYEnd*(1-0.1);
 
 		var paper_tableW = paper_tableX2 - paper_tableX1;
@@ -260,16 +260,14 @@ var ConferenceScheduler = SAGE2_App.extend( {
 
 		var cellW = paper_tableW/this.numberOfDays;
 		var cellH = parseInt(Math.min(paper_tableH/this.numberOfRows, cellW),10);
+		// var cellH = paper_tableH/this.numberOfRows;
+
 		var dayH = cellW*0.25;
 
 		var cellX = paper_tableX1;
 		var cellY = paper_tableY1 - cellH - dayH;
 
-		//Variables to hold coordinates of image rectangle
-		var imgX;
-		var imgY;
-		var imgW;
-		var imgH;
+	
 
 
 		//Creating group of headers
@@ -299,7 +297,8 @@ var ConferenceScheduler = SAGE2_App.extend( {
 
 		//Holds the width and height of cell
 		cellW = paper_tableW/this.numberOfColumns;
-		cellH = parseInt(Math.min(paper_tableH/this.numberOfRows, cellW),10);
+		//UNCOMMENT 
+		// cellH = parseInt(Math.min(paper_tableH/this.numberOfRows, cellW),10);
 
 		var sessionW = cellW*2;
 
@@ -341,10 +340,10 @@ var ConferenceScheduler = SAGE2_App.extend( {
 		}
 
 		//Print image rect
-		imgW = sessionW;
-		imgH = dayH+cellH;
-		imgX = paper_tableX1 - imgW;
-		imgY = paper_tableY1 - imgH;
+		var imgW = sessionW;
+		var imgH = dayH+cellH;
+		var imgX = paper_tableX1 - imgW;
+		var imgY = paper_tableY1 - imgH;
 		this.imgRect = this.paper_main.rect(imgX, imgY, imgW, imgH).attr({
 				fill:        "rgba(68, 48, 255, 0.15)",
 				// stroke:      "rgba(68, 48, 255, 0.80)",
