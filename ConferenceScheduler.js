@@ -26,10 +26,10 @@ var ConferenceScheduler = SAGE2_App.extend( {
 		this.numberOfHalls = 3;
 		this.numberOfSessions = 6;
 
-		this.themeNames = ["Robotics","Visualization"];
-		this.themeObjects = {"Robotics":[],"Visualization":[]};
+		this.themeNames = ["Robotics","Visualization","Neural Networks"];
+		this.themeObjects = {"Robotics":[],"Visualization":[],"Neural Networks":[]};
 		//Colors for Sticky
-		this.stickyColor = {"Robotics":"#FEBB32","Visualization":"#8EE13E"};
+		this.stickyColor = {"Robotics":"#FEBB32","Visualization":"#8EE13E", "Neural Networks":"#76CBC8"};
 
 		//Grid variables
 		this.numberOfRows = this.numberOfSessions;
@@ -191,9 +191,7 @@ var ConferenceScheduler = SAGE2_App.extend( {
 		var cellX = paper_gridXEnd+sticky_offsetX+cellW;
 		var cellY = sticky_offsetY;
 		console.log("CellX:"+cellX+" : CellY: "+cellY);
-		//Gap between 2 stickies
-		var gapBetweenSticky = this.postItW * 0.2;
-		console.log("gapBetweenSticky:"+gapBetweenSticky);
+		
 		//Create an array of stickies
 		this.array_sticky = [];
 		//Create Array of Sticky objects
@@ -204,26 +202,62 @@ var ConferenceScheduler = SAGE2_App.extend( {
 		var sticky_x2;
 		var sticky_y2;
 		var array_sticky = this.array_sticky;
-		var counter = 0
+		var counter = 0;
+
+
+		// //Post-it Width and Height
+		var postItW = cellH/3;
+		var postItH = postItW;
+		//Gap between 2 stickies
+		var padding = this.postItW * 0.2;
+		console.log("padding:"+padding);
+
+		//var wrappos
+		var wrapAt = paper_mainW - sticky_offsetX -padding-this.postItW;
+		console.log("Wrap at:"+ wrapAt);
+		//Updating the postit values
+		this.postItW = postItW;
+		this.postItH = postItH;
+
+		var stickyColor;
+		//Creating Filter for shadow
+		var f = this.paper_main.filter(Snap.filter.blur(padding/3,padding/3));
+
 		for(var stickyCollection in this.themeObjects){
+			var cellActualY = cellY;
+			console.log("==>"+stickyCollection);
+			stickyColor = this.stickyColor[stickyCollection];
 			for(var k = 0 ; k < this.themeObjects[stickyCollection].length;k++){
 				
+				//if going out of bound
+				if(cellX> wrapAt){
+					cellX = paper_gridXEnd+sticky_offsetX+cellW;
+					// cellY += cellH/2 - padding/2;
+					cellY = sticky_y2;
+				}
+
 				//Intializing x1,x2, y1, y2 of sticky
-				sticky_x1 =  cellX;
-				sticky_y1 =  cellY;
+				sticky_x1 =  cellX+padding;
+				sticky_y1 =  cellY+padding;
 				sticky_x2 =  sticky_x1+this.postItW;
 				sticky_y2 =  sticky_y1+ this.postItH;
 
 				
 				array_sticky.push([sticky_x1,sticky_y1,sticky_x2,sticky_y2]);
+
+				//Creating Sticky Shadow
+				this.sticky_shadow = this.paper_main.rect(array_sticky[counter][0]+(padding/3),array_sticky[counter][1]+(padding/3),this.postItW,this.postItH).attr({fill: "gray", filter: f});
+
 				//Creating a sticky
-				this.sticky_1= this.paper_main.rect(array_sticky[counter][0],array_sticky[counter][1],this.postItW,this.postItH).attr({fill: "Yellow"});
+				this.sticky_1= this.paper_main.rect(array_sticky[counter][0],array_sticky[counter][1],this.postItW,this.postItH).attr({fill: stickyColor});
 				console.log("Sticky Created at: "+array_sticky[counter][0] +": "+ array_sticky[counter][1] );
 				//Pushing into sticky object
 				this.sticky_object_array.push(this.sticky_1);
 
 				// Move x, y
-				cellX = (sticky_x2 + gapBetweenSticky);
+				cellX = sticky_x2;
+
+				
 				console.log("cellX for next sticky of same theme:"+cellX);
 				//Increase the counter
 				counter++;
@@ -231,7 +265,7 @@ var ConferenceScheduler = SAGE2_App.extend( {
 			//Change themeReservoir
 			//Reset X
 			cellX = paper_gridXEnd+sticky_offsetX+cellW;
-			cellY+= cellH;
+			cellY= cellActualY+cellH;
 		}
 		
 	},

@@ -1,5 +1,15 @@
 [ 
 {"Title":"Evolution of Computer Graphics", "Speaker":"Dr. Foo Bar", "Theme": "Visualization"},
 {"Title":"Advanced Visualization", "Speaker":"Dr. Bob Cullars", "Theme": "Visualization"},
-{"Title":"Innovations in 2015 in Robotics", "Speaker":"Dr. Han Solo", "Theme": "Robotics"}
+{"Title":"Evolution of Computer Graphics", "Speaker":"Dr. Foo Bar", "Theme": "Visualization"},
+{"Title":"Evolution of Computer Graphics", "Speaker":"Dr. Foo Bar", "Theme": "Visualization"},
+{"Title":"Evolution of Computer Graphics", "Speaker":"Dr. Foo Bar", "Theme": "Visualization"},
+{"Title":"Evolution of Computer Graphics", "Speaker":"Dr. Foo Bar", "Theme": "Visualization"},
+{"Title":"Innovations in 2015 in Robotics", "Speaker":"Dr. Han Solo", "Theme": "Robotics"},
+{"Title":"Innovations in 2015 in Robotics", "Speaker":"Dr. Han Solo", "Theme": "Robotics"},
+{"Title":"Innovations in 2015 in Robotics", "Speaker":"Dr. Han Solo", "Theme": "Robotics"},
+{"Title":"Innovations in 2015 in Robotics", "Speaker":"Dr. Han Solo", "Theme": "Robotics"},
+{"Title":"Innovations in 2015 in Robotics", "Speaker":"Dr. Han Solo", "Theme": "Robotics"},
+{"Title":"Innovations in 2015 in Robotics", "Speaker":"Dr. Han Solo", "Theme": "Robotics"},
+{"Title":"Hopfeild Networks", "Speaker":"Dr. R2D2", "Theme": "Neural Networks"}
 ]
