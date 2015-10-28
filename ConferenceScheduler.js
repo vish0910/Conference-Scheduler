@@ -26,7 +26,8 @@ var ConferenceScheduler = SAGE2_App.extend( {
 		this.numberOfHalls = 3;
 		this.numberOfSessions = 6;
 
-		this.themeNames = ["Robotics","Visualiztion"];
+		this.themeNames = ["Robotics","Visualization"];
+		this.themeObjects = {"Robotics":[],"Visualization":[]};
 		//Colors for Sticky
 		this.stickyColor = {"Robotics":"#FEBB32","Visualization":"#8EE13E"};
 
@@ -67,7 +68,7 @@ var ConferenceScheduler = SAGE2_App.extend( {
 
 		//Calling personal methods
 
-		// this.readPaperList();
+		this.readPaperList();
 	
 		this.createSnapPaper();
 		this.createPartitions();
@@ -102,6 +103,60 @@ var ConferenceScheduler = SAGE2_App.extend( {
 	},
 
 	intializePostIts: function(paperlist){
+
+
+		if(paperlist != null){
+			var postitinfo = [];
+
+			console.log("DATA"+ paperlist[1].date);
+			for(var key = 0; key < paperlist.length ; key++){
+				console.log("From postit"+ paperlist[key]["Title"]);
+
+				var title = paperlist[key]["Title"];
+				var speaker = paperlist[key]["Speaker"];
+				var theme = paperlist[key]["Theme"];
+
+				// var k;
+
+				// for(k = 0; k < this.themeNames.length;k++){
+				// 	if(this.themeNames[k] == theme){
+				// 		break;
+				// 	}
+				// }
+
+				// var themeContainerID = k;
+				console.log("Theme"+ theme);
+				// var obj = function(title,speaker){
+				// 	this.title = title;
+				// 	this.speaker = speaker; 
+				// }
+				var newSticky = {};
+				newSticky['title'] = title;
+				newSticky['speaker'] = speaker;
+
+				this.themeObjects[theme].push(newSticky);
+				console.log("Objects"+JSON.stringify(newSticky));
+
+
+				
+
+
+			}
+			this.drawPostIts(postitinfo);
+
+			for (var key in this.themeObjects) {
+ 				// console.log(a[key][Object.keys(a[key])[0]].p); // 81.25
+ 				for(var k = 0; k< this.themeObjects[key].length;k++)
+ 					console.log("Theme Objects "+JSON.stringify(this.themeObjects[key][k]));
+			}
+			
+
+
+		}
+
+	},
+
+	drawPostIts: function(postitinfo){
 		//Getting ends of grid section
 		var paper_gridXEnd = this.paper_gridXEnd;
 		var paper_gridYEnd = this.paper_gridYEnd;
@@ -111,8 +166,13 @@ var ConferenceScheduler = SAGE2_App.extend( {
 		var paper_mainH = this.paper_mainH;
 
 		//Getting the size of sticky section
-		var paper_stickyW = paper_mainW - paper_gridXEnd;
-		var paper_stickyH = paper_mainH;
+		var paper_stickyW = (paper_mainW - paper_gridXEnd) * 0.8;
+		var paper_stickyH = paper_mainH * 0.8;
+
+		//Creating table
+		//Varibles for looping
+		var sticky_offsetX = (paper_stickyW * 0.1);
+		var sticky_offsetY = (paper_stickyH * 0.1);
 
 		//Creating table
 		//Varibles for looping
@@ -128,50 +188,52 @@ var ConferenceScheduler = SAGE2_App.extend( {
 		var stickyReservoirW = cellW * (this.stickyReservoirRatio);
 
 		//Holds location where the rectangle has to be created
-		var cellX = paper_gridXEnd;
-		var cellY = 0;
-
+		var cellX = paper_gridXEnd+sticky_offsetX+cellW;
+		var cellY = sticky_offsetY;
+		console.log("CellX:"+cellX+" : CellY: "+cellY);
+		//Gap between 2 stickies
+		var gapBetweenSticky = this.postItW * 0.2;
+		console.log("gapBetweenSticky:"+gapBetweenSticky);
 		//Create an array of stickies
 		this.array_sticky = [];
 		//Create Array of Sticky objects
 		this.sticky_object_array = [];
 
-		if(paperlist != null){
-			console.log("DATA"+ paperlist[1].date);
-			for(var key = 0; key < paperlist.length ; key++){
-				console.log("From postit"+ paperlist[key]["Title"]);
-
-				var title = paperlist[key]["Title"];
-				var speaker = paperlist[key]["Speaker"];
-				var theme = paperlist[key]["Theme"];
-
-				var k;
-
-				for(k = 0; k < this.themeNames.length;k++){
-					if(this.themeNames[k] == theme){
-						break;
-					}
-				}
-
-				var themeContainerID = k;
-
-				var sticky_x1 =  paper_gridXEnd+oldCellW;
-				var sticky_y1 =  cellH*1;
-				var sticky_x2 =  sticky_x1+this.postItW;
-				var sticky_y2 =  sticky_y1+ this.postItH;
-				var array_sticky = this.array_sticky;
-				array_sticky.push([sticky_x1,sticky_y1,sticky_x2,sticky_y2]);
+		var sticky_x1;
+		var sticky_y1;
+		var sticky_x2;
+		var sticky_y2;
+		var array_sticky = this.array_sticky;
+		var counter = 0
+		for(var stickyCollection in this.themeObjects){
+			for(var k = 0 ; k < this.themeObjects[stickyCollection].length;k++){
 				
-				//Creating a sticky
-				this.sticky_1= this.paper_main.rect(array_sticky[0][0],array_sticky[0][1],this.postItW,this.postItH).attr({fill: "Pink"});
+				//Intializing x1,x2, y1, y2 of sticky
+				sticky_x1 =  cellX;
+				sticky_y1 =  cellY;
+				sticky_x2 =  sticky_x1+this.postItW;
+				sticky_y2 =  sticky_y1+ this.postItH;
 
+				
+				array_sticky.push([sticky_x1,sticky_y1,sticky_x2,sticky_y2]);
+				//Creating a sticky
+				this.sticky_1= this.paper_main.rect(array_sticky[counter][0],array_sticky[counter][1],this.postItW,this.postItH).attr({fill: "Yellow"});
+				console.log("Sticky Created at: "+array_sticky[counter][0] +": "+ array_sticky[counter][1] );
 				//Pushing into sticky object
 				this.sticky_object_array.push(this.sticky_1);
 
-
+				// Move x, y
+				cellX = (sticky_x2 + gapBetweenSticky);
+				console.log("cellX for next sticky of same theme:"+cellX);
+				//Increase the counter
+				counter++;
 			}
+			//Change themeReservoir
+			//Reset X
+			cellX = paper_gridXEnd+sticky_offsetX+cellW;
+			cellY+= cellH;
 		}
-
+		
 	},
 
 
