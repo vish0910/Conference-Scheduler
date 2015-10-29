@@ -27,7 +27,7 @@ var ConferenceScheduler = SAGE2_App.extend( {
 		this.numberOfSessions = 6;
 
 		this.themeNames = ["Robotics","Visualization","Neural Networks"];
-		this.themeObjects = {"Robotics":[],"Visualization":[],"Neural Networks":[]};
+		this.catagorizedStickies = {"Robotics":[],"Visualization":[],"Neural Networks":[]};
 		//Colors for Sticky
 		this.stickyColor = {"Robotics":"#FEBB32","Visualization":"#8EE13E", "Neural Networks":"#76CBC8"};
 
@@ -49,8 +49,8 @@ var ConferenceScheduler = SAGE2_App.extend( {
 		this.buttonH = 25;
 
 		//Post-it Width and Height
-		this.postItW = 50;
-		this.postItH = 25;
+		this.postItW = 0;
+		this.postItH = 0;
 
 		//Get the Window height and width
 		this.mainDivW = parseInt(this.element.style.width,  10);
@@ -76,10 +76,6 @@ var ConferenceScheduler = SAGE2_App.extend( {
 		this.intializeSticky();
 		this.intializeControl();
 
-		
-
-
-
 
 		// SAGE2 Application Settings
 		//
@@ -104,7 +100,6 @@ var ConferenceScheduler = SAGE2_App.extend( {
 
 	intializePostIts: function(paperlist){
 
-
 		if(paperlist != null){
 			var postitinfo = [];
 
@@ -116,42 +111,26 @@ var ConferenceScheduler = SAGE2_App.extend( {
 				var speaker = paperlist[key]["Speaker"];
 				var theme = paperlist[key]["Theme"];
 
-				// var k;
-
-				// for(k = 0; k < this.themeNames.length;k++){
-				// 	if(this.themeNames[k] == theme){
-				// 		break;
-				// 	}
-				// }
-
-				// var themeContainerID = k;
 				console.log("Theme"+ theme);
-				// var obj = function(title,speaker){
-				// 	this.title = title;
-				// 	this.speaker = speaker; 
-				// }
+				
+				//Creating a sticky object and pushing into right catagory based on its theme.
 				var newSticky = {};
 				newSticky['title'] = title;
 				newSticky['speaker'] = speaker;
 
-				this.themeObjects[theme].push(newSticky);
-				console.log("Objects"+JSON.stringify(newSticky));
-
-
-				
-
-
+				this.catagorizedStickies[theme].push(newSticky);
+				// console.log("Objects"+JSON.stringify(newSticky));
 			}
+
 			this.drawPostIts(postitinfo);
 
-			for (var key in this.themeObjects) {
- 				// console.log(a[key][Object.keys(a[key])[0]].p); // 81.25
- 				for(var k = 0; k< this.themeObjects[key].length;k++)
- 					console.log("Theme Objects "+JSON.stringify(this.themeObjects[key][k]));
-			}
+			//Printing stickies on console
+			// for (var key in this.catagorizedStickies) {
+ 		// 		// console.log(a[key][Object.keys(a[key])[0]].p); // 81.25
+ 		// 		for(var k = 0; k< this.catagorizedStickies[key].length;k++)
+ 		// 			console.log("Theme Objects "+JSON.stringify(this.catagorizedStickies[key][k]));
+			// }
 			
-
-
 		}
 
 	},
@@ -205,32 +184,35 @@ var ConferenceScheduler = SAGE2_App.extend( {
 		var counter = 0;
 
 
-		// //Post-it Width and Height
-		var postItW = cellH/3;
+		//Post-it Width and Height
+		var postItW = stickyReservoirW/6;
 		var postItH = postItW;
-		//Gap between 2 stickies
-		var padding = this.postItW * 0.2;
-		console.log("padding:"+padding);
 
-		//var wrappos
-		var wrapAt = paper_mainW - sticky_offsetX -padding-this.postItW;
-		console.log("Wrap at:"+ wrapAt);
 		//Updating the postit values
 		this.postItW = postItW;
 		this.postItH = postItH;
+		// console.log(this.postItW + "&&&&" + this.postItH);
 
+		//Gap between 2 stickies
+		var padding = postItW * 0.3;
+		console.log("padding:"+padding);
+
+		//Wrapping point 
+		var wrapAt = paper_mainW - sticky_offsetX - padding - postItW;
+		
 		var stickyColor;
+
 		//Creating Filter for shadow
 		var f = this.paper_main.filter(Snap.filter.blur(padding/3,padding/3));
 
-		for(var stickyCollection in this.themeObjects){
+		for(var theme in this.catagorizedStickies){
 			var cellActualY = cellY;
-			console.log("==>"+stickyCollection);
-			stickyColor = this.stickyColor[stickyCollection];
-			for(var k = 0 ; k < this.themeObjects[stickyCollection].length;k++){
+			console.log("==>"+theme);
+			stickyColor = this.stickyColor[theme];
+			for(var k = 0 ; k < this.catagorizedStickies[theme].length;k++){
 				
-				//if going out of bound
-				if(cellX> wrapAt){
+				//Check if going out of bound
+				if(cellX+postItW> wrapAt){
 					cellX = paper_gridXEnd+sticky_offsetX+cellW;
 					// cellY += cellH/2 - padding/2;
 					cellY = sticky_y2;
@@ -243,14 +225,17 @@ var ConferenceScheduler = SAGE2_App.extend( {
 				sticky_y2 =  sticky_y1+ this.postItH;
 
 				//Pushing array of sticky info 
-				array_sticky.push([sticky_x1,sticky_y1,sticky_x2,sticky_y2,0,0]);
+				array_sticky.push([sticky_x1,sticky_y1,sticky_x2,sticky_y2,parseFloat('0.0'),parseFloat('0.0')]);
 
 				//Creating Sticky Shadow
 				this.sticky_shadow = this.paper_main.rect(array_sticky[counter][0]+(padding/3),array_sticky[counter][1]+(padding/3),this.postItW,this.postItH).attr({fill: "gray", filter: f});
 
+
+				//Creating default transform property
+				var defaultTransform = 'translate('+array_sticky[counter][4]+','+array_sticky[counter][5]+')';
 				//Creating a sticky
-				this.sticky_1= this.paper_main.rect(array_sticky[counter][0],array_sticky[counter][1],this.postItW,this.postItH).attr({fill: stickyColor});
-				console.log("Sticky Created at: "+array_sticky[counter][0] +": "+ array_sticky[counter][1] );
+				this.sticky_1= this.paper_main.rect(array_sticky[counter][0],array_sticky[counter][1],this.postItW,this.postItH).attr({fill: stickyColor, transform : defaultTransform});
+				// console.log("Sticky Created at: "+array_sticky[counter][0] +": "+ array_sticky[counter][1] );
 				//Pushing into sticky object
 				this.sticky_object_array.push(this.sticky_1);
 
@@ -258,7 +243,7 @@ var ConferenceScheduler = SAGE2_App.extend( {
 				cellX = sticky_x2;
 
 				
-				console.log("cellX for next sticky of same theme:"+cellX);
+				// console.log("cellX for next sticky of same theme:"+cellX);
 				//Increase the counter
 				counter++;
 			}
@@ -357,16 +342,16 @@ var ConferenceScheduler = SAGE2_App.extend( {
 		var cellH = parseInt(Math.min(paper_tableH/this.numberOfRows, cellW),10);
 		// var cellH = paper_tableH/this.numberOfRows;
 
+		//Creating group of headers
+		this.g_gridHeaders = this.paper_main.g();
+
+		//Height of Day Headers
 		var dayH = cellW*0.25;
 
 		var cellX = paper_tableX1;
 		var cellY = paper_tableY1 - cellH - dayH;
 
-	
-
-
-		//Creating group of headers
-		this.g_gridHeaders = this.paper_main.g();
+		
 
 		//Printing Day1, Day2 etc.
 		for(var k = 0;k<this.numberOfDays;k++){
@@ -386,10 +371,6 @@ var ConferenceScheduler = SAGE2_App.extend( {
 		var dayPartition = this.paper_main.line(cellX, cellY,cellX,paper_tableY2).attr({ stroke: "Pink", strokeWidth: 4});
 		this.g_gridHeaders.add(dayPartition);
 
-
-		
-
-		
 
 		//Holds the width and height of cell
 		cellW = paper_tableW/this.numberOfColumns;
@@ -416,7 +397,6 @@ var ConferenceScheduler = SAGE2_App.extend( {
 			this.g_gridHeaders.add(sessionRect);
 			cellY += cellH;
 		}
-
 		
 		//Halls
 		//Holds location where the rectangle has to be created
@@ -453,12 +433,7 @@ var ConferenceScheduler = SAGE2_App.extend( {
 
 		//Holds location where the rectangle has to be created
 		cellX = paper_tableX1;
-		// var cellY = 0;
-
-		//If you want the grid to be in center
-		// var cellY = paper_gridYEnd*0.35;
 		cellY = paper_tableY1;
-
 
 
 		//Create a group for grid cell
@@ -483,11 +458,6 @@ var ConferenceScheduler = SAGE2_App.extend( {
 			//Reset Value of x-coordinate
 			cellX = paper_tableX1;
 		}//End of loop that creates rectangles
-
-
-		// this.g_gridcells.attr({
-		// 	fill: "rgba(40, 55, 55, 0.85)"
-		// });
 
 	},
 
@@ -561,50 +531,6 @@ var ConferenceScheduler = SAGE2_App.extend( {
 			cellY += cellH;
 		}
 
-		// //Loop that creates rectangles
-		// for(i = 0;i<this.numberOfThemes;i++){
-		// 	for(j=0;j<2;j++ ){
-		// 		//For reference : Paper.rect(x,y,width,height,[rx],[ry])
-		// 		this.cellRect = this.paper_main.rect(cellX, cellY, cellW, cellH).attr({
-		// 		fill:        "rgba(68, 48, 255, 0.15)",
-		// 		stroke:      "rgba(68, 48, 255, 0.80)",
-		// 		strokeWidth: 3
-		// 		});
-
-		// 		//Update value of the x-coordinate
-		// 		cellX += cellW;
-		// 		cellW = stickyReservoirW; 
-		// 	}
-		// 	//Update value of the y-coordinate
-		// 	cellY += cellH;
-		// 	//Reset Value of x-coordinate
-		// 	cellX = paper_gridXEnd;
-		// 	//Reset the width to old
-		// 	cellW = oldCellW;
-		// }//End of loop that creates rectangles
-
-		// cellY = 0;
-
-
-		// //Create an array of stickies
-		// this.array_sticky = [];
-		// var sticky_x1 =  paper_gridXEnd+oldCellW;
-		// var sticky_y1 =  cellH*1;
-		// var sticky_x2 =  sticky_x1+this.postItW;
-		// var sticky_y2 =  sticky_y1+ this.postItH;
-		// this.array_sticky.push([sticky_x1,sticky_y1,sticky_x2,sticky_y2]);
-		// var array_sticky = this.array_sticky;
-
-		// //Creating a sticky
-		
-		// this.sticky_1= this.paper_main.rect(array_sticky[0][0],array_sticky[0][1],this.postItW,this.postItH).attr({
-		// 	fill: "Pink"
-		// });
-
-		// this.sticky_object_array = [];
-		// this.sticky_object_array.push(this.sticky_1);
-		// this.sticky_1_text = this.paper_main.text
-
 	},
 
 	intializeControl: function(){
@@ -668,20 +594,56 @@ var ConferenceScheduler = SAGE2_App.extend( {
 	},
 
 //==> Play Area
+	// findStickyId: function(paperX,paperY){
+	// 	var array_sticky_size = this.array_sticky.length;
+	// 	console.log("Array length:"+array_sticky_size);
+	// 	var i;
+	// 	var result = null;
+	// 	var array_sticky = this.array_sticky;
+	// 	for(i=0;i<array_sticky_size;i++){
+	// 		if(paperX >= array_sticky[i][0] && paperX < array_sticky[i][2] && paperY >= array_sticky[i][1] && paperY < array_sticky[i][3]){
+	// 			result = i;
+	// 			break;
+	// 		}
+	// 	}
+	// 	return result;
+	// },
+
+
 	findStickyId: function(paperX,paperY){
-		var array_sticky_size = this.array_sticky.length;
-		console.log("Array length:"+array_sticky_size);
-		var i;
 		var result = null;
-		var array_sticky = this.array_sticky;
-		for(i=0;i<array_sticky_size;i++){
-			if(paperX >= array_sticky[i][0] && paperX < array_sticky[i][2] && paperY >= array_sticky[i][1] && paperY < array_sticky[i][3]){
-				result = i;
+		var postItW = this.postItW;
+		var postItH = this.postItH;
+		for (var key in this.sticky_object_array) {
+ 			// console.log(">%^^^^$#%"+ JSON.stringify(this.sticky_object_array[key]));
+
+ 			//Get X and Y co-ordinates
+ 			var sticky_X = parseFloat(this.sticky_object_array[key].attr("x"));
+ 			var sticky_Y = parseFloat(this.sticky_object_array[key].attr("y"));
+
+ 			//Get Tranform values
+			var transformString = this.sticky_object_array[key].attr("transform")+'';
+			var tXY = transformString.split(',');
+			var tX = parseFloat(tXY[0].slice(1),10);
+			var tY = parseFloat(tXY[1],10);
+
+			//Find resulting co ordinates by adding location and translation
+			var rX = sticky_X+tX;
+			var rY = sticky_Y+tY;
+
+			//Find if the mouse click was on sticky
+			if(paperX >= rX && paperX < rX+postItW && paperY >= rY && paperY < rY+postItH){
+				result = key;
 				break;
 			}
-		}
+			// console.log("**VSD**"+transformString);
+			// console.log("tsdX:"+tX+ "tsdY: "+tY);
+
+ 		}
+
 		return result;
 	},
+
 
 
 //End of Play Area
@@ -717,9 +679,9 @@ var ConferenceScheduler = SAGE2_App.extend( {
 		var paperX = (x/mainDivW) * paper_mainW;
 		var paperY = (y/mainDivH) * paper_mainH;
 
-					//Creatin a new user object if it doesnot exists
+		//Creating a new user object if it doesnot exists
 		if (this.userInteraction[user.id] === undefined) {
-			this.userInteraction[user.id] = {dragging: false, position: {x: 0, y: 0}, stickyId: null};
+			this.userInteraction[user.id] = {dragging: false, position: {x: 0, y: 0, tX: 0, tY: 0}, stickyId: null,stickyPast:[0,0,0,0]};
 		}
 
 		if (eventType === "pointerPress" && (data.button === "left")) {
@@ -739,10 +701,44 @@ var ConferenceScheduler = SAGE2_App.extend( {
 				if(stickyId != null){
 					console.log("Not Null");
 					this.userInteraction[user.id].dragging = true;
-					this.userInteraction[user.id].position.x = position.x
-					this.userInteraction[user.id].position.y = position.y;
+					// this.userInteraction[user.id].position.x = position.x; //DONOT DELETE X  and Y from user were never used.
+					// this.userInteraction[user.id].position.y = position.y;
+					this.userInteraction[user.id].position.x = paperX;
+					this.userInteraction[user.id].position.y = paperY;
 					this.userInteraction[user.id].stickyId = stickyId;
-					console.log("User: ->"+ JSON.stringify(this.userInteraction[user.id]));
+
+					//Get X and Y co-ordinates
+ 					var sticky_X = parseFloat(this.sticky_object_array[stickyId].attr("x"));
+ 					var sticky_Y = parseFloat(this.sticky_object_array[stickyId].attr("y"));
+
+ 					//Get Tranform values
+					var transformString = this.sticky_object_array[stickyId].attr("transform")+'';
+					var tXY = transformString.split(',');
+					var tX = parseFloat(tXY[0].slice(1),10);
+					var tY = parseFloat(tXY[1],10);
+
+					this.userInteraction[user.id].stickyPast[0] = sticky_X;
+					this.userInteraction[user.id].stickyPast[1] = sticky_Y;
+					this.userInteraction[user.id].stickyPast[2] = tX;
+					this.userInteraction[user.id].stickyPast[3] = tX;
+					// //Get Tranform values
+					// var transformString = this.sticky_object_array[stickyId].attr("transform")+'';
+					// var tXY = transformString.split(',');
+					// var tX = parseFloat(tXY[0].slice(1),10);
+					// var tY = parseFloat(tXY[1],10);
+
+
+
+					// console.log("User: ->"+ JSON.stringify(this.userInteraction[user.id]));
+					// console.log("****"+transformString);
+					// console.log("tX:"+tX+ "tY: "+tY);
+
+
+					// this.userInteraction[user.id].position.tX = tX;
+					// this.userInteraction[user.id].position.tY = tY;
+
+					// this.sticky_array[stickyId][4] =tX;
+					// this.sticky_array[stickyId][5] = tY;
 
 				}
 				//Printing All users
@@ -779,11 +775,32 @@ var ConferenceScheduler = SAGE2_App.extend( {
 			if(this.userInteraction[user.id].dragging){
 				console.log("Dragging");
 				var sid = this.userInteraction[user.id].stickyId;
-				var sOldX = this.array_sticky[sid][0]; //Get X coordinate of the sticky's location
-				var sOldY = this.array_sticky[sid][1]; //Get Y coordinate of the sticky's location
+				var stickyPast = this.userInteraction[user.id].stickyPast;
+				//Get X and Y co-ordinates
+ 				var sticky_X = stickyPast[0];
+ 				var sticky_Y = stickyPast[1];
 
-				var tOldX = this.array_sticky[sid][4];
-				var tOldY = this.array_sticky[sid][5];
+ 				//Get Tranform values
+				var tX = stickyPast[2];
+				var tY = stickyPast[3];
+
+				//Find old coordinates by adding location and translation
+				var rX = sticky_X+tX;
+				var rY = sticky_Y+tY;
+
+				console.log("RX:"+rX+" : RY: "+ rY);
+
+
+
+
+
+
+				// var sid = this.userInteraction[user.id].stickyId;
+				// var sOldX = this.array_sticky[sid][0]; //Get X coordinate of the sticky's location
+				// var sOldY = this.array_sticky[sid][1]; //Get Y coordinate of the sticky's location
+
+				// var tOldX = this.array_sticky[sid][4];
+				// var tOldY = this.array_sticky[sid][5];
 
 				// var oGX = tOldX+sOldX;
 				// var oGY = tOldY+sOldY;
@@ -791,12 +808,12 @@ var ConferenceScheduler = SAGE2_App.extend( {
 				// var transX = (paperX - Math.max(sOldX,tOldX));
 				// var transY = (paperY - Math.max(sOldY, tOldY));
 				// console.log("TransX:"+ transX+" TransY: "+transY);
-				var transX = paperX - sOldX;
-				var transY = paperY - sOldY;
+				var transX = paperX - rX;
+				var transY = paperY - rY;
 
 
-				this.array_sticky[sid][4] = transX;
-				this.array_sticky[sid][5] = transY;
+				// this.array_sticky[sid][4] = transX;
+				// this.array_sticky[sid][5] = transY;
 
 				// //Get translate property of the sticky
 				// var attr1 =  this.sticky_object_array[sid].attr("transform")+'';
@@ -804,8 +821,8 @@ var ConferenceScheduler = SAGE2_App.extend( {
 				// var tOldXY = attr1.split(',');
 				// var tOldX = parseInt(tOldXY[0].slice(1),10);
 				// var tOldY = parseInt(tOldXY[1],10);
-				console.log("solx:"+sOldX+" solY: "+sOldY);
-				console.log("tranx:"+transX+" TolY: "+transY);
+				// console.log("solx:"+sOldX+" solY: "+sOldY);
+				console.log("Vishaltranx:"+transX+" TolY: "+transY);
 
 
 				// console.log("Old X:"+sidOldX+" Old Y:"+sidOldY+" New X: " + paperX + " New Y: "+ paperY );
@@ -826,6 +843,10 @@ var ConferenceScheduler = SAGE2_App.extend( {
 
 				this.userInteraction[user.id].dragging = false;
 				this.userInteraction[user.id].stickyId = null;
+				this.userInteraction[user.id].stickyId[0] = 0;
+				this.userInteraction[user.id].stickyId[1] = 0;
+				this.userInteraction[user.id].stickyId[2] = 0;
+				this.userInteraction[user.id].stickyId[3] = 0;
 				console.log("Dropped Sticky at: "+this.array_sticky[sid][0]+" , "+this.array_sticky[sid][1]+" And Translate at : " + this.array_sticky[sid][4] + " , " + this.array_sticky[sid][5]);
 				console.log("Mouse Released: ->"+ JSON.stringify(this.userInteraction[user.id]));
 			}
