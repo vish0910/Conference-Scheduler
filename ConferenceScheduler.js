@@ -651,7 +651,7 @@ var ConferenceScheduler = SAGE2_App.extend( {
 
 
 	event: function(eventType, position, user, data, date) {
-		
+		var emptyArray = [0,0,0,0];
 
 		var mainDivW = this.mainDivW;
 		var mainDivH = this.mainDivH;
@@ -681,7 +681,7 @@ var ConferenceScheduler = SAGE2_App.extend( {
 
 		//Creating a new user object if it doesnot exists
 		if (this.userInteraction[user.id] === undefined) {
-			this.userInteraction[user.id] = {dragging: false, position: {x: 0, y: 0, tX: 0, tY: 0}, stickyId: null,stickyPast:[0,0,0,0]};
+			this.userInteraction[user.id] = {dragging: false, position: {x: 0, y: 0, tX: 0, tY: 0}, stickyId: null,stickyPast: emptyArray};
 		}
 
 		if (eventType === "pointerPress" && (data.button === "left")) {
@@ -720,7 +720,7 @@ var ConferenceScheduler = SAGE2_App.extend( {
 					this.userInteraction[user.id].stickyPast[0] = sticky_X;
 					this.userInteraction[user.id].stickyPast[1] = sticky_Y;
 					this.userInteraction[user.id].stickyPast[2] = tX;
-					this.userInteraction[user.id].stickyPast[3] = tX;
+					this.userInteraction[user.id].stickyPast[3] = tY;
 					// //Get Tranform values
 					// var transformString = this.sticky_object_array[stickyId].attr("transform")+'';
 					// var tXY = transformString.split(',');
@@ -802,14 +802,9 @@ var ConferenceScheduler = SAGE2_App.extend( {
 				// var tOldX = this.array_sticky[sid][4];
 				// var tOldY = this.array_sticky[sid][5];
 
-				// var oGX = tOldX+sOldX;
-				// var oGY = tOldY+sOldY;
-				//Calculating new Translate
-				// var transX = (paperX - Math.max(sOldX,tOldX));
-				// var transY = (paperY - Math.max(sOldY, tOldY));
 				// console.log("TransX:"+ transX+" TransY: "+transY);
-				var transX = paperX - rX;
-				var transY = paperY - rY;
+				var transX = paperX - sticky_X;
+				var transY = paperY - sticky_Y;
 
 
 				// this.array_sticky[sid][4] = transX;
@@ -835,19 +830,19 @@ var ConferenceScheduler = SAGE2_App.extend( {
 		else if (eventType === "pointerRelease" && (data.button === "left")) {
 			if(this.userInteraction[user.id].dragging){
 				//Update the new coordinates of the sticky
-				var sid = this.userInteraction[user.id].stickyId;
-				this.array_sticky[sid][0] = paperX;
-				this.array_sticky[sid][1] = paperY;
-				this.array_sticky[sid][2] = paperX + this.postItW; //Updateing X2 and Y2
-				this.array_sticky[sid][3] = paperY + this.postItH;
-
+				// var sid = this.userInteraction[user.id].stickyId;
+				// this.array_sticky[sid][0] = paperX;
+				// this.array_sticky[sid][1] = paperY;
+				// this.array_sticky[sid][2] = paperX + this.postItW; //Updateing X2 and Y2
+				// this.array_sticky[sid][3] = paperY + this.postItH;
+				console.log("Mouse Before: ->"+ JSON.stringify(this.userInteraction[user.id]));
 				this.userInteraction[user.id].dragging = false;
 				this.userInteraction[user.id].stickyId = null;
-				this.userInteraction[user.id].stickyId[0] = 0;
-				this.userInteraction[user.id].stickyId[1] = 0;
-				this.userInteraction[user.id].stickyId[2] = 0;
-				this.userInteraction[user.id].stickyId[3] = 0;
-				console.log("Dropped Sticky at: "+this.array_sticky[sid][0]+" , "+this.array_sticky[sid][1]+" And Translate at : " + this.array_sticky[sid][4] + " , " + this.array_sticky[sid][5]);
+				this.userInteraction[user.id].stickyPast = emptyArray;
+				// this.userInteraction[user.id].stickyId[1] = '0';
+				// this.userInteraction[user.id].stickyId[2] = '0';
+				// this.userInteraction[user.id].stickyId[3] = '0';
+				//console.log("Dropped Sticky at: "+this.array_sticky[sid][0]+" , "+this.array_sticky[sid][1]+" And Translate at : " + this.array_sticky[sid][4] + " , " + this.array_sticky[sid][5]);
 				console.log("Mouse Released: ->"+ JSON.stringify(this.userInteraction[user.id]));
 			}
 		}
