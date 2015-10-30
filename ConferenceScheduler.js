@@ -185,7 +185,7 @@ var ConferenceScheduler = SAGE2_App.extend( {
 
 
 		//Post-it Width and Height
-		var postItW = stickyReservoirW/6;
+		var postItW = Math.min(stickyReservoirW/6,cellH/3) ;
 		var postItH = postItW;
 
 		//Updating the postit values
@@ -205,12 +205,15 @@ var ConferenceScheduler = SAGE2_App.extend( {
 		//Creating Filter for shadow
 		var f = this.paper_main.filter(Snap.filter.blur(padding/3,padding/3));
 
+		
+
 		for(var theme in this.catagorizedStickies){
 			var cellActualY = cellY;
 			console.log("==>"+theme);
 			stickyColor = this.stickyColor[theme];
 			for(var k = 0 ; k < this.catagorizedStickies[theme].length;k++){
-				
+				//creating a group for group all elements of a sticky
+				var g_sticky = this.paper_main.g();
 				//Check if going out of bound
 				if(cellX+postItW> wrapAt){
 					cellX = paper_gridXEnd+sticky_offsetX+cellW;
@@ -227,15 +230,19 @@ var ConferenceScheduler = SAGE2_App.extend( {
 				//Pushing array of sticky info 
 				array_sticky.push([sticky_x1,sticky_y1,sticky_x2,sticky_y2,parseFloat('0.0'),parseFloat('0.0')]);
 
-				//Creating Sticky Shadow
-				this.sticky_shadow = this.paper_main.rect(array_sticky[counter][0]+(padding/3),array_sticky[counter][1]+(padding/3),this.postItW,this.postItH).attr({fill: "gray", filter: f});
-
-
 				//Creating default transform property
 				var defaultTransform = 'translate('+array_sticky[counter][4]+','+array_sticky[counter][5]+')';
+				//Creating Sticky Shadow
+				this.sticky_shadow = this.paper_main.rect(array_sticky[counter][0]+(padding/3),array_sticky[counter][1]+(padding/3),this.postItW,this.postItH).attr({fill: "gray", filter: f});
 				//Creating a sticky
 				this.sticky_1= this.paper_main.rect(array_sticky[counter][0],array_sticky[counter][1],this.postItW,this.postItH).attr({fill: stickyColor, transform : defaultTransform});
 				// console.log("Sticky Created at: "+array_sticky[counter][0] +": "+ array_sticky[counter][1] );
+				
+
+				//Add sticky and shadow to group.
+				g_sticky.add(this.sticky_shadow);
+				g_sticky.add(this.sticky_1);
+
 				//Pushing into sticky object
 				this.sticky_object_array.push(this.sticky_1);
 
@@ -572,15 +579,28 @@ var ConferenceScheduler = SAGE2_App.extend( {
 		var mainDivW = parseInt(this.element.style.width,  10);
 		var mainDivH = parseInt(this.element.style.height, 10);
 
+
+		//Calculating SVG viewport width and height
+		//UPDATE REQUIRED: make sure the aspect ratio when the the window is resized, and refreshed.
+		var paper_mainW = this.paper_mainW;
+		var paper_mainH = this.paper_mainH;
+
+
+
 		//Resizing the snap grid paper
 		this.paper_main.attr({
   			width: mainDivW,
-  			height: mainDivH
+  			height: mainDivH,
   		});
+
+
+
 
   		//Updating main window width and height 
 		this.mainDivW = mainDivW;
 		this.mainDivH = mainDivH;
+
+
 
 		//Refreshing
 		this.refresh(date);
@@ -685,7 +705,7 @@ var ConferenceScheduler = SAGE2_App.extend( {
 		}
 
 		if (eventType === "pointerPress" && (data.button === "left")) {
-
+			console.log("Mouse Clicked at:"+paperX+"),("+paperY );
 
 			// console.log("User:"+JSON.stringify(user));
 
@@ -759,6 +779,10 @@ var ConferenceScheduler = SAGE2_App.extend( {
 					// Snap.getElementByPoint(paperX, paperY).attr({fill: "Yellow"});
 
 					// var mat= this.sticky_object_array.getAttributeNS(null, "transform").slice(7,-1).split(' ');
+
+					this.g_sticky.attr({
+						transform: 'translate(10,10)'
+					});
 					console.log("done");
 				}
  
@@ -803,8 +827,8 @@ var ConferenceScheduler = SAGE2_App.extend( {
 				// var tOldY = this.array_sticky[sid][5];
 
 				// console.log("TransX:"+ transX+" TransY: "+transY);
-				var transX = paperX - sticky_X;
-				var transY = paperY - sticky_Y;
+				var transX = paperX - sticky_X - this.postItW;
+				var transY = paperY - sticky_Y- this.postItH;
 
 
 				// this.array_sticky[sid][4] = transX;
@@ -822,7 +846,7 @@ var ConferenceScheduler = SAGE2_App.extend( {
 
 				// console.log("Old X:"+sidOldX+" Old Y:"+sidOldY+" New X: " + paperX + " New Y: "+ paperY );
 				// console.log("Translate X:" + transX + " Translate Y:"+ transY);
-				this.sticky_object_array[sid].attr({
+				this.sticky_object_array[sid].parent().attr({
 						transform: 'translate('+transX+','+transY+')'
 					});
 			}
