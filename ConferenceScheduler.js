@@ -233,18 +233,18 @@ var ConferenceScheduler = SAGE2_App.extend( {
 				//Creating default transform property
 				var defaultTransform = 'translate('+array_sticky[counter][4]+','+array_sticky[counter][5]+')';
 				//Creating Sticky Shadow
-				this.sticky_shadow = this.paper_main.rect(array_sticky[counter][0]+(padding/3),array_sticky[counter][1]+(padding/3),this.postItW,this.postItH).attr({fill: "gray", filter: f});
+				var sticky_shadow = this.paper_main.rect(array_sticky[counter][0]+(padding/3),array_sticky[counter][1]+(padding/3),this.postItW,this.postItH).attr({fill: "gray", filter: f});
 				//Creating a sticky
-				this.sticky_1= this.paper_main.rect(array_sticky[counter][0],array_sticky[counter][1],this.postItW,this.postItH).attr({fill: stickyColor, transform : defaultTransform});
+				var sticky_1= this.paper_main.rect(array_sticky[counter][0],array_sticky[counter][1],this.postItW,this.postItH).attr({fill: stickyColor, transform : defaultTransform});
 				// console.log("Sticky Created at: "+array_sticky[counter][0] +": "+ array_sticky[counter][1] );
 				
 
 				//Add sticky and shadow to group.
-				g_sticky.add(this.sticky_shadow);
-				g_sticky.add(this.sticky_1);
+				g_sticky.add(sticky_shadow);
+				g_sticky.add(sticky_1);
 
 				//Pushing into sticky object
-				this.sticky_object_array.push(this.sticky_1);
+				this.sticky_object_array.push(sticky_1);
 
 				// Move x, y
 				cellX = sticky_x2;
