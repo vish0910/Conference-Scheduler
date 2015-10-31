@@ -237,11 +237,20 @@ var ConferenceScheduler = SAGE2_App.extend( {
 				//Creating a sticky
 				var sticky_1= this.paper_main.rect(array_sticky[counter][0],array_sticky[counter][1],this.postItW,this.postItH).attr({fill: stickyColor, transform : defaultTransform});
 				// console.log("Sticky Created at: "+array_sticky[counter][0] +": "+ array_sticky[counter][1] );
-				
+				var title = "Title: "+ this.catagorizedStickies[theme][k]['title'];
+				// var sticky_text_title = this.paper_main.text(array_sticky[counter][0]+(padding/3),array_sticky[counter][1]+(padding/3),title).attr({fill: "Green", "font-size": "0.2em"});  
+				var fobjectSVG = '<text x='+(array_sticky[counter][0]+(padding/3))+' y='+(array_sticky[counter][1]+(padding/3))+' width='+this.postItW+' height='+this.postItH+' fill = "red"><p>Hi<p></text>';
+
+				var frag = Snap.parse(fobjectSVG);
+
+				var g = this.paper_main.append( frag );
+
 
 				//Add sticky and shadow to group.
 				g_sticky.add(sticky_shadow);
 				g_sticky.add(sticky_1);
+				g_sticky.add(frag);
+				// g_sticky.add(sticky_text_title);
 
 				//Pushing into sticky object
 				this.sticky_object_array.push(sticky_1);
