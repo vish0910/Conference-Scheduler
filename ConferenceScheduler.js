@@ -237,7 +237,7 @@ var ConferenceScheduler = SAGE2_App.extend( {
 				//Creating a sticky
 				var sticky_1= this.paper_main.rect(array_sticky[counter][0],array_sticky[counter][1],this.postItW,this.postItH).attr({fill: stickyColor, transform : defaultTransform});
 				// console.log("Sticky Created at: "+array_sticky[counter][0] +": "+ array_sticky[counter][1] );
-				var title = "Title: "+ this.catagorizedStickies[theme][k]['title'];
+				// var title = "Title: "+ this.catagorizedStickies[theme][k]['title'];
 				// var sticky_text_title = this.paper_main.text(array_sticky[counter][0]+(padding/3),array_sticky[counter][1]+(padding/3),title).attr({fill: "Green", "font-size": "0.2em"});  
 				// var fobjectSVG = '<svg x='+(array_sticky[counter][0]+(padding/3))+' y='+(array_sticky[counter][1]+(padding/3))+' width='+this.postItW+' height='+this.postItH+'><text fill="red">HI</text></svg>';
 
@@ -248,14 +248,21 @@ var ConferenceScheduler = SAGE2_App.extend( {
 				//Add sticky and shadow to group.
 				g_sticky.add(sticky_shadow);
 				g_sticky.add(sticky_1);
+
+				var title =  "<strong>Title:</strong> "+ this.catagorizedStickies[theme][k]['title'];
+				var author = "<strong>Speaker:</strong> "+ this.catagorizedStickies[theme][k]['speaker'];
+				var htmlText = '<div xmlns="http://www.w3.org/1999/xhtml" style="color:black; font-size:3px">'
+									+ title + '<br><br>' + author+ '</div>';
+
+
+				//Creating a foreignObject which will have HTML wrappable text
 				var newElement = document.createElementNS("http://www.w3.org/2000/svg", 'foreignObject'); //Create a path in SVG's namespace
 					newElement.setAttribute('x', (array_sticky[counter][0]+(padding/3)));
        				newElement.setAttribute('y', (array_sticky[counter][1]+(padding/3)));
-       				newElement.setAttribute('width',(this.postItW-(padding/3)));
-       				newElement.setAttribute('height',(this.postItH-(padding/3)));
+       				newElement.setAttribute('width',(this.postItW - (2*padding/3)));
+       				newElement.setAttribute('height',(this.postItH - (2*padding/3)));
 
-					newElement.innerHTML = '<div xmlns="http://www.w3.org/1999/xhtml" style="color:black; font-size:3px">Here is a <strong>paragraph</strong> that requires <em>word wrap</em><br>Newline has now started </div>';
-				
+					newElement.innerHTML = htmlText;
 				var nodeFobj = 	g_sticky.append(newElement);
 
 				
@@ -799,42 +806,6 @@ var ConferenceScheduler = SAGE2_App.extend( {
 					// Snap.getElementByPoint(paperX, paperY).attr({fill: "Yellow"});
 
 					// var mat= this.sticky_object_array.getAttributeNS(null, "transform").slice(7,-1).split(' ');
-					var papsvg = this.paper_main; //Get svg element
-					var newElement = document.createElementNS("http://www.w3.org/2000/svg", 'foreignObject'); //Create a path in SVG's namespace
-
-
-					newElement.innerHTML = '<div xmlns="http://www.w3.org/1999/xhtml" style="color:pink">Here is a <strong>paragraph</strong> that requires <em>word wrap</em></div>';
-					// newElement.setAttribute("d","M 0 0 L 200 200"); //Set path's data
-					// newElement.style.stroke = "Pink"; //Set stroke colour
-					// newElement.style.strokeWidth = "5px"; //Set stroke width
-					// var svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-        			// var txt = document.createElementNS('http://www.w3.org/1999/xhtml', 'body');
-        			// txt.style.stroke = "Pink"; //Set stroke colour
-        			// 	txt.setAttribute('x', '100');
-       				// 	txt.setAttribute('y', '300');
-       				// 	txt.innerHTML = '<p style="color:pink;">HIIII</p>';
-       				// 	var t = document.createTextNode('<body><p>Here is a paragraph that requires word wrap</p></body>');
-        			// 			txt.appendChild(t);
-
-      //   				var el =  document.createElement("h1")
-						// 	el.id="title";
-						// 	el.innerHTML = "Some title";
-						// txt.appendChild(el);
-
-
-        						// svg.appendChild(txt);
-        						// newElement.appendChild(svg);
-        						// newElement.appendChild(txt);
-        						
-
-    //     		 <body xmlns="http://www.w3.org/1999/xhtml">
-    //   <div>Here is a <strong>paragraph</strong> that requires <em>word wrap</em></div>
-    // </body>
-
-
-
-    				// newElement.appendChild(svg);
-					papsvg.append(newElement);
 
 					// this.g_sticky.attr({
 					// 	transform: 'translate(10,10)'
