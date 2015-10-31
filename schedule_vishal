@@ -1,1 +1,13 @@
-Test Vishal
+Schedule and deliverables:
+	-implement/draw the grid to schedule conference --10/23 by 11pm (estimate:10 hrs)
+	-implement sticky pool --10/25 by 11pm (estimate:6 hrs)
+	-read event information from a file --10/26 by 11pm (estimate:4hrs)
+	-catagorize events based on their themes --10/27 11pm(estimate:3hrs)
+	-implement click event -- 10/29 by 11pm (estimate: 10hrs)
+	-create stickies and display it in the pool --10/30 by 11pm (estimate: 10hrs)
+	-implement drag event (part 1) -- 11/01 by 11pm (estimate: 14 hrs)
+	-implement coloring of stickies based on theme --11/02 by 11pm (estimate: 6hrs)
+	-implement drag event (part 2) --11/05 by 11pm (estimate: 16hrs)
+	-implement scalability (part 1) --11/07 by 11pm (estimate: 8 hrs)
+	-add data to stickies --11/08 by 11pm (estimate: 8hrs)
+	-choose good color scheme --11/09 by 9am (estimate: 6hrs)
