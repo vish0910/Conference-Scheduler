@@ -760,6 +760,7 @@ var ConferenceScheduler = SAGE2_App.extend( {
 
  					//Get Tranform values
 					var transformString = this.sticky_object_array[stickyId].attr("transform")+'';
+					console.log("This is Transform"+transformString);
 					var tXY = transformString.split(',');
 					var tX = parseFloat(tXY[0].slice(1),10);
 					var tY = parseFloat(tXY[1],10);
@@ -874,8 +875,11 @@ var ConferenceScheduler = SAGE2_App.extend( {
 				// console.log("Old X:"+sidOldX+" Old Y:"+sidOldY+" New X: " + paperX + " New Y: "+ paperY );
 				// console.log("Translate X:" + transX + " Translate Y:"+ transY);
 				this.sticky_object_array[sid].parent().attr({
-						transform: 'translate('+transX+','+transY+')'
+						transform: 'translate('+transX+','+transY+')',
 					});
+				// this.sticky_object_array[sid].parent().attr({
+				// 		transform: 'scale(1.2,1.2)',
+				// 	});
 			}
 		}
 		else if (eventType === "pointerRelease" && (data.button === "left")) {
