@@ -233,9 +233,10 @@ var ConferenceScheduler = SAGE2_App.extend( {
 
 				//Creating default transform property
 				var defaultTransform = 'translate('+array_sticky[counter][4]+','+array_sticky[counter][5]+')';
+				var defaultMatrix = 'matrix(1,0,0,1,'+array_sticky[counter][4]+','+array_sticky[counter][5]+')';
 
 				//creating a group for group all elements of a sticky
-				var g_sticky = this.paper_main.g().attr({ x: array_sticky[counter][0], y: array_sticky[counter][1], transform : defaultTransform});
+				var g_sticky = this.paper_main.g().attr({ x: array_sticky[counter][0], y: array_sticky[counter][1], transform : defaultMatrix});
 
 				// var svg_sticky = this.paper_main.svg(array_sticky[counter][0],array_sticky[counter][1],this.postItW+(padding/3),this.postItH+(padding/3)).attr({transform : defaultTransform});
 
@@ -243,11 +244,23 @@ var ConferenceScheduler = SAGE2_App.extend( {
 				var sticky_shadow = this.paper_main.rect(array_sticky[counter][0]+(padding/3),array_sticky[counter][1]+(padding/3),this.postItW,this.postItH).attr({fill: "gray", filter: f});
 				//Creating a sticky
 				var sticky_1= this.paper_main.rect(array_sticky[counter][0],array_sticky[counter][1],this.postItW,this.postItH).attr({fill: stickyColor, transform : defaultTransform});
+				
+				//Creating within  and svg
+				// //Creating Sticky Shadow
+				// var sticky_shadow = g_sticky.rect((padding/3),(padding/3),this.postItW,this.postItH).attr({fill: "gray", filter: f});
+				// //Creating a sticky
+				// var sticky_1= g_sticky.rect(0,0,this.postItW,this.postItH).attr({fill: stickyColor, transform : defaultTransform});
+				// // console.log("Sticky Created at: "+array_sticky[counter][0] +": "+ array_sticky[counter][1] );
+
+
+
+
+
 				// console.log("Sticky Created at: "+array_sticky[counter][0] +": "+ array_sticky[counter][1] );
 				// var title = "Title: "+ this.catagorizedStickies[theme][k]['title'];
 				// var sticky_text_title = this.paper_main.text(array_sticky[counter][0]+(padding/3),array_sticky[counter][1]+(padding/3),title).attr({fill: "Green", "font-size": "0.2em"});  
 				// var fobjectSVG = '<svg x='+(array_sticky[counter][0]+(padding/3))+' y='+(array_sticky[counter][1]+(padding/3))+' width='+this.postItW+' height='+this.postItH+'><text fill="red">HI</text></svg>';
-
+				// var svg_rect = svg_sticky.rect(0,0,10,10).attr({fill: "Green"});
 				// var frag = Snap.parse(fobjectSVG);
 
 				// var g = this.paper_main.append( frag );
@@ -255,7 +268,7 @@ var ConferenceScheduler = SAGE2_App.extend( {
 				//Add sticky and shadow to group.
 				g_sticky.add(sticky_shadow);
 				g_sticky.add(sticky_1);
-
+				// g_sticky.add(svg_sticky);
 				var title =  "<strong>Title:</strong> "+ this.catagorizedStickies[theme][k]['title'];
 				var author = "<strong>Speaker:</strong> "+ this.catagorizedStickies[theme][k]['speaker'];
 				var htmlText = '<div xmlns="http://www.w3.org/1999/xhtml" style="color:black; font-size:2px">'
@@ -312,7 +325,8 @@ var ConferenceScheduler = SAGE2_App.extend( {
   			width:   mainDivW,
   			//height:  parseInt(2.6*grid, 10) // DONOT DELETE For future reference
   			height:  mainDivH,
-  			// preserveAspectRatio: "xMinYMin meet" //For top left. Default is center.
+  			preserveAspectRatio: "xMinYMin meet" //For top left. Default is center.
+  			// preserveAspectRatio: 'none'
 		});
 
 		//Add the snap container to the div
@@ -712,7 +726,7 @@ findStickyId: function(paperX,paperY){
 
  			//Get Tranform values
 			var transformString = this.sticky_object_array[key].attr("transform")+'';
-			console.log("Total Rect sticky tranform:"+JSON.stringify(transformString));
+			console.log("Total Rect sticky tranform matrix:"+transformString);
 			var tXY = transformString.split(',');
 			var tX = parseFloat(tXY[0].slice(1),10);
 			var tY = parseFloat(tXY[1],10);
@@ -857,17 +871,33 @@ findStickyId: function(paperX,paperY){
 					// this.g_sticky.attr({
 					// 	transform: 'translate(10,10)'
 					// });
+					var bb = this.sticky_object_array[12].getBBox();
+					console.log("BBox:"+ JSON.stringify(bb));
+					// var xScale = (this.mainDivW/this.paper_mainW);
+					// var yScale = (this.mainDivH/this.paper_mainH);
+					var xScale = 0.5;
+					var yScale = 1;
 
-					this.sticky_object_array[12].attr({
-						transform: 'translate(20,20)',
+					console.log("xScale: "+ xScale + " yScale: "+ yScale);
+					console.log("g_gridcells: "+ JSON.stringify(this.g_gridcells.childNodes[0]));
+					var oldWidth = parseFloat(this.g_gridcells["childNodes"].attr("width")+'');
+					console.log("OldWidth:"+oldWidth);
+					// this.sticky_object_array[12].attr({
+					this.g_gridcells.childNodes[0].attr({
+
+						// transform: 'translate(20,20), scale(0.04)'
+						// transform: 'scale('+(bb.width/this.mainDivW)+','+(bb.height/this.mainDivH)+')'
+						
+						// transform: 'scale('+xScale+'%,'+yScale+'%)'
+						width: 2*oldWidth
+
 						// x: 10,
 						// y: 10,
 					});
-					this.sticky_object_array[12].parent().attr({
-						transform: 'translate(20,20)',
-						// x: 10,
-						// y: 10,
-					});
+					var bb = this.sticky_object_array[12].getBBox();
+					console.log("After BBox:"+ JSON.stringify(bb));
+				
+					// this.sticky_object_array[12].animate({ transform: 'r360,150,150' }, 3000, mina.bounce );
 
 					// console.log("Manipulating: ===>"+ JSON.stringify(this.sticky_object_array[12]));
 					// this.sticky_object_array[12].attr({
