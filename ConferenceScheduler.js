@@ -70,7 +70,7 @@ var ConferenceScheduler = SAGE2_App.extend( {
 
 		//Calculating SVG viewport width and height
 		//UPDATE REQUIRED: make sure the aspect ratio when the the window is resized, and refreshed.
-		this.paper_mainW = 1000; 
+		this.paper_mainW = 2000; 
 		this.paper_mainH = (this.paper_mainW * (this.mainDivH / this.mainDivW));
 
 		this.paper_gridXEnd = this.paper_mainW * this.gridWRatio;
@@ -1014,14 +1014,30 @@ findHolderId: function(paperX,paperY){
 					// var ggg = Snap.select("#g_gridcells");
 					// ggg.attr({transform: 'translate(10,10)'});
 
+
+
 					var bb = this.sticky_object_array[12].attr("transform");
-					console.log("After BBox:"+ JSON.stringify(bb));
+					// console.log("After BBox:"+ JSON.stringify(bb));
 				
 					// this.sticky_object_array[12].animate({ transform: 'r360,150,150' }, 3000, mina.bounce );
 
 					// console.log("Manipulating: ===>"+ JSON.stringify(this.sticky_object_array[12]));
+					var xS = this.sticky_object_array[12].attr("x");
+					var yS = this.sticky_object_array[12].attr("y");
+					console.log("xS:"+xS);
+					console.log("yS:"+yS);
+
 					// this.sticky_object_array[12].attr({
-					// 	transform: 'translate(20,20)'
+					// 	x: 0,
+					// 	y: 0
+					// });
+
+					this.sticky_object_array[12].attr({
+						transform: 'scale(2,1) translate(-'+(xS/2)+',0)'
+					});
+
+					// this.sticky_object_array[12].attr({
+					// 	transform: 'translate(-'+xS+',0)'
 					// });
 					// console.log("Modified: ===>"+ JSON.stringify(this.sticky_object_array[12]));
 					console.log("done");
