@@ -523,7 +523,8 @@ var ConferenceScheduler = SAGE2_App.extend( {
 				fill:        "rgba(68, 48, 255, 0.15)",
 				stroke:      "rgba(68, 48, 255, 0.80)",
 				strokeWidth: 2,
-				transform: defaultTransform
+				transform: defaultTransform,
+				holdsSticky: ""
 				});
 				//Add the cell to group
 				this.g_gridcells.add(cellRect);
@@ -784,7 +785,8 @@ findHolderId: function(paperX,paperY){
  			//Get X and Y co-ordinates
  			var holder_X = parseFloat(this.holder_object_array[key].attr("x"));
  			var holder_Y = parseFloat(this.holder_object_array[key].attr("y"));
-
+ 			var holdsSticky = this.holder_object_array[key].attr("holdsSticky");
+ 			console.log("holdsSticky:"+holdsSticky);
  			//Get Tranform values
 			var transformString = this.holder_object_array[key].attr("transform")+'';
 			console.log("Total Rect holder tranform matrix:"+transformString);
@@ -798,7 +800,11 @@ findHolderId: function(paperX,paperY){
 
 			//Find if the mouse click was on sticky
 			if(paperX >= rX && paperX < rX+holderW && paperY >= rY && paperY < rY+holderH){
-				result = key;
+				console.log("Found Sticky");
+				if(holdsSticky == null){
+					console.log("FALSE");
+					result = key;
+				}
 				break;
 			}
 			// console.log("**VSD**"+transformString);
@@ -1012,15 +1018,15 @@ findHolderId: function(paperX,paperY){
  				var sticky_X = stickyPast[0];
  				var sticky_Y = stickyPast[1];
 
- 				//Get Tranform values
-				var tX = stickyPast[2];
-				var tY = stickyPast[3];
+ 			// 	//Get Tranform values
+				// var tX = stickyPast[2];
+				// var tY = stickyPast[3];
 
-				//Find old coordinates by adding location and translation
-				var rX = sticky_X+tX;
-				var rY = sticky_Y+tY;
+				// //Find old coordinates by adding location and translation
+				// var rX = sticky_X+tX;
+				// var rY = sticky_Y+tY;
 
-				console.log("RX:"+rX+" : RY: "+ rY);
+				// console.log("RX:"+rX+" : RY: "+ rY);
 
 
 
@@ -1069,12 +1075,29 @@ findHolderId: function(paperX,paperY){
 				// this.array_sticky[sid][1] = paperY;
 				// this.array_sticky[sid][2] = paperX + this.postItW; //Updateing X2 and Y2
 				// this.array_sticky[sid][3] = paperY + this.postItH;
-				var holderId = this.findHolderId(paperX,paperY);
+				var holderId = this.findHolderId(paperX-this.postItW,paperY-this.postItH);
 				console.log("Returned: "+ holderId);
 				if(holderId == null){
 					this.sticky_object_array[sid].attr({
 						transform: 'translate(0,0)'
 					});
+				}
+				else{
+					var stickyPast = this.userInteraction[user.id].stickyPast;
+					//Get X and Y co-ordinates
+ 					var sticky_X = stickyPast[0];
+ 					var sticky_Y = stickyPast[1];
+					var hX = parseFloat(this.holder_object_array[holderId].attr("x"));
+					var hY = parseFloat(this.holder_object_array[holderId].attr("y"));
+					var transX = hX - sticky_X;
+					var transY = hY - sticky_Y;
+					this.sticky_object_array[sid].attr({
+						transform: 'translate('+transX+','+transY+')'
+					});
+					this.holder_object_array[holderId].attr({
+						holdsSticky: sid
+					});
+					// console.log("HOLDER: "+ )
 				}
 
 
