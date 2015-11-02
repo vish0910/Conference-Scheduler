@@ -17,9 +17,13 @@ var ConferenceScheduler = SAGE2_App.extend( {
 		//Create user interartion 
 		this.userInteraction = {};
 
+		// // move and resize callbacks
+		// this.resizeEvents = "continuous";
+		// this.moveEvents   = "continuous";
+
 		// move and resize callbacks
-		this.resizeEvents = "continuous";
-		this.moveEvents   = "continuous";
+		this.resizeEvents = "onfinish";
+		this.moveEvents   = "onfinish";
 
 
 		this.numberOfDays = 3;
@@ -60,6 +64,9 @@ var ConferenceScheduler = SAGE2_App.extend( {
 		//Get the Window height and width
 		this.mainDivW = parseInt(this.element.style.width,  10);
 		this.mainDivH = parseInt(this.element.style.height, 10);
+
+		this.orgMainDivW = this.mainDivW;
+		this.orgMainDivH = this.mainDivH;
 
 		//Calculating SVG viewport width and height
 		//UPDATE REQUIRED: make sure the aspect ratio when the the window is resized, and refreshed.
@@ -190,7 +197,7 @@ var ConferenceScheduler = SAGE2_App.extend( {
 
 
 		//Post-it Width and Height
-		var postItW = Math.min(stickyReservoirW/6,cellH/3) ;
+		var postItW = Math.min(stickyReservoirW/5,cellH/3) ;
 		var postItH = postItW;
 
 		//Updating the postit values
@@ -278,7 +285,7 @@ var ConferenceScheduler = SAGE2_App.extend( {
 				// g_sticky.add(svg_sticky);
 				var title =  "<strong>Title:</strong> "+ this.catagorizedStickies[theme][k]['title'];
 				var author = "<strong>Speaker:</strong> "+ this.catagorizedStickies[theme][k]['speaker'];
-				var htmlText = '<div xmlns="http://www.w3.org/1999/xhtml" style="color:black; font-size:2px">'
+				var htmlText = '<div xmlns="http://www.w3.org/1999/xhtml" style="color:black; font-size: 2px">'
 									+ title + '<br><br>' + author+ '</div>';
 
 
@@ -334,7 +341,7 @@ var ConferenceScheduler = SAGE2_App.extend( {
   			width:   mainDivW,
   			//height:  parseInt(2.6*grid, 10) // DONOT DELETE For future reference
   			height:  mainDivH,
-  			preserveAspectRatio: "xMinYMin meet" //For top left. Default is center.
+  			// preserveAspectRatio: "xMaxYMax meet" //For top left. Default is center.
   			// preserveAspectRatio: 'none'
 		});
 
@@ -428,7 +435,7 @@ var ConferenceScheduler = SAGE2_App.extend( {
 				stroke:      "rgba(68, 48, 255, 0.80)",
 				strokeWidth: 3
 				});
-			var dayText = this.paper_main.text(cellX+(cellW*0.5),cellY+(cellH*0.5),"Day "+(k+1)).attr({fill: "Green", "text-anchor" : "middle"});
+			var dayText = this.paper_main.text(cellX+(cellW*0.5),cellY+(dayH*0.5),"Day "+(k+1)).attr({fill: "Green", "text-anchor" : "middle"});
 			//Add header to the group
 			this.g_gridHeaders.add(headRect);
 			this.g_gridHeaders.add(dayPartition);
@@ -459,7 +466,7 @@ var ConferenceScheduler = SAGE2_App.extend( {
 				stroke:      "rgba(68, 48, 255, 0.80)",
 				strokeWidth: 3
 				});
-			var sessionText = this.paper_main.text(cellX+(sessionW*0.5),cellY+(cellH*0.5),"Session "+(k+1)).attr({fill: "Green", "text-anchor" : "middle"});
+			var sessionText = this.paper_main.text(cellX+(sessionW*0.5),cellY+(cellH*0.7),"Session "+(k+1)).attr({fill: "Green", "text-anchor" : "middle"});
 			//Add header to the group
 			this.g_gridHeaders.add(sessionRect);
 			this.g_gridHeaders.add(sessionText);
@@ -479,7 +486,7 @@ var ConferenceScheduler = SAGE2_App.extend( {
 				stroke:      "rgba(68, 48, 255, 0.80)",
 				strokeWidth: 3
 				});
-			var hallText = this.paper_main.text(cellX+(cellW*0.5),cellY+(cellH*0.5),"Hall "+(((k)%this.numberOfHalls)+1)).attr({fill: "Green", "text-anchor" : "middle"});
+			var hallText = this.paper_main.text(cellX+(cellW*0.5),cellY+(cellH*0.7),"Hall "+(((k)%this.numberOfHalls)+1)).attr({fill: "Green", "text-anchor" : "middle", fontFamily: "Tahoma, Geneva, sans-serif"});
 			//Add header to the group
 			this.g_gridHeaders.add(hallRect);
 			this.g_gridHeaders.add(hallText);
@@ -744,6 +751,22 @@ findStickyId: function(paperX,paperY){
 		var result = null;
 		var postItW = this.postItW;
 		var postItH = this.postItH;
+
+		var orgMainDivW = this.orgMainDivW;
+		var orgMainDivH = this.orgMainDivH;
+
+		var mainDivW = this.mainDivW;
+		var mainDivH = this.mainDivH;
+
+		// console.log("ORGW: "+orgMainDivW+ " and MainW: "+mainDivW);
+		// var paperX = (actualpaperX/mainDivW) * orgMainDivW; 
+		// var paperY = (actualpaperY/mainDivH) * orgMainDivH;
+	
+		// console.log("actual X:"+actualpaperX+"actual Y:"+ actualpaperY);
+		// console.log("Coverted X:"+paperX+"Converted Y:"+ paperY);
+		// if(actualpaperY != paperX || actualpaperY != paperY){
+		// 	    this.paper_main.rect(actualpaperX,actualpaperY,postItW,postItH).attr({stroke: 'white', fill: 'rgba(12,13,44,0.1)'});
+		// }
 		for (var key in this.sticky_object_array) {
  			// console.log(">%^^^^$#%"+ JSON.stringify(this.sticky_object_array[key]));
 
@@ -761,7 +784,7 @@ findStickyId: function(paperX,paperY){
 			//Find resulting co ordinates by adding location and translation
 			var rX = sticky_X+tX;
 			var rY = sticky_Y+tY;
-
+			
 			//Find if the mouse click was on sticky
 			if(paperX >= rX && paperX < rX+postItW && paperY >= rY && paperY < rY+postItH){
 				result = key;
@@ -787,10 +810,10 @@ findHolderId: function(paperX,paperY){
  			var holder_X = parseFloat(this.holder_object_array[key].attr("x"));
  			var holder_Y = parseFloat(this.holder_object_array[key].attr("y"));
  			var holdsSticky = this.holder_object_array[key].attr("holdsSticky");
- 			console.log("holdsSticky:"+holdsSticky);
+ 			// console.log("holdsSticky:"+holdsSticky);
  			//Get Tranform values
 			var transformString = this.holder_object_array[key].attr("transform")+'';
-			console.log("Total Rect holder tranform matrix:"+transformString);
+			// console.log("Total Rect holder tranform matrix:"+transformString);
 			var tXY = transformString.split(',');
 			var tX = parseFloat(tXY[0].slice(1),10);
 			var tY = parseFloat(tXY[1],10);
@@ -801,9 +824,9 @@ findHolderId: function(paperX,paperY){
 
 			//Find if the mouse click was on sticky
 			if(paperX >= rX && paperX < rX+holderW && paperY >= rY && paperY < rY+holderH){
-				console.log("Found Sticky");
+				// console.log("Found Sticky");
 				if(holdsSticky == null){
-					console.log("FALSE");
+					// console.log("FALSE");
 					result = key;
 				}
 				break;
@@ -860,6 +883,9 @@ findHolderId: function(paperX,paperY){
 		}
 
 		if (eventType === "pointerPress" && (data.button === "left")) {
+			console.log("Width:=>"+mainDivW);
+			this.paper_main.rect(paperX,paperY,10,10).attr({stroke: 'white', fill: 'rgba(12,13,44,0.1)'});
+
 			console.log("Mouse Clicked at:"+paperX+"),("+paperY );
 
 			// console.log("User:"+JSON.stringify(user));
@@ -867,10 +893,10 @@ findHolderId: function(paperX,paperY){
 
 			if( paperX >= 0 && paperX < paper_gridXEnd && paperY>=0 && paperY<=paper_gridYEnd){ // Grid Section
 				console.log("Clicked in Grid Section("+ x + ","+ y +")");
-				var holderId = this.findHolderId(paperX,paperY);
-				console.log("Returned: "+ holderId);
-				// if(stickyId != null){
-				// console.log("")}
+				// var holderId = this.findHolderId(paperX,paperY);
+				// console.log("Returned: "+ holderId);
+				// // if(stickyId != null){
+				// // console.log("")}
 			}
 			else if(paperX >= paper_gridXEnd && paperX < paper_mainW && paperY>=0 && paperY<=paper_mainH){ // Sticky Section
 				console.log("Clicked in Sticky Section("+ x+ ","+ y +")");
@@ -943,9 +969,9 @@ findHolderId: function(paperX,paperY){
 					// 	transform: 'translate(10,10)'
 					// });
 
-					var myMatrix = new Snap.Matrix();
-					myMatrix.scale(2,1);            // play with scaling before and after the rotate 
-					myMatrix.translate(0,0);      // this translate will not be applied to the rotation
+					// var myMatrix = new Snap.Matrix();
+					// myMatrix.scale(2,1);            // play with scaling before and after the rotate 
+					// myMatrix.translate(0,0);      // this translate will not be applied to the rotation
 
 					// var bb = this.sticky_object_array[12].attr("transform")["globalMatrix"];
 					// console.log("BBox:"+ JSON.stringify(this.sticky_object_array[12].attr("transform")));
@@ -973,18 +999,18 @@ findHolderId: function(paperX,paperY){
 					// var oldWidth = parseFloat(this.g_gridcells["childNodes"].attr("width")+'');
 					// console.log("OldWidth:"+oldWidth);
 					// this.sticky_object_array[12].setAttributeNS(null, "transform", newMatrix);
-					this.sticky_object_array[12].attr({
-					// this.g_gridcells.attr({
+					// this.sticky_object_array[12].attr({
+					// // this.g_gridcells.attr({
 
-						// transform: 'translate(20,20), scale(0.04)'
-						// transform: 'scale('+(bb.width/this.mainDivW)+','+(bb.height/this.mainDivH)+')'
+					// 	// transform: 'translate(20,20), scale(0.04)'
+					// 	// transform: 'scale('+(bb.width/this.mainDivW)+','+(bb.height/this.mainDivH)+')'
 						
-						transform: myMatrix
-						// width: 2*oldWidth
+					// 	transform: myMatrix
+					// 	// width: 2*oldWidth
 
-						// x: 10,
-						// y: 10,
-					});
+					// 	// x: 10,
+					// 	// y: 10,
+					// });
 					// var ggg = Snap.select("#g_gridcells");
 					// ggg.attr({transform: 'translate(10,10)'});
 
@@ -1079,6 +1105,7 @@ findHolderId: function(paperX,paperY){
 				var holderId = this.findHolderId(paperX-this.postItW,paperY-this.postItH);
 				console.log("Returned: "+ holderId);
 				if(holderId == null){
+					
 					this.sticky_object_array[sid].attr({
 						transform: 'translate(0,0)'
 					});
