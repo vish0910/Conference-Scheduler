@@ -1135,9 +1135,16 @@ findHolderId: function(paperX,paperY){
 					var hY = parseFloat(this.holder_object_array[holderId].attr("y"));
 					var transX = hX - sticky_X;
 					var transY = hY - sticky_Y;
+					
+					//Translate and Scale 
 					this.sticky_object_array[sid].attr({
-						transform: 'translate('+transX+','+transY+')'
+						transform: 'scale(2,1) translate('+((transX-sticky_X)/2)+','+transY+')'
 					});
+
+					// this.sticky_object_array[sid].attr({
+					// 	transform: 'translate('+transX+','+transY+')'
+					// });
+
 					this.holder_object_array[holderId].attr({
 						holdsSticky: sid
 					});
