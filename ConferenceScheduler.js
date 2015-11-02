@@ -52,6 +52,11 @@ var ConferenceScheduler = SAGE2_App.extend( {
 		this.postItW = 0;
 		this.postItH = 0;
 
+		//Size of HolderCells
+		this.holderW = 0;
+		this.holderH = 0;
+
+
 		//Get the Window height and width
 		this.mainDivW = parseInt(this.element.style.width,  10);
 		this.mainDivH = parseInt(this.element.style.height, 10);
@@ -205,6 +210,8 @@ var ConferenceScheduler = SAGE2_App.extend( {
 		//Creating Filter for shadow
 		var f = this.paper_main.filter(Snap.filter.blur(padding/3,padding/3));
 
+		this.g_allSticky = this.paper_main.g();
+		this.g_allSticky.attr({id: "g_allSticky"});
 		
 
 		for(var theme in this.catagorizedStickies){
@@ -294,6 +301,8 @@ var ConferenceScheduler = SAGE2_App.extend( {
 				//Pushing into sticky group object
 				this.sticky_object_array.push(g_sticky);
 
+				this.g_allSticky.add(g_sticky);
+
 				// Move x, y
 				cellX = sticky_x2;
 
@@ -367,6 +376,7 @@ var ConferenceScheduler = SAGE2_App.extend( {
 
 		//Testing how gropping works
 		this.g_partition = this.paper_main.g();
+		this.g_partition.attr({ id: 'g_partition'});
 		this.g_partition.add(this.rect_grid, this.rect_sticky, this.rect_control);
 
 	},
@@ -400,7 +410,7 @@ var ConferenceScheduler = SAGE2_App.extend( {
 
 		//Creating group of headers
 		this.g_gridHeaders = this.paper_main.g();
-
+		this.g_gridHeaders.attr({ id: 'g_gridHeaders'});
 		//Height of Day Headers
 		var dayH = cellW*0.25;
 
@@ -451,6 +461,7 @@ var ConferenceScheduler = SAGE2_App.extend( {
 			var sessionText = this.paper_main.text(cellX+(sessionW*0.5),cellY+(cellH*0.5),"Session "+(k+1)).attr({fill: "Green", "text-anchor" : "middle"});
 			//Add header to the group
 			this.g_gridHeaders.add(sessionRect);
+			this.g_gridHeaders.add(sessionText);
 			cellY += cellH;
 		}
 		
@@ -470,6 +481,7 @@ var ConferenceScheduler = SAGE2_App.extend( {
 			var hallText = this.paper_main.text(cellX+(cellW*0.5),cellY+(cellH*0.5),"Hall "+(((k)%this.numberOfHalls)+1)).attr({fill: "Green", "text-anchor" : "middle"});
 			//Add header to the group
 			this.g_gridHeaders.add(hallRect);
+			this.g_gridHeaders.add(hallText);
 			cellX += cellW;
 		}
 
@@ -491,9 +503,17 @@ var ConferenceScheduler = SAGE2_App.extend( {
 		cellX = paper_tableX1;
 		cellY = paper_tableY1;
 
+		//Set the global Holder Size
+		this.holderW = cellW;
+		this.holderH = cellH;
 
 		//Create a group for grid cell
 		this.g_gridcells = this.paper_main.g();
+		this.g_gridcells.attr({ id : 'g_gridcells'})
+
+		//Creating array of holders
+		this.holder_object_array = [];
+		var defaultTransform = 'translate(0,0)';
 
 		//Loop that creates rectangles
 		for(i = 0;i<this.numberOfRows;i++){
@@ -502,10 +522,13 @@ var ConferenceScheduler = SAGE2_App.extend( {
 				var cellRect = this.paper_main.rect(cellX, cellY, cellW, cellH).attr({
 				fill:        "rgba(68, 48, 255, 0.15)",
 				stroke:      "rgba(68, 48, 255, 0.80)",
-				strokeWidth: 2
+				strokeWidth: 2,
+				transform: defaultTransform
 				});
 				//Add the cell to group
 				this.g_gridcells.add(cellRect);
+				//Pusing the rect in holder
+				this.holder_object_array.push(cellRect);
 				//Update value of the x-coordinate
 				cellX +=cellW;
 			}
@@ -549,6 +572,7 @@ var ConferenceScheduler = SAGE2_App.extend( {
 
 		//Creating group for theme headers
 		this.g_themeHeaders = this.paper_main.g();
+		this.g_themeHeaders.attr({ id: 'g_themeHeaders'});
 
 		//Creating Theme headers
 		for(var k = 0; k<this.numberOfThemes;k++){
@@ -558,7 +582,8 @@ var ConferenceScheduler = SAGE2_App.extend( {
 				strokeWidth: 3
 				});
 			var  themeText = this.paper_main.text(cellX+(cellW*0.5),cellY+(cellH*0.5),"Theme "+k).attr({fill: "Green", "text-anchor" : "middle"});
-			this.g_themeHeaders.add(themeRect)
+			this.g_themeHeaders.add(themeRect);
+			this.g_themeHeaders.add(themeText);
 			cellY += cellH;
 		}
 
@@ -575,7 +600,7 @@ var ConferenceScheduler = SAGE2_App.extend( {
 
 		//Creating group for theme Reservoir
 		this.g_themeReservoir = this.paper_main.g();
-
+		this.g_themeReservoir.attr({id:'g_themeReservoir'});
 		//Creating Theme Reservoirs
 		for(var k = 0; k<this.numberOfThemes;k++){
 			var themeRect = this.paper_main.rect(cellX, cellY, cellW, cellH).attr({
@@ -749,6 +774,41 @@ findStickyId: function(paperX,paperY){
 	},
 
 
+findHolderId: function(paperX,paperY){
+		var result = null;
+		var holderW = this.holderW;
+		var holderH = this.holderH;
+		for (var key in this.holder_object_array) {
+ 			// console.log(">%^^^^$#%"+ JSON.stringify(this.sticky_object_array[key]));
+
+ 			//Get X and Y co-ordinates
+ 			var holder_X = parseFloat(this.holder_object_array[key].attr("x"));
+ 			var holder_Y = parseFloat(this.holder_object_array[key].attr("y"));
+
+ 			//Get Tranform values
+			var transformString = this.holder_object_array[key].attr("transform")+'';
+			console.log("Total Rect holder tranform matrix:"+transformString);
+			var tXY = transformString.split(',');
+			var tX = parseFloat(tXY[0].slice(1),10);
+			var tY = parseFloat(tXY[1],10);
+
+			//Find resulting co ordinates by adding location and translation
+			var rX = holder_X+tX;
+			var rY = holder_Y+tY;
+
+			//Find if the mouse click was on sticky
+			if(paperX >= rX && paperX < rX+holderW && paperY >= rY && paperY < rY+holderH){
+				result = key;
+				break;
+			}
+			// console.log("**VSD**"+transformString);
+			// console.log("tsdX:"+tX+ "tsdY: "+tY);
+
+ 		}
+
+		return result;
+	},
+
 
 
 
@@ -800,6 +860,10 @@ findStickyId: function(paperX,paperY){
 
 			if( paperX >= 0 && paperX < paper_gridXEnd && paperY>=0 && paperY<=paper_gridYEnd){ // Grid Section
 				console.log("Clicked in Grid Section("+ x + ","+ y +")");
+				var holderId = this.findHolderId(paperX,paperY);
+				console.log("Returned: "+ holderId);
+				// if(stickyId != null){
+				// console.log("")}
 			}
 			else if(paperX >= paper_gridXEnd && paperX < paper_mainW && paperY>=0 && paperY<=paper_mainH){ // Sticky Section
 				console.log("Clicked in Sticky Section("+ x+ ","+ y +")");
@@ -871,30 +935,53 @@ findStickyId: function(paperX,paperY){
 					// this.g_sticky.attr({
 					// 	transform: 'translate(10,10)'
 					// });
-					var bb = this.sticky_object_array[12].getBBox();
-					console.log("BBox:"+ JSON.stringify(bb));
-					// var xScale = (this.mainDivW/this.paper_mainW);
-					// var yScale = (this.mainDivH/this.paper_mainH);
-					var xScale = 0.5;
-					var yScale = 1;
 
-					console.log("xScale: "+ xScale + " yScale: "+ yScale);
-					console.log("g_gridcells: "+ JSON.stringify(this.g_gridcells.childNodes[0]));
-					var oldWidth = parseFloat(this.g_gridcells["childNodes"].attr("width")+'');
-					console.log("OldWidth:"+oldWidth);
-					// this.sticky_object_array[12].attr({
-					this.g_gridcells.childNodes[0].attr({
+					var myMatrix = new Snap.Matrix();
+					myMatrix.scale(2,1);            // play with scaling before and after the rotate 
+					myMatrix.translate(0,0);      // this translate will not be applied to the rotation
+
+					// var bb = this.sticky_object_array[12].attr("transform")["globalMatrix"];
+					// console.log("BBox:"+ JSON.stringify(this.sticky_object_array[12].attr("transform")));
+					// // var currentMatrix = bb.slice(7,-1).split(',');
+     // 				var currentMatrix = [0,0,0,0,0,0];
+     // 				var i=0
+     // 				for(key in bb) {
+     // 					console.log(i+" : "+ bb[key])
+     //  					currentMatrix[i] = parseFloat(bb[key]);
+     //  					i++;
+     //  					if(i>5)
+     //  						break;
+     //  				}
+     //  				currentMatrix[0] =2;
+     //  				currentMatrix[3] = 2;
+     //  				var newMatrix = "matrix(" + currentMatrix.join(',') + ")";
+     //  				console.log("new matrix ="+ newMatrix);
+					// // var xScale = (this.mainDivW/this.paper_mainW);
+					// // var yScale = (this.mainDivH/this.paper_mainH);
+					// var xScale = (((this.postItW/paper_mainW)*200)*paper_mainW)/mainDivW;
+					// var yScale = 1;
+
+					// console.log("xScale: "+ xScale + " yScale: "+ yScale);
+					// console.log("g_gridcells: "+ JSON.stringify(this.g_gridcells.childNodes[0]));
+					// var oldWidth = parseFloat(this.g_gridcells["childNodes"].attr("width")+'');
+					// console.log("OldWidth:"+oldWidth);
+					// this.sticky_object_array[12].setAttributeNS(null, "transform", newMatrix);
+					this.sticky_object_array[12].attr({
+					// this.g_gridcells.attr({
 
 						// transform: 'translate(20,20), scale(0.04)'
 						// transform: 'scale('+(bb.width/this.mainDivW)+','+(bb.height/this.mainDivH)+')'
 						
-						// transform: 'scale('+xScale+'%,'+yScale+'%)'
-						width: 2*oldWidth
+						transform: myMatrix
+						// width: 2*oldWidth
 
 						// x: 10,
 						// y: 10,
 					});
-					var bb = this.sticky_object_array[12].getBBox();
+					// var ggg = Snap.select("#g_gridcells");
+					// ggg.attr({transform: 'translate(10,10)'});
+
+					var bb = this.sticky_object_array[12].attr("transform");
 					console.log("After BBox:"+ JSON.stringify(bb));
 				
 					// this.sticky_object_array[12].animate({ transform: 'r360,150,150' }, 3000, mina.bounce );
@@ -977,11 +1064,21 @@ findStickyId: function(paperX,paperY){
 		else if (eventType === "pointerRelease" && (data.button === "left")) {
 			if(this.userInteraction[user.id].dragging){
 				//Update the new coordinates of the sticky
-				// var sid = this.userInteraction[user.id].stickyId;
+				var sid = this.userInteraction[user.id].stickyId;
 				// this.array_sticky[sid][0] = paperX;
 				// this.array_sticky[sid][1] = paperY;
 				// this.array_sticky[sid][2] = paperX + this.postItW; //Updateing X2 and Y2
 				// this.array_sticky[sid][3] = paperY + this.postItH;
+				var holderId = this.findHolderId(paperX,paperY);
+				console.log("Returned: "+ holderId);
+				if(holderId == null){
+					this.sticky_object_array[sid].attr({
+						transform: 'translate(0,0)'
+					});
+				}
+
+
+
 				console.log("Mouse Before: ->"+ JSON.stringify(this.userInteraction[user.id]));
 				this.userInteraction[user.id].dragging = false;
 				this.userInteraction[user.id].stickyId = null;
