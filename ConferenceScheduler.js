@@ -417,11 +417,12 @@ var ConferenceScheduler = SAGE2_App.extend( {
 		var cellX = paper_tableX1;
 		var cellY = paper_tableY1 - cellH - dayH;
 
-		
+		//Find length of the partition line
+		var partitionLength = cellY+dayH+(cellH*(this.numberOfRows+1));
 
 		//Printing Day1, Day2 etc.
 		for(var k = 0;k<this.numberOfDays;k++){
-			var dayPartition = this.paper_main.line(cellX, cellY,cellX,paper_tableY2).attr({ stroke: "Pink", strokeWidth: 4});
+			var dayPartition = this.paper_main.line(cellX, cellY,cellX,partitionLength).attr({ stroke:"rgba(68, 48, 255, 0.80)", strokeWidth: 4});
 			var headRect = this.paper_main.rect(cellX, cellY, cellW, dayH).attr({
 				fill:        "rgba(68, 48, 255, 0.15)",
 				stroke:      "rgba(68, 48, 255, 0.80)",
@@ -434,7 +435,7 @@ var ConferenceScheduler = SAGE2_App.extend( {
 			cellX += cellW;
 		}
 		//Drawing the last line and add it to the group
-		var dayPartition = this.paper_main.line(cellX, cellY,cellX,paper_tableY2).attr({ stroke: "Pink", strokeWidth: 4});
+		var dayPartition = this.paper_main.line(cellX, cellY,cellX,partitionLength).attr({ stroke:"rgba(68, 48, 255, 0.80)", strokeWidth: 4});
 		this.g_gridHeaders.add(dayPartition);
 
 
@@ -493,8 +494,8 @@ var ConferenceScheduler = SAGE2_App.extend( {
 		var imgRect = this.paper_main.rect(imgX, imgY, imgW, imgH).attr({
 				fill:        "rgba(68, 48, 255, 0.15)",
 				// stroke:      "rgba(68, 48, 255, 0.80)",
-				stroke: "Yellow",
-				strokeWidth: 1
+				stroke: "rgba(68, 48, 255, 0.80)",
+				strokeWidth: 3
 				});
 		this.g_gridHeaders.add(imgRect);
 
