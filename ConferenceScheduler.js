@@ -47,6 +47,8 @@ var ConferenceScheduler = SAGE2_App.extend( {
 		this.gridWRatio = 0.6;
 		this.gridHRatio = 0.8;
 
+		this.toggle = true;
+
 		//Button Width and Height
 
 		this.buttonW = 50;
@@ -251,7 +253,7 @@ var ConferenceScheduler = SAGE2_App.extend( {
 
 				//creating a group for group all elements of a sticky
 				var g_sticky = this.paper_main.g().attr({ x: array_sticky[counter][0], y: array_sticky[counter][1], transform : defaultMatrix});
-
+				g_sticky.attr({id: "g_sticky"+counter});
 				// var svg_sticky = this.paper_main.svg(array_sticky[counter][0],array_sticky[counter][1],this.postItW+(padding/3),this.postItH+(padding/3)).attr({transform : defaultTransform});
 
 				//Creating Sticky Shadow
@@ -1036,17 +1038,32 @@ findHolderId: function(paperX,paperY){
 					// 	transform: 'scale(4,1) translate(-'+(xS-(xS/4))+',0)'
 					// });
 
+					if(this.toggle == true){
+						var myMatrix = new Snap.Matrix();
+						myMatrix.scale(3.5,1);            // play with scaling before and after the rotate 
+						// myMatrix.translate(-(xS-(xS/2)),0);
+						myMatrix.translate(-(xS-(xS/3.5))+(-10),0);
+						// myMatrix.translate(10,0);
 
-					var myMatrix = new Snap.Matrix();
-					myMatrix.scale(3.5,1);            // play with scaling before and after the rotate 
-					// myMatrix.translate(-(xS-(xS/2)),0);
-					myMatrix.translate(-(xS-(xS/3.5))+(-10),0);
-					// myMatrix.translate(10,0);
-
-					this.sticky_object_array[12].attr({
+						this.sticky_object_array[12].attr({
 						transform: myMatrix
-					});
-					console.log("ATTribute:"+ this.sticky_object_array[12].attr("transform"));
+						});
+						console.log("ATTribute:"+ this.sticky_object_array[12].attr("transform"));
+						this.toggle = false;
+					}
+					else{
+						var myMatrix = new Snap.Matrix();
+						myMatrix.scale(1,1);
+						// myMatrix.translate(0,0); //Not required
+
+						this.sticky_object_array[12].attr({
+						transform: myMatrix
+						});
+						console.log("ATTribute:"+ JSON.stringify(this.sticky_object_array[12]));
+						var child = document.getElementById("g_sticky12").childNodes;
+						console.log("ATTribute:"+ JSON.stringify(child));
+						this.toggle = true;
+					}
 					// this.sticky_object_array[12].attr({
 					// 	transform: 'translate(-'+xS+',0)'
 					// });
