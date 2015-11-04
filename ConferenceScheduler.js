@@ -78,8 +78,12 @@ var ConferenceScheduler = SAGE2_App.extend( {
 		this.paper_gridXEnd = this.paper_mainW * this.gridWRatio;
 		this.paper_gridYEnd = this.paper_mainH * this.gridHRatio;
 
+		//Default values of workzone. Will be updated on resize
+		this.workablePixelW = this.orgMainDivW;
+		this.offsetWorkZoneX = 0;
+		this.workablePixelH = this.orgMainDivH;
+		this.offsetWorkZoneY = 0;
 		
-
 		//Calling personal methods
 
 		this.readPaperList();
@@ -343,7 +347,7 @@ var ConferenceScheduler = SAGE2_App.extend( {
   			width:   mainDivW,
   			//height:  parseInt(2.6*grid, 10) // DONOT DELETE For future reference
   			height:  mainDivH,
-  			preserveAspectRatio: "xMinYMin meet" //For top left. Default is center.
+  			// preserveAspectRatio: "xMinYMin meet" //For top left. Default is center.
   			// preserveAspectRatio: 'none'
 		});
 
@@ -686,6 +690,7 @@ var ConferenceScheduler = SAGE2_App.extend( {
 		this.mainDivH = mainDivH;
 
 
+		this.updatePositionTracker();
 
 		//Refreshing
 		this.refresh(date);
@@ -801,7 +806,7 @@ findStickyId: function(paperX,paperY){
 	},
 
 
-findHolderId: function(paperX,paperY){
+	findHolderId: function(paperX,paperY){
 		var result = null;
 		var holderW = this.holderW;
 		var holderH = this.holderH;
@@ -844,6 +849,100 @@ findHolderId: function(paperX,paperY){
 
 
 
+	updatePositionTracker: function() {
+
+		var mainDivW = this.mainDivW;
+		var mainDivH = this.mainDivH;
+		//=>Added
+		var orgMainDivW = this.orgMainDivW;
+		var orgMainDivH = this.orgMainDivH;
+
+		// var offsetW = ((mainDivW - orgMainDivW)/2)/mainDivW * paper_mainW;
+		// var offsetH = ((mainDivH - orgMainDivH)/2)/mainDivH * paper_mainH;
+
+
+		this.paper_gridXEnd = this.paper_mainW * this.gridWRatio;
+		this.paper_gridYEnd = this.paper_mainH * this.gridHRatio;
+		//<==
+		//Getting ends of grid section
+		var paper_gridXEnd = this.paper_gridXEnd;
+		var paper_gridYEnd = this.paper_gridYEnd;
+
+		//Getting svg bounds
+		var paper_mainW = this.paper_mainW;
+		var paper_mainH = this.paper_mainH;
+
+		//Getting the size of sticky section
+		var paper_stickyW = paper_mainW - paper_gridXEnd;
+		var paper_stickyH = paper_mainH;
+
+		//Getting size of control
+		var paper_controlW = paper_gridXEnd;
+		var paper_controlH = paper_mainH - paper_gridYEnd;
+
+		// var x = position.x;
+		// var y = position.y;
+
+		var workablePixelW;
+		var workablePixelH;
+
+		var originalHWRatio = orgMainDivH/orgMainDivW;
+
+		var newHWRatio = mainDivH/mainDivW;
+
+		var offsetWorkZoneX = 0;
+		var offsetWorkZoneY = 0;
+
+		if(newHWRatio<originalHWRatio){
+			// console.log("Width has Black Patch");
+			// console.log("Difference:"+(originalHWRatio-newHWRatio));
+			// var diff = 1 - (originalHWRatio-newHWRatio);
+			// var oldWtoNewWRatio = orgMainDivW/mainDivW;
+			var newHtoOldHRatio = mainDivH/orgMainDivH;
+
+			// var diffRatio = (1 - newHtoOldHRatio);
+			// var 
+
+			// workablePixelW = oldWtoNewWRatio * mainDivW;
+			workablePixelW = orgMainDivW*newHtoOldHRatio;
+			workablePixelH = mainDivH;
+
+			var offsetPixelX = (mainDivW - workablePixelW)/2;
+			offsetWorkZoneX = (offsetPixelX/workablePixelW) * paper_mainW;
+			offsetWorkZoneY = 0;
+		}
+		else if(newHWRatio>originalHWRatio){
+			// console.log("Height has Black Patch");
+			// console.log("Difference:"+(newHWRatio-originalHWRatio));
+			// var diff = 1 - (newHWRatio-originalHWRatio);
+			// var oldHtoNewHRatio = orgMainDivH/mainDivH;
+			// workablePixelH = oldHtoNewHRatio * mainDivH;
+			var newWtoOldWRatio = mainDivW/orgMainDivW;
+
+			// var diffRatio = 1 - newWtoOldWRatio;
+
+			workablePixelW = mainDivW;
+			workablePixelH = orgMainDivH*newWtoOldWRatio;
+			
+			var offsetPixelY = (mainDivH - workablePixelH)/2;
+			offsetWorkZoneX = 0;
+			offsetWorkZoneY = (offsetPixelY/workablePixelH) * paper_mainH;
+		}
+		else{
+			console.log("No Black Patch");
+			workablePixelW = mainDivW;
+			workablePixelH = mainDivH;
+			var diffRatio = 0;
+
+		}
+
+		this.workablePixelW = workablePixelW;
+		this.offsetWorkZoneX = offsetWorkZoneX;
+		this.workablePixelH = workablePixelH;
+		this.offsetWorkZoneY = offsetWorkZoneY;
+
+	},
+
 
 
 //End of Play Area
@@ -884,56 +983,73 @@ findHolderId: function(paperX,paperY){
 		var x = position.x;
 		var y = position.y;
 
-		var workablePixelW;
-		var workablePixelH;
+		var workablePixelW = this.workablePixelW;
+		var workablePixelH = this.workablePixelH;
 
-		var originalHWRatio = orgMainDivH/orgMainDivW;
+		var offsetWorkZoneX = this.offsetWorkZoneX;
+		var offsetWorkZoneY = this.offsetWorkZoneY;
 
-		var newHWRatio = mainDivH/mainDivW;
+		// var workablePixelW;
+		// var workablePixelH;
 
-		if(newHWRatio<originalHWRatio){
-			console.log("Width has Black Patch");
-			console.log("Difference:"+(originalHWRatio-newHWRatio));
-			var diff = 1 - (originalHWRatio-newHWRatio);
-			var oldWtoNewWRatio = orgMainDivW/mainDivW;
-			var newHtoOldHRatio = mainDivH/orgMainDivH;
+		// var originalHWRatio = orgMainDivH/orgMainDivW;
 
-			var diffRatio = 1 - newWtoOldWRatio;
+		// var newHWRatio = mainDivH/mainDivW;
 
-			// workablePixelW = oldWtoNewWRatio * mainDivW;
-			workablePixelW = orgMainDivW*newHtoOldHRatio;
-			workablePixelH = mainDivH;
+		// var offsetWorkZoneX = 0;
+		// var offsetWorkZoneY = 0;
 
-		}
-		else if(newHWRatio>originalHWRatio){
-			console.log("Height has Black Patch");
-			console.log("Difference:"+(newHWRatio-originalHWRatio));
-			var diff = 1 - (newHWRatio-originalHWRatio);
-			// var oldHtoNewHRatio = orgMainDivH/mainDivH;
-			// workablePixelH = oldHtoNewHRatio * mainDivH;
-			var newWtoOldWRatio = mainDivW/orgMainDivW;
+		// if(newHWRatio<originalHWRatio){
+		// 	console.log("Width has Black Patch");
+		// 	console.log("Difference:"+(originalHWRatio-newHWRatio));
+		// 	var diff = 1 - (originalHWRatio-newHWRatio);
+		// 	var oldWtoNewWRatio = orgMainDivW/mainDivW;
+		// 	var newHtoOldHRatio = mainDivH/orgMainDivH;
 
-			var diffRatio = 1 - newHtoOldHRatio;
+		// 	var diffRatio = (1 - newHtoOldHRatio);
+		// 	var 
 
-			workablePixelH = orgMainDivH*newWtoOldWRatio;
-			workablePixelW = mainDivW;
-		}
-		else{
-			console.log("No Black Patch");
-			workablePixelW = mainDivW;
-			workablePixelH = mainDivH;
-			var diffRatio = 0;
+		// 	// workablePixelW = oldWtoNewWRatio * mainDivW;
+		// 	workablePixelW = orgMainDivW*newHtoOldHRatio;
+		// 	workablePixelH = mainDivH;
 
-		}
+		// 	var offsetPixelX = (mainDivW - workablePixelW)/2;
+		// 	offsetWorkZoneX = (offsetPixelX/workablePixelW) * paper_mainW;
+		// 	offsetWorkZoneY = 0;
 
+		// }
+		// else if(newHWRatio>originalHWRatio){
+		// 	console.log("Height has Black Patch");
+		// 	console.log("Difference:"+(newHWRatio-originalHWRatio));
+		// 	var diff = 1 - (newHWRatio-originalHWRatio);
+		// 	// var oldHtoNewHRatio = orgMainDivH/mainDivH;
+		// 	// workablePixelH = oldHtoNewHRatio * mainDivH;
+		// 	var newWtoOldWRatio = mainDivW/orgMainDivW;
 
+		// 	var diffRatio = 1 - newWtoOldWRatio;
+
+		// 	workablePixelW = mainDivW;
+		// 	workablePixelH = orgMainDivH*newWtoOldWRatio;
+			
+		// 	var offsetPixelY = (mainDivH - workablePixelH)/2;
+		// 	offsetWorkZoneX = 0;
+		// 	offsetWorkZoneY = (offsetPixelY/workablePixelH) * paper_mainH;
+		// }
+		// else{
+		// 	console.log("No Black Patch");
+		// 	workablePixelW = mainDivW;
+		// 	workablePixelH = mainDivH;
+		// 	var diffRatio = 0;
+
+		// }
+		
 		// //Converting real co-ordinates to paper co-ordinates
 		// var paperX = ((x/mainDivW) * paper_mainW)*(1+diffRatio);
 		// var paperY = ((y/mainDivH) * paper_mainH)*(1+diffRatio);
 
 		//Converting real co-ordinates to paper co-ordinates
-		var paperX = (x/workablePixelW) * paper_mainW;
-		var paperY = (y/workablePixelH) * paper_mainH;
+		var paperX = ((x/workablePixelW) * paper_mainW) - offsetWorkZoneX;
+		var paperY = ((y/workablePixelH) * paper_mainH) - offsetWorkZoneY;
 
 		// //Converting real co-ordinates to paper co-ordinates
 		// var paperX = (x/mainDivW) * paper_mainW;
