@@ -263,7 +263,7 @@ var ConferenceScheduler = SAGE2_App.extend( {
 				//Creating Sticky Shadow
 				var sticky_shadow = this.paper_main.rect(array_sticky[counter][0]+(padding/3),array_sticky[counter][1]+(padding/3),this.postItW,this.postItH).attr({fill: "gray", filter: f});
 				//Creating a sticky
-				var sticky_1= this.paper_main.rect(array_sticky[counter][0],array_sticky[counter][1],this.postItW,this.postItH).attr({fill: stickyColor, transform : defaultTransform});
+				var sticky_1= this.paper_main.rect(array_sticky[counter][0],array_sticky[counter][1],this.postItW,this.postItH).attr({fill: stickyColor, transform : defaultMatrix});
 				
 				//Creating within  and svg
 				// //Creating Sticky Shadow
@@ -528,6 +528,7 @@ var ConferenceScheduler = SAGE2_App.extend( {
 		//Creating array of holders
 		this.holder_object_array = [];
 		var defaultTransform = 'translate(0,0)';
+		var defaultMatrix = 'matrix(1,0,0,1,0,0)';
 
 		//Loop that creates rectangles
 		for(i = 0;i<this.numberOfRows;i++){
@@ -537,7 +538,7 @@ var ConferenceScheduler = SAGE2_App.extend( {
 				fill:        "rgba(68, 48, 255, 0.15)",
 				stroke:      "rgba(68, 48, 255, 0.80)",
 				strokeWidth: 2,
-				transform: defaultTransform,
+				transform: defaultMatrix,
 				holdsSticky: ""
 				});
 				//Add the cell to group
@@ -724,11 +725,27 @@ var ConferenceScheduler = SAGE2_App.extend( {
  			var sticky_Y = parseFloat(this.sticky_object_array[key].attr("y"));
 
  			//Get Tranform values
-			var transformString = this.sticky_object_array[key].attr("transform")+'';
+			var transformString = this.sticky_object_array[key].attr().transform;
 			console.log("Total Rect sticky tranform matrix:"+transformString);
-			var tXY = transformString.split(',');
-			var tX = parseFloat(tXY[0].slice(1),10);
-			var tY = parseFloat(tXY[1],10);
+			// var tXY = transformString.split(',');
+			// var tX = parseFloat(tXY[0].slice(1),10);
+			// var tY = parseFloat(tXY[1],10);
+			// console.log("TX:"+tX+"TY: "+tY);
+
+
+			var currentMatrix = transformString.slice(7,-1).split("\,");
+			console.log("currentMatrix:" +currentMatrix);
+     
+      		for(var i=0; i<currentMatrix.length; i++) {
+      			currentMatrix[i] = parseFloat(currentMatrix[i]);
+      			console.log("HI:"+ i+ " ->"+ JSON.stringify(currentMatrix[i]));
+     		}
+
+     		var tX = currentMatrix[4];
+			var tY = currentMatrix[5];
+			console.log("TX:"+tX+"TY: "+tY);
+
+
 
 			//Find resulting co ordinates by adding location and translation
 			var rX = sticky_X+tX;
@@ -761,11 +778,26 @@ var ConferenceScheduler = SAGE2_App.extend( {
  			var holdsSticky = this.holder_object_array[key].attr("holdsSticky");
  			// console.log("holdsSticky:"+holdsSticky);
  			//Get Tranform values
-			var transformString = this.holder_object_array[key].attr("transform")+'';
-			// console.log("Total Rect holder tranform matrix:"+transformString);
-			var tXY = transformString.split(',');
-			var tX = parseFloat(tXY[0].slice(1),10);
-			var tY = parseFloat(tXY[1],10);
+			var transformString = this.holder_object_array[key].attr().transform;
+			console.log("Total Rect holder tranform matrix:"+transformString);
+			// var tXY = transformString.split(',');
+			// var tX = parseFloat(tXY[0].slice(1),10);
+			// var tY = parseFloat(tXY[1],10);
+
+			// console.log("TX:"+tX+"TY: "+tY);
+
+			var currentMatrix = transformString.slice(7,-1).split("\,");
+			console.log("currentMatrix:" +currentMatrix);
+     
+      		for(var i=0; i<currentMatrix.length; i++) {
+      			currentMatrix[i] = parseFloat(currentMatrix[i]);
+      			console.log("HI:"+ i+ " ->"+ JSON.stringify(currentMatrix[i]));
+     		}
+
+     		var tX = currentMatrix[4];
+			var tY = currentMatrix[5];
+			console.log("TX:"+tX+"TY: "+tY);
+
 
 			//Find resulting co ordinates by adding location and translation
 			var rX = holder_X+tX;
@@ -964,10 +996,28 @@ var ConferenceScheduler = SAGE2_App.extend( {
  					var sticky_Y = parseFloat(this.sticky_object_array[stickyId].attr("y"));
 
  					//Get Tranform values
-					var transformString = this.sticky_object_array[stickyId].attr("transform")+'';
-					var tXY = transformString.split(',');
-					var tX = parseFloat(tXY[0].slice(1),10);
-					var tY = parseFloat(tXY[1],10);
+					// var transformString = this.sticky_object_array[stickyId].attr("transform")+'';
+					// var tXY = transformString.split(',');
+					// var tX = parseFloat(tXY[0].slice(1),10);
+					// var tY = parseFloat(tXY[1],10);
+
+					//Get Tranform values
+					var transformString = this.sticky_object_array[stickyId].attr().transform;
+					// console.log("Total Rect holder tranform matrix:"+transformString);
+
+					var currentMatrix = transformString.slice(7,-1).split("\,");
+					console.log("currentMatrix:" +currentMatrix);
+     
+      				for(var i=0; i<currentMatrix.length; i++) {
+      					currentMatrix[i] = parseFloat(currentMatrix[i]);
+      					// console.log("HI:"+ i+ " ->"+ JSON.stringify(currentMatrix[i]));
+     				}
+
+     				var tX = currentMatrix[4];
+					var tY = currentMatrix[5];
+					// console.log("TX:"+tX+"TY: "+tY);
+
+
 
 					this.userInteraction[user.id].stickyPast[0] = sticky_X;
 					this.userInteraction[user.id].stickyPast[1] = sticky_Y;
@@ -1063,7 +1113,7 @@ var ConferenceScheduler = SAGE2_App.extend( {
 
 
 
-					var bb = this.sticky_object_array[12].attr("transform");
+					// var bb = this.sticky_object_array[12].attr("transform");
 					// console.log("After BBox:"+ JSON.stringify(bb));
 				
 					// this.sticky_object_array[12].animate({ transform: 'r360,150,150' }, 3000, mina.bounce );
@@ -1085,7 +1135,7 @@ var ConferenceScheduler = SAGE2_App.extend( {
 						this.sticky_object_array[12].attr({
 						transform: myMatrix
 						});
-						console.log("ATTribute:"+ this.sticky_object_array[12].attr("transform"));
+						console.log("ATTribute:"+ this.sticky_object_array[12].attr().transform);
 						this.toggle = false;
 					}
 					else{
@@ -1168,9 +1218,23 @@ var ConferenceScheduler = SAGE2_App.extend( {
 
 				// console.log("Old X:"+sidOldX+" Old Y:"+sidOldY+" New X: " + paperX + " New Y: "+ paperY );
 				// console.log("Translate X:" + transX + " Translate Y:"+ transY);
+				var myMatrix = new Snap.Matrix();
+				// myMatrix.scale(scaleX,scaleY);            // play with scaling before and after the rotate 
+					// myMatrix.translate((((transX-sticky_X) - ((transX-sticky_X)/3))),0);
+					// myMatrix.translate(scaTraX,0);
+				myMatrix.translate(transX,transY);
+					// myMatrix.translate(0,transY);
+
+
 				this.sticky_object_array[sid].attr({
-						transform: 'translate('+transX+','+transY+')'
-					});
+					transform: myMatrix
+				});
+
+
+
+				// this.sticky_object_array[sid].attr({
+				// 		transform: 'translate('+transX+','+transY+')'
+				// 	});
 				// console.log("GROUP OBJECT"+JSON.stringify(this.sticky_object_array[sid].parent().attr('transform')));
 				// console.log("StickyRECT OBJECT"+JSON.stringify(this.sticky_object_array[sid].attr('transform')));
 			}
@@ -1187,8 +1251,13 @@ var ConferenceScheduler = SAGE2_App.extend( {
 				console.log("Returned: "+ holderId);
 				if(holderId == null){
 					
+					// this.sticky_object_array[sid].attr({
+					// 	transform: 'translate(0,0)'
+					// });
+					var myMatrix = new Snap.Matrix();
+					myMatrix.translate(0,0);
 					this.sticky_object_array[sid].attr({
-						transform: 'translate(0,0)'
+						transform: myMatrix
 					});
 				}
 				else{
@@ -1247,7 +1316,7 @@ var ConferenceScheduler = SAGE2_App.extend( {
 						transform: myMatrix
 					});
 
-					console.log("ATTR:"+this.sticky_object_array[sid].attr()['transform']);
+					console.log("ATTR:"+this.sticky_object_array[sid].attr().transform);
 					this.holder_object_array[holderId].attr({
 						holdsSticky: sid
 					});
