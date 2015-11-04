@@ -287,7 +287,7 @@ var ConferenceScheduler = SAGE2_App.extend( {
 				// g_sticky.add(svg_sticky);
 				var title =  "<strong>Title:</strong> "+ this.catagorizedStickies[theme][k]['title'];
 				var author = "<strong>Speaker:</strong> "+ this.catagorizedStickies[theme][k]['speaker'];
-				var htmlText = '<div xmlns="http://www.w3.org/1999/xhtml" style="color:black; font-size: 2px">'
+				var htmlText = '<div xmlns="http://www.w3.org/1999/xhtml" style="color:black; font-size: 5px">'
 									+ title + '<br><br>' + author+ '</div>';
 
 
@@ -343,7 +343,7 @@ var ConferenceScheduler = SAGE2_App.extend( {
   			width:   mainDivW,
   			//height:  parseInt(2.6*grid, 10) // DONOT DELETE For future reference
   			height:  mainDivH,
-  			// preserveAspectRatio: "xMaxYMax meet" //For top left. Default is center.
+  			preserveAspectRatio: "xMinYMin meet" //For top left. Default is center.
   			// preserveAspectRatio: 'none'
 		});
 
@@ -855,7 +855,16 @@ findHolderId: function(paperX,paperY){
 
 		var mainDivW = this.mainDivW;
 		var mainDivH = this.mainDivH;
+		//=>Added
+		var orgMainDivW = this.orgMainDivW;
+		var orgMainDivH = this.orgMainDivH;
 
+		var offsetW = ((mainDivW - orgMainDivW)/2)/mainDivW * paper_mainW;
+		var offsetH = ((mainDivH - orgMainDivH)/2)/mainDivH * paper_mainH;
+
+		this.paper_gridXEnd = this.paper_mainW * this.gridWRatio;
+		this.paper_gridYEnd = this.paper_mainH * this.gridHRatio;
+		//<==
 		//Getting ends of grid section
 		var paper_gridXEnd = this.paper_gridXEnd;
 		var paper_gridYEnd = this.paper_gridYEnd;
@@ -875,9 +884,64 @@ findHolderId: function(paperX,paperY){
 		var x = position.x;
 		var y = position.y;
 
+		var workablePixelW;
+		var workablePixelH;
+
+		var originalHWRatio = orgMainDivH/orgMainDivW;
+
+		var newHWRatio = mainDivH/mainDivW;
+
+		if(newHWRatio<originalHWRatio){
+			console.log("Width has Black Patch");
+			console.log("Difference:"+(originalHWRatio-newHWRatio));
+			var diff = 1 - (originalHWRatio-newHWRatio);
+			var oldWtoNewWRatio = orgMainDivW/mainDivW;
+			var newHtoOldHRatio = mainDivH/orgMainDivH;
+
+			var diffRatio = 1 - newWtoOldWRatio;
+
+			// workablePixelW = oldWtoNewWRatio * mainDivW;
+			workablePixelW = orgMainDivW*newHtoOldHRatio;
+			workablePixelH = mainDivH;
+
+		}
+		else if(newHWRatio>originalHWRatio){
+			console.log("Height has Black Patch");
+			console.log("Difference:"+(newHWRatio-originalHWRatio));
+			var diff = 1 - (newHWRatio-originalHWRatio);
+			// var oldHtoNewHRatio = orgMainDivH/mainDivH;
+			// workablePixelH = oldHtoNewHRatio * mainDivH;
+			var newWtoOldWRatio = mainDivW/orgMainDivW;
+
+			var diffRatio = 1 - newHtoOldHRatio;
+
+			workablePixelH = orgMainDivH*newWtoOldWRatio;
+			workablePixelW = mainDivW;
+		}
+		else{
+			console.log("No Black Patch");
+			workablePixelW = mainDivW;
+			workablePixelH = mainDivH;
+			var diffRatio = 0;
+
+		}
+
+
+		// //Converting real co-ordinates to paper co-ordinates
+		// var paperX = ((x/mainDivW) * paper_mainW)*(1+diffRatio);
+		// var paperY = ((y/mainDivH) * paper_mainH)*(1+diffRatio);
+
 		//Converting real co-ordinates to paper co-ordinates
-		var paperX = (x/mainDivW) * paper_mainW;
-		var paperY = (y/mainDivH) * paper_mainH;
+		var paperX = (x/workablePixelW) * paper_mainW;
+		var paperY = (y/workablePixelH) * paper_mainH;
+
+		// //Converting real co-ordinates to paper co-ordinates
+		// var paperX = (x/mainDivW) * paper_mainW;
+		// var paperY = (y/mainDivH) * paper_mainH;
+
+		// //Converting real co-ordinates to paper co-ordinates
+		// var paperX = (x/orgMainDivW) * paper_mainW;
+		// var paperY = (y/orgMainDivH) * paper_mainH;
 
 		//Creating a new user object if it doesnot exists
 		if (this.userInteraction[user.id] === undefined) {
