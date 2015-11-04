@@ -638,7 +638,7 @@ var ConferenceScheduler = SAGE2_App.extend( {
 		var paper_mainW = this.paper_mainW;
 		var paper_mainH = this.paper_mainH;
 
-		//Getting size of control
+		//Getting size of control section
 		var paper_controlW = paper_gridXEnd;
 		var paper_controlH = paper_mainH - paper_gridYEnd;
 
@@ -647,12 +647,10 @@ var ConferenceScheduler = SAGE2_App.extend( {
 			stroke: "#000000"
 		});
 
-
-
 	},
 
-
 //<== Play Area ends
+
 	load: function(date) {
 		console.log('ConferenceScheduler> Load with state value', this.state.value);
 		this.refresh(date);
@@ -668,22 +666,16 @@ var ConferenceScheduler = SAGE2_App.extend( {
 		var mainDivW = parseInt(this.element.style.width,  10);
 		var mainDivH = parseInt(this.element.style.height, 10);
 
-
 		//Calculating SVG viewport width and height
 		//UPDATE REQUIRED: make sure the aspect ratio when the the window is resized, and refreshed.
 		var paper_mainW = this.paper_mainW;
 		var paper_mainH = this.paper_mainH;
-
-
 
 		//Resizing the snap grid paper
 		this.paper_main.attr({
   			width: mainDivW,
   			height: mainDivH
   		});
-
-
-
 
   		//Updating main window width and height 
 		this.mainDivW = mainDivW;
@@ -719,61 +711,11 @@ var ConferenceScheduler = SAGE2_App.extend( {
 	// 	return result;
 	// },
 
-
-	// findStickyId: function(paperX,paperY){
-	// 	var result = null;
-	// 	var postItW = this.postItW;
-	// 	var postItH = this.postItH;
-	// 	for (var key in this.sticky_object_array) {
- // 			// console.log(">%^^^^$#%"+ JSON.stringify(this.sticky_object_array[key]));
-
- // 			//Get X and Y co-ordinates
- // 			var sticky_X = parseFloat(this.sticky_object_array[key].attr("x"));
- // 			var sticky_Y = parseFloat(this.sticky_object_array[key].attr("y"));
-
- // 			//Get Tranform values
-	// 		var transformString = this.sticky_object_array[key].attr("transform")+'';
-	// 		console.log("Total Rect sticky tranform:"+JSON.stringify(transformString));
-	// 		var tXY = transformString.split(',');
-	// 		var tX = parseFloat(tXY[0].slice(1),10);
-	// 		var tY = parseFloat(tXY[1],10);
-
-	// 		//Find resulting co ordinates by adding location and translation
-	// 		var rX = sticky_X+tX;
-	// 		var rY = sticky_Y+tY;
-
-	// 		//Find if the mouse click was on sticky
-	// 		if(paperX >= rX && paperX < rX+postItW && paperY >= rY && paperY < rY+postItH){
-	// 			result = key;
-	// 			break;
-	// 		}
-	// 		// console.log("**VSD**"+transformString);
-	// 		// console.log("tsdX:"+tX+ "tsdY: "+tY);
-
- // 		}
-
-	// 	return result;
-	// },
-findStickyId: function(paperX,paperY){
+	findStickyId: function(paperX,paperY){
 		var result = null;
 		var postItW = this.postItW;
 		var postItH = this.postItH;
-
-		var orgMainDivW = this.orgMainDivW;
-		var orgMainDivH = this.orgMainDivH;
-
-		var mainDivW = this.mainDivW;
-		var mainDivH = this.mainDivH;
-
-		// console.log("ORGW: "+orgMainDivW+ " and MainW: "+mainDivW);
-		// var paperX = (actualpaperX/mainDivW) * orgMainDivW; 
-		// var paperY = (actualpaperY/mainDivH) * orgMainDivH;
 	
-		// console.log("actual X:"+actualpaperX+"actual Y:"+ actualpaperY);
-		// console.log("Coverted X:"+paperX+"Converted Y:"+ paperY);
-		// if(actualpaperY != paperX || actualpaperY != paperY){
-		// 	    this.paper_main.rect(actualpaperX,actualpaperY,postItW,postItH).attr({stroke: 'white', fill: 'rgba(12,13,44,0.1)'});
-		// }
 		for (var key in this.sticky_object_array) {
  			// console.log(">%^^^^$#%"+ JSON.stringify(this.sticky_object_array[key]));
 
@@ -847,23 +789,19 @@ findStickyId: function(paperX,paperY){
 	},
 
 
-
-
 	updatePositionTracker: function() {
 
 		var mainDivW = this.mainDivW;
 		var mainDivH = this.mainDivH;
-		//=>Added
+	
 		var orgMainDivW = this.orgMainDivW;
 		var orgMainDivH = this.orgMainDivH;
 
-		// var offsetW = ((mainDivW - orgMainDivW)/2)/mainDivW * paper_mainW;
-		// var offsetH = ((mainDivH - orgMainDivH)/2)/mainDivH * paper_mainH;
 
-
-		this.paper_gridXEnd = this.paper_mainW * this.gridWRatio;
-		this.paper_gridYEnd = this.paper_mainH * this.gridHRatio;
-		//<==
+		//Can remove this, but keep it, incase of any bug in future
+		// this.paper_gridXEnd = this.paper_mainW * this.gridWRatio;
+		// this.paper_gridYEnd = this.paper_mainH * this.gridHRatio;
+		
 		//Getting ends of grid section
 		var paper_gridXEnd = this.paper_gridXEnd;
 		var paper_gridYEnd = this.paper_gridYEnd;
@@ -895,15 +833,8 @@ findStickyId: function(paperX,paperY){
 
 		if(newHWRatio<originalHWRatio){
 			// console.log("Width has Black Patch");
-			// console.log("Difference:"+(originalHWRatio-newHWRatio));
-			// var diff = 1 - (originalHWRatio-newHWRatio);
-			// var oldWtoNewWRatio = orgMainDivW/mainDivW;
 			var newHtoOldHRatio = mainDivH/orgMainDivH;
 
-			// var diffRatio = (1 - newHtoOldHRatio);
-			// var 
-
-			// workablePixelW = oldWtoNewWRatio * mainDivW;
 			workablePixelW = orgMainDivW*newHtoOldHRatio;
 			workablePixelH = mainDivH;
 
@@ -913,13 +844,7 @@ findStickyId: function(paperX,paperY){
 		}
 		else if(newHWRatio>originalHWRatio){
 			// console.log("Height has Black Patch");
-			// console.log("Difference:"+(newHWRatio-originalHWRatio));
-			// var diff = 1 - (newHWRatio-originalHWRatio);
-			// var oldHtoNewHRatio = orgMainDivH/mainDivH;
-			// workablePixelH = oldHtoNewHRatio * mainDivH;
 			var newWtoOldWRatio = mainDivW/orgMainDivW;
-
-			// var diffRatio = 1 - newWtoOldWRatio;
 
 			workablePixelW = mainDivW;
 			workablePixelH = orgMainDivH*newWtoOldWRatio;
@@ -932,10 +857,9 @@ findStickyId: function(paperX,paperY){
 			console.log("No Black Patch");
 			workablePixelW = mainDivW;
 			workablePixelH = mainDivH;
-			var diffRatio = 0;
-
 		}
 
+		//Update the global values
 		this.workablePixelW = workablePixelW;
 		this.offsetWorkZoneX = offsetWorkZoneX;
 		this.workablePixelH = workablePixelH;
@@ -983,81 +907,22 @@ findStickyId: function(paperX,paperY){
 		var x = position.x;
 		var y = position.y;
 
+		//Gett the work zone and offset
 		var workablePixelW = this.workablePixelW;
 		var workablePixelH = this.workablePixelH;
 
 		var offsetWorkZoneX = this.offsetWorkZoneX;
 		var offsetWorkZoneY = this.offsetWorkZoneY;
 
-		// var workablePixelW;
-		// var workablePixelH;
-
-		// var originalHWRatio = orgMainDivH/orgMainDivW;
-
-		// var newHWRatio = mainDivH/mainDivW;
-
-		// var offsetWorkZoneX = 0;
-		// var offsetWorkZoneY = 0;
-
-		// if(newHWRatio<originalHWRatio){
-		// 	console.log("Width has Black Patch");
-		// 	console.log("Difference:"+(originalHWRatio-newHWRatio));
-		// 	var diff = 1 - (originalHWRatio-newHWRatio);
-		// 	var oldWtoNewWRatio = orgMainDivW/mainDivW;
-		// 	var newHtoOldHRatio = mainDivH/orgMainDivH;
-
-		// 	var diffRatio = (1 - newHtoOldHRatio);
-		// 	var 
-
-		// 	// workablePixelW = oldWtoNewWRatio * mainDivW;
-		// 	workablePixelW = orgMainDivW*newHtoOldHRatio;
-		// 	workablePixelH = mainDivH;
-
-		// 	var offsetPixelX = (mainDivW - workablePixelW)/2;
-		// 	offsetWorkZoneX = (offsetPixelX/workablePixelW) * paper_mainW;
-		// 	offsetWorkZoneY = 0;
-
-		// }
-		// else if(newHWRatio>originalHWRatio){
-		// 	console.log("Height has Black Patch");
-		// 	console.log("Difference:"+(newHWRatio-originalHWRatio));
-		// 	var diff = 1 - (newHWRatio-originalHWRatio);
-		// 	// var oldHtoNewHRatio = orgMainDivH/mainDivH;
-		// 	// workablePixelH = oldHtoNewHRatio * mainDivH;
-		// 	var newWtoOldWRatio = mainDivW/orgMainDivW;
-
-		// 	var diffRatio = 1 - newWtoOldWRatio;
-
-		// 	workablePixelW = mainDivW;
-		// 	workablePixelH = orgMainDivH*newWtoOldWRatio;
-			
-		// 	var offsetPixelY = (mainDivH - workablePixelH)/2;
-		// 	offsetWorkZoneX = 0;
-		// 	offsetWorkZoneY = (offsetPixelY/workablePixelH) * paper_mainH;
-		// }
-		// else{
-		// 	console.log("No Black Patch");
-		// 	workablePixelW = mainDivW;
-		// 	workablePixelH = mainDivH;
-		// 	var diffRatio = 0;
-
-		// }
-		
-		// //Converting real co-ordinates to paper co-ordinates
-		// var paperX = ((x/mainDivW) * paper_mainW)*(1+diffRatio);
-		// var paperY = ((y/mainDivH) * paper_mainH)*(1+diffRatio);
 
 		//Converting real co-ordinates to paper co-ordinates
 		var paperX = ((x/workablePixelW) * paper_mainW) - offsetWorkZoneX;
 		var paperY = ((y/workablePixelH) * paper_mainH) - offsetWorkZoneY;
 
 		// //Converting real co-ordinates to paper co-ordinates
+		//This works in case the aspect ratio will be locked. i.e. No Black area in width or height
 		// var paperX = (x/mainDivW) * paper_mainW;
 		// var paperY = (y/mainDivH) * paper_mainH;
-
-		// //Converting real co-ordinates to paper co-ordinates
-		// var paperX = (x/orgMainDivW) * paper_mainW;
-		// var paperY = (y/orgMainDivH) * paper_mainH;
 
 		//Creating a new user object if it doesnot exists
 		if (this.userInteraction[user.id] === undefined) {
@@ -1209,14 +1074,6 @@ findStickyId: function(paperX,paperY){
 					console.log("xS:"+xS);
 					console.log("yS:"+yS);
 
-					// this.sticky_object_array[12].attr({
-					// 	x: 0,
-					// 	y: 0
-					// });
-
-					// this.sticky_object_array[12].attr({
-					// 	transform: 'scale(4,1) translate(-'+(xS-(xS/4))+',0)'
-					// });
 
 					if(this.toggle == true){
 						var myMatrix = new Snap.Matrix();
@@ -1234,7 +1091,7 @@ findStickyId: function(paperX,paperY){
 					else{
 						var myMatrix = new Snap.Matrix();
 						myMatrix.scale(1,1);
-						// myMatrix.translate(0,0); //Not required
+						myMatrix.translate(0,0); //Not required
 
 						this.sticky_object_array[12].attr({
 						transform: myMatrix
