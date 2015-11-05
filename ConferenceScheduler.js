@@ -44,8 +44,8 @@ var ConferenceScheduler = SAGE2_App.extend( {
 		this.stickyReservoirRatio = 3;
 
 		//Division ratio
-		this.gridWRatio = 0.6;
-		this.gridHRatio = 0.8;
+		this.gridWRatio = 0.7;
+		this.gridHRatio = 0.9;
 
 		this.toggle = true;
 
@@ -256,7 +256,7 @@ var ConferenceScheduler = SAGE2_App.extend( {
 				var defaultMatrix = 'matrix(1,0,0,1,'+array_sticky[counter][4]+','+array_sticky[counter][5]+')';
 
 				//creating a group for group all elements of a sticky
-				var g_sticky = this.paper_main.g().attr({ x: array_sticky[counter][0], y: array_sticky[counter][1], transform : defaultMatrix});
+				var g_sticky = this.paper_main.g().attr({ x: array_sticky[counter][0], y: array_sticky[counter][1], transform : defaultMatrix, tX:0, tY:0});
 				g_sticky.attr({id: "g_sticky"+counter});
 				// var svg_sticky = this.paper_main.svg(array_sticky[counter][0],array_sticky[counter][1],this.postItW+(padding/3),this.postItH+(padding/3)).attr({transform : defaultTransform});
 
@@ -405,8 +405,8 @@ var ConferenceScheduler = SAGE2_App.extend( {
 
 		var paper_tableX1 = paper_gridXEnd * 0.2;
 		var paper_tableX2 = paper_gridXEnd *(1-0.05);
-		var paper_tableY1 = paper_gridYEnd * 0.35;
-		var paper_tableY2 = paper_gridYEnd*(1-0.1);
+		var paper_tableY1 = paper_gridYEnd * 0.30;
+		var paper_tableY2 = paper_gridYEnd*(1-0.05);
 
 		var paper_tableW = paper_tableX2 - paper_tableX1;
 		var paper_tableH = paper_tableY2 - paper_tableY1;
@@ -741,8 +741,13 @@ var ConferenceScheduler = SAGE2_App.extend( {
       			console.log("HI:"+ i+ " ->"+ JSON.stringify(currentMatrix[i]));
      		}
 
-     		var tX = currentMatrix[4];
-			var tY = currentMatrix[5];
+     		var scaleX = currentMatrix[0];
+			var scaleY = currentMatrix[3];
+
+   			// var tX = currentMatrix[4];
+			// var tY = currentMatrix[5];
+			var tX = parseFloat(this.sticky_object_array[key].attr("tX"));
+ 			var tY = parseFloat(this.sticky_object_array[key].attr("tY"));
 			console.log("TX:"+tX+"TY: "+tY);
 
 
@@ -751,8 +756,10 @@ var ConferenceScheduler = SAGE2_App.extend( {
 			var rX = sticky_X+tX;
 			var rY = sticky_Y+tY;
 			
+
+
 			//Find if the mouse click was on sticky
-			if(paperX >= rX && paperX < rX+postItW && paperY >= rY && paperY < rY+postItH){
+			if(paperX >= rX && paperX < rX+(postItW*scaleX) && paperY >= rY && paperY < rY+(postItH*scaleY)){
 				result = key;
 				break;
 			}
@@ -776,7 +783,7 @@ var ConferenceScheduler = SAGE2_App.extend( {
  			var holder_X = parseFloat(this.holder_object_array[key].attr("x"));
  			var holder_Y = parseFloat(this.holder_object_array[key].attr("y"));
  			var holdsSticky = this.holder_object_array[key].attr("holdsSticky");
- 			// console.log("holdsSticky:"+holdsSticky);
+ 			console.log("holdsSticky:"+holdsSticky);
  			//Get Tranform values
 			var transformString = this.holder_object_array[key].attr().transform;
 			console.log("Total Rect holder tranform matrix:"+transformString);
@@ -806,10 +813,11 @@ var ConferenceScheduler = SAGE2_App.extend( {
 			//Find if the mouse click was on sticky
 			if(paperX >= rX && paperX < rX+holderW && paperY >= rY && paperY < rY+holderH){
 				// console.log("Found Sticky");
-				if(holdsSticky == null){
+				// if(holdsSticky == null){
 					// console.log("FALSE");
+					if(holdsSticky != null){ console.log("Holds Following sticky:"+holdsSticky);}
 					result = key;
-				}
+				// }
 				break;
 			}
 			// console.log("**VSD**"+transformString);
@@ -970,20 +978,33 @@ var ConferenceScheduler = SAGE2_App.extend( {
 			// console.log("User:"+JSON.stringify(user));
 
 
-			if( paperX >= 0 && paperX < paper_gridXEnd && paperY>=0 && paperY<=paper_gridYEnd){ // Grid Section
-				console.log("Clicked in Grid Section("+ x + ","+ y +")");
-				// var holderId = this.findHolderId(paperX,paperY);
-				// console.log("Returned: "+ holderId);
-				// // if(stickyId != null){
-				// // console.log("")}
-			}
-			else if(paperX >= paper_gridXEnd && paperX < paper_mainW && paperY>=0 && paperY<=paper_mainH){ // Sticky Section
+			// if( paperX >= 0 && paperX < paper_gridXEnd && paperY>=0 && paperY<=paper_gridYEnd){ // Grid Section
+			// 	console.log("Clicked in Grid Section("+ x + ","+ y +")");
+			// 	// var holderId = this.findHolderId(paperX,paperY);
+			// 	// console.log("Returned: "+ holderId);
+			// 	// // if(stickyId != null){
+			// 	// // console.log("")}
+			// }
+			// else if(paperX >= paper_gridXEnd && paperX < paper_mainW && paperY>=0 && paperY<=paper_mainH){ // Sticky Section
+				//Grid section or sticky section
+			if(( paperX >= 0 && paperX < paper_gridXEnd && paperY>=0 && paperY<=paper_gridYEnd) ||  (paperX >= paper_gridXEnd && paperX < paper_mainW && paperY>=0 && paperY<=paper_mainH)){
 				console.log("Clicked in Sticky Section("+ x+ ","+ y +")");
 
 				var stickyId = this.findStickyId(paperX,paperY);
 				console.log("Returned: "+ stickyId);
 				if(stickyId != null){
 					console.log("Not Null");
+					var holderId = this.findHolderId(paperX,paperY);
+					console.log("Returned: "+ holderId);
+
+					if(holderId != null){
+						var hoS = this.holder_object_array[holderId].attr("holdsSticky");
+						if( hoS != null){
+							this.holder_object_array[holderId].attr({
+								holdsSticky: ""
+							});
+						}
+					}
 					this.userInteraction[user.id].dragging = true;
 					// this.userInteraction[user.id].position.x = position.x; //DONOT DELETE X  and Y from user were never used.
 					// this.userInteraction[user.id].position.y = position.y;
@@ -994,6 +1015,25 @@ var ConferenceScheduler = SAGE2_App.extend( {
 					//Get X and Y co-ordinates
  					var sticky_X = parseFloat(this.sticky_object_array[stickyId].attr("x"));
  					var sticky_Y = parseFloat(this.sticky_object_array[stickyId].attr("y"));
+//-------->
+ 					var transX = parseFloat(this.sticky_object_array[stickyId].attr("tX"));
+ 					var transY = parseFloat(this.sticky_object_array[stickyId].attr("tY"));
+					var scaleX = 2;
+					var scaleY = 2;
+					var myMatrix = new Snap.Matrix();
+					myMatrix.scale(scaleX,scaleY);            // play with scaling before and after the rotate 
+					// myMatrix.translate((((transX-sticky_X) - ((transX-sticky_X)/3))),0);
+					// myMatrix.translate(scaTraX,0);
+					myMatrix.translate(-(sticky_X-(sticky_X/scaleX))+(transX/scaleX),-(sticky_Y-(sticky_Y/scaleY))+(transY/scaleY));
+
+						this.sticky_object_array[stickyId].attr({
+						transform: myMatrix
+						});
+						console.log("ATTribute:"+ this.sticky_object_array[stickyId].attr().transform);
+
+//<-------
+
+
 
  					//Get Tranform values
 					// var transformString = this.sticky_object_array[stickyId].attr("transform")+'';
@@ -1041,6 +1081,7 @@ var ConferenceScheduler = SAGE2_App.extend( {
 
 					// this.sticky_array[stickyId][4] =tX;
 					// this.sticky_array[stickyId][5] = tY;
+
 
 				}
 				//Printing All users
@@ -1249,6 +1290,7 @@ var ConferenceScheduler = SAGE2_App.extend( {
 				// this.array_sticky[sid][3] = paperY + this.postItH;
 				var holderId = this.findHolderId(paperX-this.postItW,paperY-this.postItH);
 				console.log("Returned: "+ holderId);
+				
 				if(holderId == null){
 					
 					// this.sticky_object_array[sid].attr({
@@ -1257,70 +1299,90 @@ var ConferenceScheduler = SAGE2_App.extend( {
 					var myMatrix = new Snap.Matrix();
 					myMatrix.translate(0,0);
 					this.sticky_object_array[sid].attr({
-						transform: myMatrix
+						transform: myMatrix,
+						tX: 0,
+						tY: 0
 					});
+
 				}
 				else{
-					var stickyPast = this.userInteraction[user.id].stickyPast;
-					//Get X and Y co-ordinates
- 					var sticky_X = stickyPast[0];
- 					var sticky_Y = stickyPast[1];
-					var hX = parseFloat(this.holder_object_array[holderId].attr("x"));
-					var hY = parseFloat(this.holder_object_array[holderId].attr("y"));
-					var transX = hX - sticky_X;
-					var transY = hY - sticky_Y;
-					console.log("transX: "+transX);
-					console.log("transY: "+transY);
+					var hoS = this.holder_object_array[holderId].attr("holdsSticky");
+					if(hoS != null){
+						var myMatrix = new Snap.Matrix();
+						myMatrix.translate(0,0);
+						this.sticky_object_array[sid].attr({
+							transform: myMatrix
+						});
+					}
+					else{
+						var stickyPast = this.userInteraction[user.id].stickyPast;
+						//Get X and Y co-ordinates
+	 					var sticky_X = stickyPast[0];
+	 					var sticky_Y = stickyPast[1];
+						var hX = parseFloat(this.holder_object_array[holderId].attr("x"));
+						var hY = parseFloat(this.holder_object_array[holderId].attr("y"));
+						var transX = hX - sticky_X;
+						var transY = hY - sticky_Y;
+						console.log("transX: "+transX);
+						console.log("transY: "+transY);
 
 
-					var scaleX = this.holderW/this.postItW;
-					console.log("Scale X Ratio:"+scaleX);
+						var scaleX = this.holderW/this.postItW;
+						console.log("Scale X Ratio:"+scaleX);
 
-					var scaleY = this.holderH/this.postItH;
-					console.log("Scale Y Ratio:"+scaleY);
+						var scaleY = this.holderH/this.postItH;
+						console.log("Scale Y Ratio:"+scaleY);
 
-					// var scaTraX = (transX-sticky_X) - ((transX-sticky_X)/3);
-					console.log("Sticky X:"+sticky_X);
-					var scaTraX = transX - ((sticky_X)/3);
-					// console.log("scaTraX:"+scaTraX);
-					//Translate and Scale 
-					// this.sticky_object_array[sid].attr({
-					// 	transform: 'scale('+scaTraX+',1) translate('+scaTraX+','+transY+')'
-					// });
+						// var scaTraX = (transX-sticky_X) - ((transX-sticky_X)/3);
+						console.log("Sticky X:"+sticky_X);
+						var scaTraX = transX - ((sticky_X)/3);
+						// console.log("scaTraX:"+scaTraX);
+						//Translate and Scale 
+						// this.sticky_object_array[sid].attr({
+						// 	transform: 'scale('+scaTraX+',1) translate('+scaTraX+','+transY+')'
+						// });
 
-					// //Working
-					// this.sticky_object_array[sid].attr({
-					// 	transform: 'scale(2,1) translate('+((transX-sticky_X) - ((transX-sticky_X)/2))+','+transY+')'
-					// });
-
-
-					// this.sticky_object_array[sid].attr({
-					// 	transform: 'scale(3,1) translate('+(transX-((sticky_X)-(sticky_X/3)))+','+transY+')'
-					// });
-
-					// this.sticky_object_array[sid].attr({
-					// 	transform: 'translate('+transX+','+transY+')'
-					// }); //DONOT DELETE
+						// //Working
+						// this.sticky_object_array[sid].attr({
+						// 	transform: 'scale(2,1) translate('+((transX-sticky_X) - ((transX-sticky_X)/2))+','+transY+')'
+						// });
 
 
+						// this.sticky_object_array[sid].attr({
+						// 	transform: 'scale(3,1) translate('+(transX-((sticky_X)-(sticky_X/3)))+','+transY+')'
+						// });
 
-					var myMatrix = new Snap.Matrix();
-					myMatrix.scale(scaleX,scaleY);            // play with scaling before and after the rotate 
-					// myMatrix.translate((((transX-sticky_X) - ((transX-sticky_X)/3))),0);
-					// myMatrix.translate(scaTraX,0);
-					myMatrix.translate(-(sticky_X-(sticky_X/scaleX))+(transX/scaleX),-(sticky_Y-(sticky_Y/scaleY))+(transY/scaleY));
-					// myMatrix.translate(0,transY);
+						// this.sticky_object_array[sid].attr({
+						// 	transform: 'translate('+transX+','+transY+')'
+						// }); //DONOT DELETE . this works if scaling of sticky not required.
 
 
-					this.sticky_object_array[sid].attr({
-						transform: myMatrix
-					});
 
-					console.log("ATTR:"+this.sticky_object_array[sid].attr().transform);
-					this.holder_object_array[holderId].attr({
-						holdsSticky: sid
-					});
-					// console.log("HOLDER: "+ )
+						var myMatrix = new Snap.Matrix();
+						myMatrix.scale(scaleX,scaleY);            // play with scaling before and after the rotate 
+						// myMatrix.translate((((transX-sticky_X) - ((transX-sticky_X)/3))),0);
+						// myMatrix.translate(scaTraX,0);
+						myMatrix.translate(-(sticky_X-(sticky_X/scaleX))+(transX/scaleX),-(sticky_Y-(sticky_Y/scaleY))+(transY/scaleY));
+						// myMatrix.translate(0,transY);
+
+
+						this.sticky_object_array[sid].attr({
+							transform: myMatrix,
+							// Updating tX and tY on the group
+							tX: transX,
+							tY: transY
+						});
+
+						console.log("ATTR:"+this.sticky_object_array[sid].attr().transform);
+						this.holder_object_array[holderId].attr({
+							holdsSticky: sid
+						});
+						console.log("HOLDER:"+this.holder_object_array[holderId].attr("holdsSticky"));
+
+						// console.log("HOLDER: "+ )
+
+					}
+
 				}
 
 
@@ -1339,6 +1401,46 @@ var ConferenceScheduler = SAGE2_App.extend( {
 
 		// Scroll events for zoom
 		else if (eventType === "pointerScroll") {
+
+			var stickyId = this.findStickyId(paperX,paperY);
+				console.log("Returned: "+ stickyId);
+				if(stickyId != null){
+					console.log("Not Null");
+					var xS = this.sticky_object_array[stickyId].attr("x");
+					var yS = this.sticky_object_array[stickyId].attr("y");
+					console.log("xS:"+xS);
+					console.log("yS:"+yS);
+
+
+					if(this.toggle == true){
+						var myMatrix = new Snap.Matrix();
+						myMatrix.scale(3.5,1);            // play with scaling before and after the rotate 
+						// myMatrix.translate(-(xS-(xS/2)),0);
+						myMatrix.translate(-(xS-(xS/3.5))+(-10),0);
+						// myMatrix.translate(10,0);
+
+						this.sticky_object_array[stickyId].attr({
+						transform: myMatrix
+						});
+						console.log("ATTribute:"+ this.sticky_object_array[stickyId].attr().transform);
+						this.toggle = false;
+					}
+					else{
+						var myMatrix = new Snap.Matrix();
+						myMatrix.scale(1,1);
+						myMatrix.translate(0,0); //Not required
+
+						this.sticky_object_array[stickyId].attr({
+						transform: myMatrix
+						});
+						console.log("ATTribute:"+ JSON.stringify(this.sticky_object_array[stickyId]));
+						var child = document.getElementById("g_sticky12").childNodes;
+						console.log("ATTribute:"+ JSON.stringify(child));
+						this.toggle = true;
+					}
+					
+				}
+
 		}
 		else if (eventType === "widgetEvent"){
 		}
@@ -1346,7 +1448,33 @@ var ConferenceScheduler = SAGE2_App.extend( {
 			if (data.character === "m") {
 				this.refresh(date);
 			}
+			else if (data.character === "z") {
+				var stickyId = this.findStickyId(paperX,paperY);
+				console.log("Returned: "+ stickyId);
+				if(stickyId != null){
+					console.log("Not Null");
+					
+					//Get X and Y co-ordinates
+ 					var sticky_X = parseFloat(this.sticky_object_array[stickyId].attr("x"));
+ 					var sticky_Y = parseFloat(this.sticky_object_array[stickyId].attr("y"));
+					var transX = parseFloat(this.sticky_object_array[stickyId].attr("tX"));
+ 					var transY = parseFloat(this.sticky_object_array[stickyId].attr("tY"));
+					var scaleX = 2;
+					var scaleY = 2;
+					var myMatrix = new Snap.Matrix();
+					myMatrix.scale(scaleX,scaleY);            // play with scaling before and after the rotate 
+					// myMatrix.translate((((transX-sticky_X) - ((transX-sticky_X)/3))),0);
+					// myMatrix.translate(scaTraX,0);
+					myMatrix.translate(-(sticky_X-(sticky_X/scaleX))+(transX/scaleX),-(sticky_Y-(sticky_Y/scaleY))+(transY/scaleY));
+
+						this.sticky_object_array[stickyId].attr({
+						transform: myMatrix
+						});
+						console.log("ATTribute:"+ this.sticky_object_array[stickyId].attr().transform);
+
+			}
 		}
+	}
 		else if (eventType === "specialKey") {
 			if (data.code === 37 && data.state === "down") { // left
 				this.refresh(date);
