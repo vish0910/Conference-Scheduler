@@ -1311,7 +1311,9 @@ var ConferenceScheduler = SAGE2_App.extend( {
 						var myMatrix = new Snap.Matrix();
 						myMatrix.translate(0,0);
 						this.sticky_object_array[sid].attr({
-							transform: myMatrix
+							transform: myMatrix,
+							tX: 0,
+							tY: 0
 						});
 					}
 					else{
