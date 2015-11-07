@@ -265,8 +265,14 @@ var ConferenceScheduler = SAGE2_App.extend( {
 				var defaultTransform = 'translate('+array_sticky[counter][4]+','+array_sticky[counter][5]+')';
 				var defaultMatrix = 'matrix(1,0,0,1,'+array_sticky[counter][4]+','+array_sticky[counter][5]+')';
 
+				//Creating innerHTML for the sticky
+				var title =  "<strong>Title:</strong> "+ this.catagorizedStickies[theme][k]['title'];
+				var author = "<strong>Speaker:</strong> "+ this.catagorizedStickies[theme][k]['speaker'];
+				var htmlText = '<div xmlns="http://www.w3.org/1999/xhtml" style="color:black; font-size: 5px">'
+									+ title + '<br><br>' + author+ '</div>';
+
 				//creating a group for group all elements of a sticky
-				var g_sticky = this.paper_main.g().attr({ x: array_sticky[counter][0], y: array_sticky[counter][1], transform : defaultMatrix, tX:0, tY:0, stickyColor : stickyColor});
+				var g_sticky = this.paper_main.g().attr({ x: array_sticky[counter][0], y: array_sticky[counter][1], transform : defaultMatrix, tX:0, tY:0, stickyColor : stickyColor, htmlText: htmlText});
 				g_sticky.attr({id: "g_sticky"+counter});
 				// var svg_sticky = this.paper_main.svg(array_sticky[counter][0],array_sticky[counter][1],this.postItW+(padding/3),this.postItH+(padding/3)).attr({transform : defaultTransform});
 
@@ -299,10 +305,7 @@ var ConferenceScheduler = SAGE2_App.extend( {
 				g_sticky.add(sticky_shadow);
 				g_sticky.add(sticky_1);
 				// g_sticky.add(svg_sticky);
-				var title =  "<strong>Title:</strong> "+ this.catagorizedStickies[theme][k]['title'];
-				var author = "<strong>Speaker:</strong> "+ this.catagorizedStickies[theme][k]['speaker'];
-				var htmlText = '<div xmlns="http://www.w3.org/1999/xhtml" style="color:black; font-size: 5px">'
-									+ title + '<br><br>' + author+ '</div>';
+				
 
 
 				//Creating a foreignObject which will have HTML wrappable text
@@ -1047,6 +1050,8 @@ var ConferenceScheduler = SAGE2_App.extend( {
 				var defaultMatrix = 'matrix(1,0,0,1,0,0)';
 				var stickyColor = this.sticky_object_array[stickyId].attr("stickyColor");
 				var f = this.filter;
+				var htmlText = this.sticky_object_array[stickyId].attr("htmlText");
+				console.log("HTML TEXT:"+htmlText);
 				//creating a group for group all elements of a sticky
 				var g_sticky = this.paper_main.g().attr({ x: sticky_X, y: sticky_Y, transform : defaultMatrix, tX:transX, tY:transY, stickyColor: stickyColor});
 				g_sticky.attr({id: "g_sticky"+stickyId});
@@ -1061,7 +1066,6 @@ var ConferenceScheduler = SAGE2_App.extend( {
 				//Add sticky and shadow to group.
 				g_sticky.add(sticky_shadow);
 				g_sticky.add(sticky_1);
-				// g_sticky.add(svg_sticky);
 				// var title =  "<strong>Title:</strong> "+ this.catagorizedStickies[theme][k]['title'];
 				// var author = "<strong>Speaker:</strong> "+ this.catagorizedStickies[theme][k]['speaker'];
 				// var htmlText = '<div xmlns="http://www.w3.org/1999/xhtml" style="color:black; font-size: 5px">'
@@ -1070,12 +1074,12 @@ var ConferenceScheduler = SAGE2_App.extend( {
 
 				//Creating a foreignObject which will have HTML wrappable text
 				var newElement = document.createElementNS("http://www.w3.org/2000/svg", 'foreignObject'); //Create a path in SVG's namespace
-					newElement.setAttribute('x', (x+(padding/3)));
-       				newElement.setAttribute('y', (y+(padding/3)));
+					newElement.setAttribute('x', (sticky_X+(padding/3)));
+       				newElement.setAttribute('y', (sticky_Y+(padding/3)));
        				newElement.setAttribute('width',(this.postItW - (2*padding/3)));
        				newElement.setAttribute('height',(this.postItH - (2*padding/3)));
 
-					// newElement.innerHTML = htmlText;
+					newElement.innerHTML = htmlText;
 				var nodeFobj = 	g_sticky.append(newElement);
 
 			
