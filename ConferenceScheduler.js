@@ -69,6 +69,7 @@ var ConferenceScheduler = SAGE2_App.extend( {
 		this.filter = null;
 		this.shadowColor = "black";
 		this.shadowDepth = 4;
+		this.stickyFontSize = 5;
 
 		//Size of HolderCells
 		this.holderW = 0;
@@ -174,17 +175,22 @@ var ConferenceScheduler = SAGE2_App.extend( {
 
 	intializePostIts: function(paperlist){
 
+		var longestPostItText = 0;
 		if(paperlist != null){
 			var postitinfo = [];
 
 			// console.log("DATA"+ paperlist[1].date);
 			for(var key = 0; key < paperlist.length ; key++){
 				// console.log("From postit"+ paperlist[key]["Title"]);
-
+				var currentPostItLength = 20; //Including length of "title:" and "speaker:"
 				var title = paperlist[key]["Title"];
 				var speaker = paperlist[key]["Speaker"];
 				var theme = paperlist[key]["Theme"];
 
+				currentPostItLength = title.length + speaker.length;
+				if(currentPostItLength > longestPostItText){
+					longestPostItText = currentPostItLength;
+				}
 				// console.log("Theme"+ theme);
 				
 				//Creating a sticky object and pushing into right catagory based on its theme.
@@ -194,8 +200,9 @@ var ConferenceScheduler = SAGE2_App.extend( {
 
 				this.catagorizedStickies[theme].push(newSticky);
 				// console.log("Objects"+JSON.stringify(newSticky));
-			}
 
+			}
+			this.longestPostItText = longestPostItText;
 			this.drawPostIts(postitinfo);
 
 			//Printing stickies on console
@@ -271,6 +278,10 @@ var ConferenceScheduler = SAGE2_App.extend( {
 		var padding = postItW * 0.3;
 		console.log("padding:"+padding);
 		this.padding = padding;
+
+		//Finding the text size
+		this.stickyFontSize = Math.floor(Math.sqrt((postItW * postItH * 0.5)/(this.longestPostItText)));
+		console.log("longestPostItText:"+this.longestPostItText + "this.stickyFontSize:"+this.stickyFontSize);
 		//Wrapping point 
 		var wrapAt = paper_mainW - sticky_offsetX - padding - postItW;
 		
@@ -314,7 +325,7 @@ var ConferenceScheduler = SAGE2_App.extend( {
 				//Creating innerHTML for the sticky
 				var title =  "<strong>Title:</strong> "+ this.catagorizedStickies[theme][k]['title'];
 				var author = "<strong>Speaker:</strong> "+ this.catagorizedStickies[theme][k]['speaker'];
-				var htmlText = '<div xmlns="http://www.w3.org/1999/xhtml" style="color:black; font-size: 5px">'
+				var htmlText = '<div xmlns="http://www.w3.org/1999/xhtml" style="color:black; font-size: '+this.stickyFontSize+'px">'
 									+ title + '<br><br>' + author+ '</div>';
 
 				//creating a group for group all elements of a sticky
