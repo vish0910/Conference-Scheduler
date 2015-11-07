@@ -1,0 +1,11 @@
+{
+	"numberOfDays": 5,
+	"numberOfHalls":3,
+	"numberOfSessions": 6,
+	"numberOfThemes" :5,
+	"themes": {"Robotics":"#FEBB32","Visualization":"#8EE13E", "Neural Networks":"#76CBC8", "Keynote": "#FFAAAA", "Session Chairs": "#FDF490"},
+	"days": ["Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
+	"dates": ["10/28/2015","10/29/2015","10/30/2015","10/31/2015","11/1/2015"],
+	"sessions": ["8am - 10.30am","10.30am - 12pm ","12pm - 2pm (Lunch)","2pm - 3.30pm","3.30pm - 4pm", "Session Chairs"],
+	"halls": ["Grand Hall", "Ballroom", "Red Hall"]
+}

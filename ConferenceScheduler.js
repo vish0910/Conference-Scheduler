@@ -30,10 +30,18 @@ var ConferenceScheduler = SAGE2_App.extend( {
 		this.numberOfHalls = 3;
 		this.numberOfSessions = 6;
 
-		this.themeNames = ["Robotics","Visualization","Neural Networks"];
-		this.catagorizedStickies = {"Robotics":[],"Visualization":[],"Neural Networks":[]};
+		// this.themeNames = ["Robotics","Visualization","Neural Networks"];
+		this.themeNames = [];
+		this.array_days = [];
+		this.array_dates = [];
+		this.array_halls = [];
+		this.array_sessions = [];
+
+		// this.catagorizedStickies = {"Robotics":[],"Visualization":[],"Neural Networks":[]};
+		this.catagorizedStickies = {};
 		//Colors for Sticky
-		this.stickyColor = {"Robotics":"#FEBB32","Visualization":"#8EE13E", "Neural Networks":"#76CBC8"};
+		// this.stickyColor = {"Robotics":"#FEBB32","Visualization":"#8EE13E", "Neural Networks":"#76CBC8"};
+		this.stickyColor = {};
 
 		//Grid variables
 		this.numberOfRows = this.numberOfSessions;
@@ -59,6 +67,8 @@ var ConferenceScheduler = SAGE2_App.extend( {
 		this.postItH = 0;
 		this.padding = 0;
 		this.filter = null;
+		this.shadowColor = "black";
+		this.shadowDepth = 4;
 
 		//Size of HolderCells
 		this.holderW = 0;
@@ -94,14 +104,14 @@ var ConferenceScheduler = SAGE2_App.extend( {
 		// console.log("State:"+ this.state.hello);
 
 		//Calling personal methods
-
-		this.readPaperList();
+		this.readConferenceInfo();
+		// this.readPaperList();
 	
 		this.createSnapPaper();
 		this.createPartitions();
-		this.intializeGrid();
-		this.intializeSticky();
-		this.intializeControl();
+		// this.intializeGrid();
+		// this.intializeSticky();
+		// this.intializeControl();
 
 		this.SAGE2Sync(true);
 
@@ -114,6 +124,42 @@ var ConferenceScheduler = SAGE2_App.extend( {
 		this.enableControls = true;
 	},
 //==> PLay Area
+	readConferenceInfo: function(){
+		var _this = this;
+		readFile(this.resrcPath+"conferenceinfo.json", function(err,data){
+			if (err) throw err;
+			else{
+			// console.log("ReadData"+ data);
+			// console.log("numberOfThemes:"+data.numberOfThemes);
+				_this.numberOfDays = data.numberOfDays;
+				_this.numberOfHalls = data.numberOfHalls;
+				_this.numberOfSessions = data.numberOfSessions;
+				_this.numberOfThemes = data.numberOfThemes;
+				_this.stickyColor = data.themes;
+				_this.array_days = data.days;
+				_this.array_dates = data.dates;
+				_this.array_sessions = data.sessions;
+				_this.array_halls = data.halls;
+				console.log("StickyColor:"+ JSON.stringify(_this.stickyColor));
+				for(var key in _this.stickyColor){
+					_this.themeNames.push(key);
+					//Creating empty arrays for holding catagorized sticky information
+					_this.catagorizedStickies[key] = [];
+				}
+				console.log("catagorizedStickies:"+JSON.stringify(_this.catagorizedStickies));
+				for(var i = 0; i< _this.array_sessions.length ; i++){
+					console.log("Dates: " + i + ">"+ _this.array_sessions[i]);
+				}
+				_this.readPaperList();
+				_this.intializeGrid();
+				_this.intializeSticky();
+				_this.intializeControl();
+
+			}
+  			// return data;
+  		}, "JSON");
+	},
+
 	readPaperList: function(){
 		var _this = this;
 		readFile(this.resrcPath+"paperlist.json", function(err,data){
@@ -231,7 +277,7 @@ var ConferenceScheduler = SAGE2_App.extend( {
 		var stickyColor;
 
 		//Creating Filter for shadow
-		var f = this.paper_main.filter(Snap.filter.blur(padding/3,padding/3));
+		var f = this.paper_main.filter(Snap.filter.blur(padding/2,padding/4));
 		this.filter = f;
 		this.g_allSticky = this.paper_main.g();
 		this.g_allSticky.attr({id: "g_allSticky"});
@@ -277,7 +323,7 @@ var ConferenceScheduler = SAGE2_App.extend( {
 				// var svg_sticky = this.paper_main.svg(array_sticky[counter][0],array_sticky[counter][1],this.postItW+(padding/3),this.postItH+(padding/3)).attr({transform : defaultTransform});
 
 				//Creating Sticky Shadow
-				var sticky_shadow = this.paper_main.rect(array_sticky[counter][0]+(padding/3),array_sticky[counter][1]+(padding/3),this.postItW,this.postItH).attr({fill: "gray", filter: f});
+				var sticky_shadow = this.paper_main.rect(array_sticky[counter][0]+(padding/this.shadowDepth),array_sticky[counter][1]+(padding/this.shadowDepth),this.postItW,this.postItH).attr({fill: this.shadowColor, filter: f});
 				//Creating a sticky
 				var sticky_1= this.paper_main.rect(array_sticky[counter][0],array_sticky[counter][1],this.postItW,this.postItH).attr({fill: stickyColor, transform : defaultMatrix});
 				
@@ -457,7 +503,7 @@ var ConferenceScheduler = SAGE2_App.extend( {
 				stroke:      "rgba(68, 48, 255, 0.80)",
 				strokeWidth: 3
 				});
-			var dayText = this.paper_main.text(cellX+(cellW*0.5),cellY+(dayH*0.5),"Day "+(k+1)).attr({fill: "Green", "text-anchor" : "middle"});
+			var dayText = this.paper_main.text(cellX+(cellW*0.5),cellY+(dayH*0.5),"Day "+(k+1)+": "+this.array_days[k]+", "+this.array_dates[k]).attr({fill: "Green", "text-anchor" : "middle"});
 			//Add header to the group
 			this.g_gridHeaders.add(headRect);
 			this.g_gridHeaders.add(dayPartition);
@@ -491,7 +537,7 @@ var ConferenceScheduler = SAGE2_App.extend( {
 				stroke:      "rgba(68, 48, 255, 0.80)",
 				strokeWidth: 3
 				});
-			var sessionText = this.paper_main.text(cellX+(sessionW*0.5),cellY+(cellH*0.7),"Session "+(k+1)).attr({fill: "Green", "text-anchor" : "middle"});
+			var sessionText = this.paper_main.text(cellX+(sessionW*0.5),cellY+(cellH*0.7),this.array_sessions[k]).attr({fill: "Green", "text-anchor" : "middle"});
 			//Add header to the group
 			this.g_gridHeaders.add(sessionRect);
 			this.g_gridHeaders.add(sessionText);
@@ -511,7 +557,8 @@ var ConferenceScheduler = SAGE2_App.extend( {
 				stroke:      "rgba(68, 48, 255, 0.80)",
 				strokeWidth: 3
 				});
-			var hallText = this.paper_main.text(cellX+(cellW*0.5),cellY+(cellH*0.7),"Hall "+(((k)%this.numberOfHalls)+1)).attr({fill: "Green", "text-anchor" : "middle", fontFamily: "Tahoma, Geneva, sans-serif"});
+			// var hallText = this.paper_main.text(cellX+(cellW*0.5),cellY+(cellH*0.7),"Hall "+(((k)%this.numberOfHalls)+1)).attr({fill: "Green", "text-anchor" : "middle", fontFamily: "Tahoma, Geneva, sans-serif"});
+			var hallText = this.paper_main.text(cellX+(cellW*0.5),cellY+(cellH*0.7),this.array_halls[k%this.numberOfHalls]).attr({fill: "Green", "text-anchor" : "middle", fontFamily: "Tahoma, Geneva, sans-serif"});
 			//Add header to the group
 			this.g_gridHeaders.add(hallRect);
 			this.g_gridHeaders.add(hallText);
@@ -619,7 +666,7 @@ var ConferenceScheduler = SAGE2_App.extend( {
 				stroke:      "rgba(68, 48, 255, 0.80)",
 				strokeWidth: 3
 				});
-			var  themeText = this.paper_main.text(cellX+(cellW*0.5),cellY+(cellH*0.5),"Theme "+k).attr({fill: "Green", "text-anchor" : "middle"});
+			var  themeText = this.paper_main.text(cellX+(cellW*0.5),cellY+(cellH*0.5),this.themeNames[k]).attr({fill: "Green", "text-anchor" : "middle"});
 			this.g_themeHeaders.add(themeRect);
 			this.g_themeHeaders.add(themeText);
 			cellY += cellH;
@@ -993,10 +1040,10 @@ var ConferenceScheduler = SAGE2_App.extend( {
 		}
 
 		if (eventType === "pointerPress" && (data.button === "left")) {
-			console.log("Width:=>"+mainDivW);
+			// console.log("Width:=>"+mainDivW);
 			this.paper_main.rect(paperX,paperY,10,10).attr({id: 'touch', stroke: 'white', fill: 'rgba(12,13,44,0.1)'});
 
-			console.log("Mouse Clicked at:"+paperX+"),("+paperY );
+			console.log("Mouse Clicked at: ("+paperX+"),("+paperY+") User:"+ JSON.stringify(user));
 
 			// console.log("User:"+JSON.stringify(user));
 
@@ -1044,6 +1091,7 @@ var ConferenceScheduler = SAGE2_App.extend( {
 
 	//------>^^^^^
 		//Creating default transform property
+				var shadowColor = user.color;
 				var padding = this.padding; 
 				
 				// var defaultMatrix = 'matrix(1,0,0,1,'+transX+','+transY+')';
@@ -1058,7 +1106,7 @@ var ConferenceScheduler = SAGE2_App.extend( {
 				// var svg_sticky = this.paper_main.svg(array_sticky[counter][0],array_sticky[counter][1],this.postItW+(padding/3),this.postItH+(padding/3)).attr({transform : defaultTransform});
 
 				//Creating Sticky Shadow
-				var sticky_shadow = this.paper_main.rect(sticky_X+(padding/3),sticky_Y+(padding/3),this.postItW,this.postItH).attr({fill: "gray", filter: f});
+				var sticky_shadow = this.paper_main.rect(sticky_X+(padding/this.shadowDepth),sticky_Y+(padding/this.shadowDepth),this.postItW,this.postItH).attr({fill: this.shadowColor, filter: f});
 				//Creating a sticky
 				var sticky_1= this.paper_main.rect(sticky_X,sticky_Y,this.postItW,this.postItH).attr({fill: stickyColor, transform : defaultMatrix});
 				
