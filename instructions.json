@@ -1,13 +1,14 @@
 {
 	"main_script": "ConferenceScheduler.js",
 	"icon": "ConferenceScheduler.png",
-	"width": 800,
-	"height": 600,
+	"width": 1600,
+	"height": 500,
 	"resize": "free",
 	"dependencies": [
 	],
 	"load": {
-		"value": 4
+		"value": 4,
+		"val2" : 5
 	},
 	"title": "ConferenceScheduler",
 	"version": "1.0.0",

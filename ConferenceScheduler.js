@@ -26,7 +26,7 @@ var ConferenceScheduler = SAGE2_App.extend( {
 		this.moveEvents   = "onfinish";
 
 
-		this.numberOfDays = 3;
+		this.numberOfDays = 5;
 		this.numberOfHalls = 3;
 		this.numberOfSessions = 6;
 
@@ -44,7 +44,7 @@ var ConferenceScheduler = SAGE2_App.extend( {
 		this.stickyReservoirRatio = 3;
 
 		//Division ratio
-		this.gridWRatio = 0.7;
+		this.gridWRatio = 0.6;
 		this.gridHRatio = 0.9;
 
 		this.toggle = true;
@@ -57,6 +57,8 @@ var ConferenceScheduler = SAGE2_App.extend( {
 		//Post-it Width and Height
 		this.postItW = 0;
 		this.postItH = 0;
+		this.padding = 0;
+		this.filter = null;
 
 		//Size of HolderCells
 		this.holderW = 0;
@@ -72,7 +74,7 @@ var ConferenceScheduler = SAGE2_App.extend( {
 
 		//Calculating SVG viewport width and height
 		//UPDATE REQUIRED: make sure the aspect ratio when the the window is resized, and refreshed.
-		this.paper_mainW = 2000; 
+		this.paper_mainW = 4000; 
 		this.paper_mainH = (this.paper_mainW * (this.mainDivH / this.mainDivW));
 
 		this.paper_gridXEnd = this.paper_mainW * this.gridWRatio;
@@ -84,6 +86,13 @@ var ConferenceScheduler = SAGE2_App.extend( {
 		this.workablePixelH = this.orgMainDivH;
 		this.offsetWorkZoneY = 0;
 		
+		//
+		// this.state.hello = data.state.hello;
+		console.log("State:"+ JSON.stringify(data));
+		// data.value = 10;
+		// this.state.value = 10;
+		// console.log("State:"+ this.state.hello);
+
 		//Calling personal methods
 
 		this.readPaperList();
@@ -94,6 +103,7 @@ var ConferenceScheduler = SAGE2_App.extend( {
 		this.intializeSticky();
 		this.intializeControl();
 
+		this.SAGE2Sync(true);
 
 		// SAGE2 Application Settings
 		//
@@ -109,7 +119,7 @@ var ConferenceScheduler = SAGE2_App.extend( {
 		readFile(this.resrcPath+"paperlist.json", function(err,data){
 			if (err) throw err;
 			else{
-			console.log("ReadData"+ data);
+			// console.log("ReadData"+ data);
 			_this.intializePostIts(data);
 			}
   			// return data;
@@ -121,15 +131,15 @@ var ConferenceScheduler = SAGE2_App.extend( {
 		if(paperlist != null){
 			var postitinfo = [];
 
-			console.log("DATA"+ paperlist[1].date);
+			// console.log("DATA"+ paperlist[1].date);
 			for(var key = 0; key < paperlist.length ; key++){
-				console.log("From postit"+ paperlist[key]["Title"]);
+				// console.log("From postit"+ paperlist[key]["Title"]);
 
 				var title = paperlist[key]["Title"];
 				var speaker = paperlist[key]["Speaker"];
 				var theme = paperlist[key]["Theme"];
 
-				console.log("Theme"+ theme);
+				// console.log("Theme"+ theme);
 				
 				//Creating a sticky object and pushing into right catagory based on its theme.
 				var newSticky = {};
@@ -214,7 +224,7 @@ var ConferenceScheduler = SAGE2_App.extend( {
 		//Gap between 2 stickies
 		var padding = postItW * 0.3;
 		console.log("padding:"+padding);
-
+		this.padding = padding;
 		//Wrapping point 
 		var wrapAt = paper_mainW - sticky_offsetX - padding - postItW;
 		
@@ -222,7 +232,7 @@ var ConferenceScheduler = SAGE2_App.extend( {
 
 		//Creating Filter for shadow
 		var f = this.paper_main.filter(Snap.filter.blur(padding/3,padding/3));
-
+		this.filter = f;
 		this.g_allSticky = this.paper_main.g();
 		this.g_allSticky.attr({id: "g_allSticky"});
 		
@@ -256,7 +266,7 @@ var ConferenceScheduler = SAGE2_App.extend( {
 				var defaultMatrix = 'matrix(1,0,0,1,'+array_sticky[counter][4]+','+array_sticky[counter][5]+')';
 
 				//creating a group for group all elements of a sticky
-				var g_sticky = this.paper_main.g().attr({ x: array_sticky[counter][0], y: array_sticky[counter][1], transform : defaultMatrix, tX:0, tY:0});
+				var g_sticky = this.paper_main.g().attr({ x: array_sticky[counter][0], y: array_sticky[counter][1], transform : defaultMatrix, tX:0, tY:0, stickyColor : stickyColor});
 				g_sticky.attr({id: "g_sticky"+counter});
 				// var svg_sticky = this.paper_main.svg(array_sticky[counter][0],array_sticky[counter][1],this.postItW+(padding/3),this.postItH+(padding/3)).attr({transform : defaultTransform});
 
@@ -310,7 +320,7 @@ var ConferenceScheduler = SAGE2_App.extend( {
 				// g_sticky.add(sticky_text_title);
 				// g_sticky.add(nodeFobj);
 
-				console.log("Following SVG Group is created: "+ JSON.stringify(g_sticky));
+				// console.log("Following SVG Group is created: "+ JSON.stringify(g_sticky));
 				//Pushing into sticky group object
 				this.sticky_object_array.push(g_sticky);
 
@@ -353,6 +363,8 @@ var ConferenceScheduler = SAGE2_App.extend( {
 
 		//Add the snap container to the div
 		this.element.appendChild(this.paper_main.node);
+		// this.state.hello = "This will be saved in state!";
+		// data.state.hello = this.state.hello;
 	},
 
 	createPartitions: function(){
@@ -418,7 +430,8 @@ var ConferenceScheduler = SAGE2_App.extend( {
 		var j;
 
 		var cellW = paper_tableW/this.numberOfDays;
-		var cellH = parseInt(Math.min(paper_tableH/this.numberOfRows, cellW),10);
+		var cellH = parseInt(Math.min(paper_tableH/this.numberOfRows, paper_tableW/this.numberOfColumns),10);
+		cellW = cellH * this.numberOfHalls;
 		// var cellH = paper_tableH/this.numberOfRows;
 
 		//Creating group of headers
@@ -445,6 +458,7 @@ var ConferenceScheduler = SAGE2_App.extend( {
 			//Add header to the group
 			this.g_gridHeaders.add(headRect);
 			this.g_gridHeaders.add(dayPartition);
+			this.g_gridHeaders.add(dayText);
 			cellX += cellW;
 		}
 		//Drawing the last line and add it to the group
@@ -453,7 +467,9 @@ var ConferenceScheduler = SAGE2_App.extend( {
 
 
 		//Holds the width and height of cell
-		cellW = paper_tableW/this.numberOfColumns;
+		// cellW = paper_tableW/this.numberOfColumns;
+		cellW = cellH;
+
 		//UNCOMMENT 
 		// cellH = parseInt(Math.min(paper_tableH/this.numberOfRows, cellW),10);
 
@@ -529,17 +545,18 @@ var ConferenceScheduler = SAGE2_App.extend( {
 		this.holder_object_array = [];
 		var defaultTransform = 'translate(0,0)';
 		var defaultMatrix = 'matrix(1,0,0,1,0,0)';
-
+		var cellCounter = 0;
 		//Loop that creates rectangles
 		for(i = 0;i<this.numberOfRows;i++){
 			for(j=0;j<this.numberOfColumns;j++ ){
 				//For reference : Paper.rect(x,y,width,height,[rx],[ry])
 				var cellRect = this.paper_main.rect(cellX, cellY, cellW, cellH).attr({
-				fill:        "rgba(68, 48, 255, 0.15)",
-				stroke:      "rgba(68, 48, 255, 0.80)",
-				strokeWidth: 2,
-				transform: defaultMatrix,
-				holdsSticky: ""
+					id: "Holder_"+cellCounter,
+					fill:        "rgba(68, 48, 255, 0.15)",
+					stroke:      "rgba(68, 48, 255, 0.80)",
+					strokeWidth: 2,
+					transform: defaultMatrix,
+					holdsSticky: ""
 				});
 				//Add the cell to group
 				this.g_gridcells.add(cellRect);
@@ -547,6 +564,8 @@ var ConferenceScheduler = SAGE2_App.extend( {
 				this.holder_object_array.push(cellRect);
 				//Update value of the x-coordinate
 				cellX +=cellW;
+				//Increase the counter value
+				cellCounter++;
 			}
 			//Update value of the y-coordinate
 			cellY += cellH;
@@ -654,6 +673,7 @@ var ConferenceScheduler = SAGE2_App.extend( {
 
 	load: function(date) {
 		console.log('ConferenceScheduler> Load with state value', this.state.value);
+		console.log("State:"+ JSON.stringify(data));
 		this.refresh(date);
 	},
 
@@ -726,7 +746,7 @@ var ConferenceScheduler = SAGE2_App.extend( {
 
  			//Get Tranform values
 			var transformString = this.sticky_object_array[key].attr().transform;
-			console.log("Total Rect sticky tranform matrix:"+transformString);
+			// console.log("Total Rect sticky tranform matrix:"+transformString);
 			// var tXY = transformString.split(',');
 			// var tX = parseFloat(tXY[0].slice(1),10);
 			// var tY = parseFloat(tXY[1],10);
@@ -734,11 +754,11 @@ var ConferenceScheduler = SAGE2_App.extend( {
 
 
 			var currentMatrix = transformString.slice(7,-1).split("\,");
-			console.log("currentMatrix:" +currentMatrix);
+			// console.log("currentMatrix:" +currentMatrix);
      
       		for(var i=0; i<currentMatrix.length; i++) {
       			currentMatrix[i] = parseFloat(currentMatrix[i]);
-      			console.log("HI:"+ i+ " ->"+ JSON.stringify(currentMatrix[i]));
+      			// console.log("HI:"+ i+ " ->"+ JSON.stringify(currentMatrix[i]));
      		}
 
      		var scaleX = currentMatrix[0];
@@ -748,7 +768,7 @@ var ConferenceScheduler = SAGE2_App.extend( {
 			// var tY = currentMatrix[5];
 			var tX = parseFloat(this.sticky_object_array[key].attr("tX"));
  			var tY = parseFloat(this.sticky_object_array[key].attr("tY"));
-			console.log("TX:"+tX+"TY: "+tY);
+			// console.log("TX:"+tX+"TY: "+tY);
 
 
 
@@ -786,7 +806,7 @@ var ConferenceScheduler = SAGE2_App.extend( {
  			console.log("holdsSticky:"+holdsSticky);
  			//Get Tranform values
 			var transformString = this.holder_object_array[key].attr().transform;
-			console.log("Total Rect holder tranform matrix:"+transformString);
+			// console.log("Total Rect holder tranform matrix:"+transformString);
 			// var tXY = transformString.split(',');
 			// var tX = parseFloat(tXY[0].slice(1),10);
 			// var tY = parseFloat(tXY[1],10);
@@ -794,16 +814,16 @@ var ConferenceScheduler = SAGE2_App.extend( {
 			// console.log("TX:"+tX+"TY: "+tY);
 
 			var currentMatrix = transformString.slice(7,-1).split("\,");
-			console.log("currentMatrix:" +currentMatrix);
+			// console.log("currentMatrix:" +currentMatrix);
      
       		for(var i=0; i<currentMatrix.length; i++) {
       			currentMatrix[i] = parseFloat(currentMatrix[i]);
-      			console.log("HI:"+ i+ " ->"+ JSON.stringify(currentMatrix[i]));
+      			// console.log("HI:"+ i+ " ->"+ JSON.stringify(currentMatrix[i]));
      		}
 
      		var tX = currentMatrix[4];
 			var tY = currentMatrix[5];
-			console.log("TX:"+tX+"TY: "+tY);
+			// console.log("TX:"+tX+"TY: "+tY);
 
 
 			//Find resulting co ordinates by adding location and translation
@@ -971,7 +991,7 @@ var ConferenceScheduler = SAGE2_App.extend( {
 
 		if (eventType === "pointerPress" && (data.button === "left")) {
 			console.log("Width:=>"+mainDivW);
-			this.paper_main.rect(paperX,paperY,10,10).attr({stroke: 'white', fill: 'rgba(12,13,44,0.1)'});
+			this.paper_main.rect(paperX,paperY,10,10).attr({id: 'touch', stroke: 'white', fill: 'rgba(12,13,44,0.1)'});
 
 			console.log("Mouse Clicked at:"+paperX+"),("+paperY );
 
@@ -1018,6 +1038,63 @@ var ConferenceScheduler = SAGE2_App.extend( {
 //-------->
  					var transX = parseFloat(this.sticky_object_array[stickyId].attr("tX"));
  					var transY = parseFloat(this.sticky_object_array[stickyId].attr("tY"));
+
+	//------>^^^^^
+		//Creating default transform property
+				var padding = this.padding; 
+				
+				// var defaultMatrix = 'matrix(1,0,0,1,'+transX+','+transY+')';
+				var defaultMatrix = 'matrix(1,0,0,1,0,0)';
+				var stickyColor = this.sticky_object_array[stickyId].attr("stickyColor");
+				var f = this.filter;
+				//creating a group for group all elements of a sticky
+				var g_sticky = this.paper_main.g().attr({ x: sticky_X, y: sticky_Y, transform : defaultMatrix, tX:transX, tY:transY, stickyColor: stickyColor});
+				g_sticky.attr({id: "g_sticky"+stickyId});
+				// var svg_sticky = this.paper_main.svg(array_sticky[counter][0],array_sticky[counter][1],this.postItW+(padding/3),this.postItH+(padding/3)).attr({transform : defaultTransform});
+
+				//Creating Sticky Shadow
+				var sticky_shadow = this.paper_main.rect(sticky_X+(padding/3),sticky_Y+(padding/3),this.postItW,this.postItH).attr({fill: "gray", filter: f});
+				//Creating a sticky
+				var sticky_1= this.paper_main.rect(sticky_X,sticky_Y,this.postItW,this.postItH).attr({fill: stickyColor, transform : defaultMatrix});
+				
+			
+				//Add sticky and shadow to group.
+				g_sticky.add(sticky_shadow);
+				g_sticky.add(sticky_1);
+				// g_sticky.add(svg_sticky);
+				// var title =  "<strong>Title:</strong> "+ this.catagorizedStickies[theme][k]['title'];
+				// var author = "<strong>Speaker:</strong> "+ this.catagorizedStickies[theme][k]['speaker'];
+				// var htmlText = '<div xmlns="http://www.w3.org/1999/xhtml" style="color:black; font-size: 5px">'
+				// 					+ title + '<br><br>' + author+ '</div>';
+
+
+				//Creating a foreignObject which will have HTML wrappable text
+				var newElement = document.createElementNS("http://www.w3.org/2000/svg", 'foreignObject'); //Create a path in SVG's namespace
+					newElement.setAttribute('x', (x+(padding/3)));
+       				newElement.setAttribute('y', (y+(padding/3)));
+       				newElement.setAttribute('width',(this.postItW - (2*padding/3)));
+       				newElement.setAttribute('height',(this.postItH - (2*padding/3)));
+
+					// newElement.innerHTML = htmlText;
+				var nodeFobj = 	g_sticky.append(newElement);
+
+			
+				this.sticky_object_array[stickyId].remove();
+				delete this.sticky_object_array[stickyId];
+
+				this.sticky_object_array[stickyId] = g_sticky;
+				this.g_allSticky.add(g_sticky);
+
+				
+
+	//<------^^^^^
+
+
+
+
+
+
+
 					var scaleX = 2;
 					var scaleY = 2;
 					var myMatrix = new Snap.Matrix();
@@ -1308,6 +1385,7 @@ var ConferenceScheduler = SAGE2_App.extend( {
 				else{
 					var hoS = this.holder_object_array[holderId].attr("holdsSticky");
 					if(hoS != null){
+						console.log("Holds Sticky: "+hoS);
 						var myMatrix = new Snap.Matrix();
 						myMatrix.translate(0,0);
 						this.sticky_object_array[sid].attr({
@@ -1448,7 +1526,9 @@ var ConferenceScheduler = SAGE2_App.extend( {
 		}
 		else if (eventType === "keyboard") {
 			if (data.character === "m") {
-				this.refresh(date);
+				console.log("Pressed M");
+				this.state.val2 = 10;
+				// this.refresh(date);
 			}
 			else if (data.character === "z") {
 				var stickyId = this.findStickyId(paperX,paperY);
