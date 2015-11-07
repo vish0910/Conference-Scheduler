@@ -1053,7 +1053,7 @@ var ConferenceScheduler = SAGE2_App.extend( {
 				var htmlText = this.sticky_object_array[stickyId].attr("htmlText");
 				console.log("HTML TEXT:"+htmlText);
 				//creating a group for group all elements of a sticky
-				var g_sticky = this.paper_main.g().attr({ x: sticky_X, y: sticky_Y, transform : defaultMatrix, tX:transX, tY:transY, stickyColor: stickyColor});
+				var g_sticky = this.paper_main.g().attr({ x: sticky_X, y: sticky_Y, transform : defaultMatrix, tX:transX, tY:transY, stickyColor: stickyColor, htmlText: htmlText});
 				g_sticky.attr({id: "g_sticky"+stickyId});
 				// var svg_sticky = this.paper_main.svg(array_sticky[counter][0],array_sticky[counter][1],this.postItW+(padding/3),this.postItH+(padding/3)).attr({transform : defaultTransform});
 
