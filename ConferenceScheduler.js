@@ -1180,11 +1180,6 @@ var ConferenceScheduler = SAGE2_App.extend( {
 	//<------^^^^^
 
 
-
-
-
-
-
 					var scaleX = 2;
 					var scaleY = 2;
 					var myMatrix = new Snap.Matrix();
