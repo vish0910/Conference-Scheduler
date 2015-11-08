@@ -1176,9 +1176,7 @@ var ConferenceScheduler = SAGE2_App.extend( {
 				this.g_allSticky.add(g_sticky);
 
 				
-
 	//<------^^^^^
-
 
 					var scaleX = 2;
 					var scaleY = 2;
