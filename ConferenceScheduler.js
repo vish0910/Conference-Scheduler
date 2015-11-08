@@ -1097,8 +1097,8 @@ var ConferenceScheduler = SAGE2_App.extend( {
  					var sticky_X = parseFloat(this.sticky_object_array[stickyId].attr("x"));
  					var sticky_Y = parseFloat(this.sticky_object_array[stickyId].attr("y"));
 //-------->
- 					var transX = parseFloat(this.sticky_object_array[stickyId].attr("tX"));
- 					var transY = parseFloat(this.sticky_object_array[stickyId].attr("tY"));
+ 					var transX = parseFloat(this.sticky_object_array[stickyId].attr("tX")) - this.postItW;
+ 					var transY = parseFloat(this.sticky_object_array[stickyId].attr("tY")) - this.postItH;
 
 	//------>^^^^^
 		//Creating default transform property
