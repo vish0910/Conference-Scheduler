@@ -1138,9 +1138,15 @@ var ConferenceScheduler = SAGE2_App.extend( {
 				// var svg_sticky = this.paper_main.svg(array_sticky[counter][0],array_sticky[counter][1],this.postItW+(padding/3),this.postItH+(padding/3)).attr({transform : defaultTransform});
 
 				//Creating Sticky Shadow
-				var sticky_shadow = this.paper_main.rect(sticky_X+(padding/this.shadowDepth),sticky_Y+(padding/this.shadowDepth),this.postItW,this.postItH).attr({fill: this.shadowColor, filter: f});
+				var sticky_shadow = this.paper_main.rect(sticky_X+(padding/this.shadowDepth),sticky_Y+(padding/this.shadowDepth),this.postItW,this.postItH).attr({
+					fill: this.shadowColor,
+					filter: f
+				});
 				//Creating a sticky
-				var sticky_1= this.paper_main.rect(sticky_X,sticky_Y,this.postItW,this.postItH).attr({fill: stickyColor, transform : defaultMatrix});
+				var sticky_1= this.paper_main.rect(sticky_X,sticky_Y,this.postItW,this.postItH).attr({
+					fill: stickyColor,
+					transform : defaultMatrix
+				});
 				
 			
 				//Add sticky and shadow to group.
