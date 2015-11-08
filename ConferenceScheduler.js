@@ -329,14 +329,27 @@ var ConferenceScheduler = SAGE2_App.extend( {
 									+ title + '<br><br>' + author+ '</div>';
 
 				//creating a group for group all elements of a sticky
-				var g_sticky = this.paper_main.g().attr({ x: array_sticky[counter][0], y: array_sticky[counter][1], transform : defaultMatrix, tX:0, tY:0, stickyColor : stickyColor, htmlText: htmlText});
-				g_sticky.attr({id: "g_sticky"+counter});
+				var g_sticky = this.paper_main.g().attr({
+					id: "g_sticky"+counter,
+					x: array_sticky[counter][0],
+					y: array_sticky[counter][1],
+					transform : defaultMatrix,
+					tX:0, tY:0,
+					stickyColor : stickyColor,
+					htmlText: htmlText
+				});
 				// var svg_sticky = this.paper_main.svg(array_sticky[counter][0],array_sticky[counter][1],this.postItW+(padding/3),this.postItH+(padding/3)).attr({transform : defaultTransform});
 
 				//Creating Sticky Shadow
-				var sticky_shadow = this.paper_main.rect(array_sticky[counter][0]+(padding/this.shadowDepth),array_sticky[counter][1]+(padding/this.shadowDepth),this.postItW,this.postItH).attr({fill: this.shadowColor, filter: f});
+				var sticky_shadow = this.paper_main.rect(array_sticky[counter][0]+(padding/this.shadowDepth),array_sticky[counter][1]+(padding/this.shadowDepth),this.postItW,this.postItH).attr({
+					fill: this.shadowColor,
+					filter: f
+				});
 				//Creating a sticky
-				var sticky_1= this.paper_main.rect(array_sticky[counter][0],array_sticky[counter][1],this.postItW,this.postItH).attr({fill: stickyColor, transform : defaultMatrix});
+				var sticky_1= this.paper_main.rect(array_sticky[counter][0],array_sticky[counter][1],this.postItW,this.postItH).attr({
+					fill: stickyColor,
+					transform : defaultMatrix
+				});
 				
 				//Creating within  and svg
 				// //Creating Sticky Shadow
@@ -1112,8 +1125,16 @@ var ConferenceScheduler = SAGE2_App.extend( {
 				var htmlText = this.sticky_object_array[stickyId].attr("htmlText");
 				console.log("HTML TEXT:"+htmlText);
 				//creating a group for group all elements of a sticky
-				var g_sticky = this.paper_main.g().attr({ x: sticky_X, y: sticky_Y, transform : defaultMatrix, tX:transX, tY:transY, stickyColor: stickyColor, htmlText: htmlText});
-				g_sticky.attr({id: "g_sticky"+stickyId});
+				var g_sticky = this.paper_main.g().attr({
+					id: "g_sticky"+stickyId,
+					x: sticky_X,
+					y: sticky_Y,
+					transform : defaultMatrix,
+					tX:transX, tY:transY,
+					stickyColor: stickyColor,
+					htmlText: htmlText
+				});
+				
 				// var svg_sticky = this.paper_main.svg(array_sticky[counter][0],array_sticky[counter][1],this.postItW+(padding/3),this.postItH+(padding/3)).attr({transform : defaultTransform});
 
 				//Creating Sticky Shadow
