@@ -746,34 +746,44 @@ var ConferenceScheduler = SAGE2_App.extend( {
 	
 		
 		this.button_floorPlan = this.paper_main.rect(20,paper_gridYEnd+50,this.buttonW,this.buttonH).attr({
-			fill: "#330099",
-			stroke: "#ffffff"
+			// fill: "#330099",
+			// stroke: "#ffffff"
+
+			fill:        "rgba(68, 48, 255, 0.15)",
+			stroke:      "rgba(68, 48, 255, 0.80)",
+			strokeWidth: 3
 		
 		});
 
-		this.text_floorPlan = this.paper_main.text(250,paper_gridYEnd+120, "View Floor plan").attr({fill: "Green", 'font-size':"50" ,"text-anchor" : "middle"});
+		this.text_floorPlan = this.paper_main.text(250,paper_gridYEnd+120, "View Floor plan").attr({fill: "Green", 'font-size':"40" ,"text-anchor" : "middle"});
 		
 		
 //		this.g_button1.add(button_floorPlan);
 		
 		this.button_roomInfo = this.paper_main.rect(650,paper_gridYEnd+50,this.buttonW,this.buttonH).attr({
-			fill: "#330099",
-			stroke: "#ffffff"
+			// fill: "#330099",
+			// stroke: "#ffffff"
+			fill:        "rgba(68, 48, 255, 0.15)",
+			stroke:      "rgba(68, 48, 255, 0.80)",
+			strokeWidth: 3
 		
 		});
 		
-		this.text_floorPlan = this.paper_main.text(930,paper_gridYEnd+120, "View Room Information").attr({fill: "Green", 'font-size':"50" ,"text-anchor" : "middle"});
+		this.text_floorPlan = this.paper_main.text(930,paper_gridYEnd+120, "View Room Information").attr({fill: "Green", 'font-size':"40" ,"text-anchor" : "middle"});
 		
 //		this.g_button2.add(button_roomInfo);
 
 		this.button_displayDate = this.paper_main.rect(1300,paper_gridYEnd+50,this.buttonwidth,this.buttonH).attr({
-			fill: "#330099",
-			stroke: "#ffffff"
+			// fill: "#330099",
+			// stroke: "#ffffff"
+			fill:        "rgba(68, 48, 255, 0.15)",
+			stroke:      "rgba(68, 48, 255, 0.80)",
+			strokeWidth: 3
 		
 		});	
 		var d= new Date();
 		
-		this.text_floorPlan = this.paper_main.text(1700,paper_gridYEnd+120, "Today is" +" "+ d.toDateString()).attr({fill: "Green", 'font-size':"50" ,"text-anchor" : "middle"});
+		this.text_floorPlan = this.paper_main.text(1700,paper_gridYEnd+120, "Today is" +" "+ d.toDateString()).attr({fill: "Green", 'font-size':"40" ,"text-anchor" : "middle"});
 		
 
 //		this.g_button3.add(button_displayDate);		
