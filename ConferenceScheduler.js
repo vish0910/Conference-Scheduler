@@ -1332,7 +1332,7 @@ if(paperX >= 650 && paperX < this.buttonW+650 && paperY >= 50+paper_gridYEnd  &&
 
 
 					if(this.toggle == true){
-					this.image_floorPlan = this.paper_main.image(this.resrcPath +"info.png",(this.paper_mainW/4),(this.paper_mainH/4),(this.paper_mainW/2),(this.paper_mainH/2));
+					this.image_floorPlan = this.paper_main.image(this.resrcPath +"icon.png",(this.paper_mainW/4),(this.paper_mainH/4),(this.paper_mainW/2),(this.paper_mainH/2));
 						
 
 						this.toggle = false;
