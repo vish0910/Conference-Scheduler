@@ -53,15 +53,20 @@ var ConferenceScheduler = SAGE2_App.extend( {
 
 		//Division ratio
 		this.gridWRatio = 0.6;
-		this.gridHRatio = 0.8;
+		this.gridHRatio = 0.9;
 
-		this.toggle = true;
+		this.textColor = "Gray";
+		this.txtSize = "20";
+
+		//Flags for Buttons
+		this.toggleFP = true;
+		this.toggleRI = true;
 
 		//Button Width and Height
-
-		this.buttonW = 550;
-		this.buttonH = 100;
-		this.buttonwidth = 1000;
+		this.buttonW = 0;
+		this.buttonH = 0;
+		this.buttonPadding = 0;
+		this.controlsLeftPadding = 0;
 	
 
 		//Post-it Width and Height
@@ -368,9 +373,9 @@ var ConferenceScheduler = SAGE2_App.extend( {
 
 				// console.log("Sticky Created at: "+array_sticky[counter][0] +": "+ array_sticky[counter][1] );
 				// var title = "Title: "+ this.catagorizedStickies[theme][k]['title'];
-				// var sticky_text_title = this.paper_main.text(array_sticky[counter][0]+(padding/3),array_sticky[counter][1]+(padding/3),title).attr({fill: "Green", "font-size": "0.2em"});  
+				// var sticky_text_title = this.paper_main.text(array_sticky[counter][0]+(padding/3),array_sticky[counter][1]+(padding/3),title).attr({fill: this.textColor, "font-size": "0.2em"});  
 				// var fobjectSVG = '<svg x='+(array_sticky[counter][0]+(padding/3))+' y='+(array_sticky[counter][1]+(padding/3))+' width='+this.postItW+' height='+this.postItH+'><text fill="red">HI</text></svg>';
-				// var svg_rect = svg_sticky.rect(0,0,10,10).attr({fill: "Green"});
+				// var svg_rect = svg_sticky.rect(0,0,10,10).attr({fill: this.textColor});
 				// var frag = Snap.parse(fobjectSVG);
 
 				// var g = this.paper_main.append( frag );
@@ -520,6 +525,13 @@ var ConferenceScheduler = SAGE2_App.extend( {
 		var cellX = paper_tableX1;
 		var cellY = paper_tableY1 - cellH - dayH;
 
+		//But, before that, display title
+		var titleText = this.paper_main.text((this.paper_gridXEnd/2),cellY*0.8 ,"Conference Scheduler").attr({
+				fill: this.textColor,
+				'font-size': "40",
+				"text-anchor" : "middle"
+		});
+
 		//Find length of the partition line
 		var partitionLength = cellY+dayH+(cellH*(this.numberOfRows+1));
 
@@ -531,7 +543,11 @@ var ConferenceScheduler = SAGE2_App.extend( {
 				stroke:      "rgba(68, 48, 255, 0.80)",
 				strokeWidth: 3
 				});
-			var dayText = this.paper_main.text(cellX+(cellW*0.5),cellY+(dayH*0.5),"Day "+(k+1)+": "+this.array_days[k]+", "+this.array_dates[k]).attr({fill: "Green", "text-anchor" : "middle"});
+			var dayText = this.paper_main.text(cellX+(cellW*0.5),cellY+(dayH*0.5),"Day "+(k+1)+": "+this.array_days[k]+", "+this.array_dates[k]).attr({
+				fill: this.textColor,
+				'font-size': this.txtSize,
+				"text-anchor" : "middle"
+			});
 			//Add header to the group
 			this.g_gridHeaders.add(headRect);
 			this.g_gridHeaders.add(dayPartition);
@@ -557,6 +573,9 @@ var ConferenceScheduler = SAGE2_App.extend( {
 		cellX = paper_tableX1-sessionW;
 		cellY = paper_tableY1;
 
+		//Saving this for refering it in controls.
+		this.controlsLeftPadding = cellX;
+
 		//Session
 		for(var k = 0;k<this.numberOfSessions;k++){
 			
@@ -565,7 +584,11 @@ var ConferenceScheduler = SAGE2_App.extend( {
 				stroke:      "rgba(68, 48, 255, 0.80)",
 				strokeWidth: 3
 				});
-			var sessionText = this.paper_main.text(cellX+(sessionW*0.5),cellY+(cellH*0.7),this.array_sessions[k]).attr({fill: "Green", "text-anchor" : "middle"});
+			var sessionText = this.paper_main.text(cellX+(sessionW*0.5),cellY+(cellH*0.7),this.array_sessions[k]).attr({
+				fill: this.textColor,
+				'font-size': this.txtSize,
+				"text-anchor" : "middle"
+			});
 			//Add header to the group
 			this.g_gridHeaders.add(sessionRect);
 			this.g_gridHeaders.add(sessionText);
@@ -585,8 +608,13 @@ var ConferenceScheduler = SAGE2_App.extend( {
 				stroke:      "rgba(68, 48, 255, 0.80)",
 				strokeWidth: 3
 				});
-			// var hallText = this.paper_main.text(cellX+(cellW*0.5),cellY+(cellH*0.7),"Hall "+(((k)%this.numberOfHalls)+1)).attr({fill: "Green", "text-anchor" : "middle", fontFamily: "Tahoma, Geneva, sans-serif"});
-			var hallText = this.paper_main.text(cellX+(cellW*0.5),cellY+(cellH*0.7),this.array_halls[k%this.numberOfHalls]).attr({fill: "Green", "text-anchor" : "middle", fontFamily: "Tahoma, Geneva, sans-serif"});
+			// var hallText = this.paper_main.text(cellX+(cellW*0.5),cellY+(cellH*0.7),"Hall "+(((k)%this.numberOfHalls)+1)).attr({fill: this.textColor, "text-anchor" : "middle", fontFamily: "Tahoma, Geneva, sans-serif"});
+			var hallText = this.paper_main.text(cellX+(cellW*0.5),cellY+(cellH*0.7),this.array_halls[k%this.numberOfHalls]).attr({
+				fill: this.textColor,
+				'font-size': this.txtSize,
+				"text-anchor" : "middle",
+				fontFamily: "Tahoma, Geneva, sans-serif"
+			});
 			//Add header to the group
 			this.g_gridHeaders.add(hallRect);
 			this.g_gridHeaders.add(hallText);
@@ -694,7 +722,11 @@ var ConferenceScheduler = SAGE2_App.extend( {
 				stroke:      "rgba(68, 48, 255, 0.80)",
 				strokeWidth: 3
 				});
-			var  themeText = this.paper_main.text(cellX+(cellW*0.5),cellY+(cellH*0.5),this.themeNames[k]).attr({fill: "Green", "text-anchor" : "middle"});
+			var  themeText = this.paper_main.text(cellX+(cellW*0.5),cellY+(cellH*0.5),this.themeNames[k]).attr({
+				fill: this.textColor,
+				'font-size': this.txtSize,
+				"text-anchor" : "middle"
+			});
 			this.g_themeHeaders.add(themeRect);
 			this.g_themeHeaders.add(themeText);
 			cellY += cellH;
@@ -740,54 +772,101 @@ var ConferenceScheduler = SAGE2_App.extend( {
 		var paper_controlW = paper_gridXEnd;
 		var paper_controlH = paper_mainH - paper_gridYEnd;
 
-//		var g_button1 = this.paper_main.g();
-//		var g_button2 = this.paper_main.g();
-//		var g_button3 = this.paper_main.g();
-	
 		
-		this.button_floorPlan = this.paper_main.rect(20,paper_gridYEnd+50,this.buttonW,this.buttonH).attr({
+		
+		var buttonH = paper_controlH*0.7;
+		var buttonW = buttonH * 5;
+		var buttonPadding = paper_controlH*0.15;
+
+		this.buttonW = buttonW;
+		this.buttonH = buttonH;
+		this.buttonPadding = buttonPadding;
+		
+		//Button 1
+		this.g_button1 = this.paper_main.g();
+		this.g_button1.attr({
+			id: "Button1"
+		});
+
+		var button1X = this.controlsLeftPadding;
+		var button1Y = paper_gridYEnd+this.buttonPadding;
+
+		var button_floorPlan = this.paper_main.rect(button1X,button1Y,this.buttonW,this.buttonH).attr({
+			fill:        "rgba(68, 48, 255, 0.15)",
+			stroke:      "rgba(68, 48, 255, 0.80)",
+			strokeWidth: 3		
+		});
+
+		var text_floorPlan = this.paper_main.text(button1X+(this.buttonW*0.5),button1Y+(this.buttonH*0.6), "Floor Plan").attr({
+			fill: this.textColor,
+			'font-size':"40" ,
+			"text-anchor" : "middle"
+		});
+		
+		this.g_button1.add(button_floorPlan);
+		this.g_button1.add(text_floorPlan);
+
+		//Button 2
+		this.g_button2 = this.paper_main.g();
+		this.g_button2.attr({
+			id: "Button2"
+		});
+
+		var button2X = button1X + this.buttonW + this.buttonPadding;
+		var button2Y = paper_gridYEnd+this.buttonPadding;
+
+		
+		var button_roomInfo = this.paper_main.rect(button2X,button2Y,this.buttonW,this.buttonH).attr({
 			// fill: "#330099",
 			// stroke: "#ffffff"
-
 			fill:        "rgba(68, 48, 255, 0.15)",
 			stroke:      "rgba(68, 48, 255, 0.80)",
 			strokeWidth: 3
 		
 		});
-
-		this.text_floorPlan = this.paper_main.text(250,paper_gridYEnd+120, "View Floor plan").attr({fill: "Green", 'font-size':"40" ,"text-anchor" : "middle"});
 		
-		
-//		this.g_button1.add(button_floorPlan);
-		
-		this.button_roomInfo = this.paper_main.rect(650,paper_gridYEnd+50,this.buttonW,this.buttonH).attr({
-			// fill: "#330099",
-			// stroke: "#ffffff"
-			fill:        "rgba(68, 48, 255, 0.15)",
-			stroke:      "rgba(68, 48, 255, 0.80)",
-			strokeWidth: 3
-		
+		var text_roomInfo = this.paper_main.text(button2X+(this.buttonW*0.5),button2Y+(this.buttonH*0.6), "Room Information").attr({
+			fill: this.textColor,
+			'font-size':"40" ,
+			"text-anchor" : "middle"
 		});
 		
-		this.text_floorPlan = this.paper_main.text(930,paper_gridYEnd+120, "View Room Information").attr({fill: "Green", 'font-size':"40" ,"text-anchor" : "middle"});
-		
-//		this.g_button2.add(button_roomInfo);
+		this.g_button2.add(button_roomInfo);
+		this.g_button2.add(text_roomInfo);
 
-		this.button_displayDate = this.paper_main.rect(1300,paper_gridYEnd+50,this.buttonwidth,this.buttonH).attr({
-			// fill: "#330099",
-			// stroke: "#ffffff"
-			fill:        "rgba(68, 48, 255, 0.15)",
-			stroke:      "rgba(68, 48, 255, 0.80)",
-			strokeWidth: 3
+		//Date Display
+
+		// this.g_button3 = this.paper_main.g();
+		// this.g_button3.attr({
+		// 	id: "Button3"
+		// });
+
+		// var button3X = button2X + this.buttonW + this.buttonPadding;
+		// var button3Y = paper_gridYEnd+this.buttonPadding;
+
+		// var button_displayDate = this.paper_main.rect(button3X,button3Y,(this.buttonW*2),this.buttonH).attr({
+		// 	// fill: "#330099",
+		// 	// stroke: "#ffffff"
+		// 	fill:        "rgba(68, 48, 255, 0.15)",
+		// 	stroke:      "rgba(68, 48, 255, 0.80)",
+		// 	strokeWidth: 3
 		
-		});	
-		var d= new Date();
-		
-		this.text_floorPlan = this.paper_main.text(1700,paper_gridYEnd+120, "Today is" +" "+ d.toDateString()).attr({fill: "Green", 'font-size':"40" ,"text-anchor" : "middle"});
+		// });	
+
+		// var d= new Date();
+		// var text_displayDate = this.paper_main.text(button3X+(this.buttonW),button3Y+(this.buttonH*0.6), "Today is" +" "+ d.toDateString()).attr({fill: this.textColor, 'font-size':"40" ,"text-anchor" : "middle"});
 		
 
-//		this.g_button3.add(button_displayDate);		
+		// this.g_button3.add(button_displayDate);	
+		// this.g_button3.add(text_displayDate);	
 
+		this.g_buttonGroup = this.paper_main.g();
+		this.g_buttonGroup.attr({
+			id: "ButtonsGroup"
+		});
+		this.g_buttonGroup.add(this.g_button1);
+		this.g_buttonGroup.add(this.g_button2);
+		this.g_buttonGroup.add(this.g_button3);
 
 	},
 
@@ -1113,7 +1192,7 @@ var ConferenceScheduler = SAGE2_App.extend( {
 
 		if (eventType === "pointerPress" && (data.button === "left")) {
 			// console.log("Width:=>"+mainDivW);
-			this.paper_main.rect(paperX,paperY,10,10).attr({id: 'touch', stroke: 'Green', fill: 'rgba(12,13,44,0.1)'});
+			// this.paper_main.rect(paperX,paperY,10,10).attr({id: 'touch', stroke: 'White', fill: 'rgba(12,13,44,0.1)'});
 
 			console.log("Mouse Clicked at: ("+paperX+"),("+paperY+") User:"+ JSON.stringify(user));
 
@@ -1301,75 +1380,60 @@ var ConferenceScheduler = SAGE2_App.extend( {
 			else if(paperX >= 0 && paperX < paper_controlW && paperY >=paper_gridYEnd && paperY <=paper_mainH){ // Control Section
 				console.log("Clicked in Control Section("+ x + ","+ y +")");
 				
-				// var offsetY = 0.15 * paper_controlH; //0.15 is half of 0.3 which is 1 - 0.70
-				if(paperX >= 20 && paperX < this.buttonW+20 && paperY >= 50+paper_gridYEnd  && paperY < paper_gridYEnd+this.buttonH+50){
+				var f = this.paper_main.filter(Snap.filter.blur(20,20));
+				// Clicked on View Floor Plan
+				var button1X = this.buttonPadding;
+				var button1Y = paper_gridYEnd+this.buttonPadding;
+				
+				if(paperX >= button1X && paperX < button1X+this.buttonW && paperY >= button1Y && paperY < button1Y+this.buttonH){
 					console.log("ButtonClicked ("+ paperX + ","+ paperY +")");
-					console.log(5+6);
-		
-	
-					var xS = this.sticky_object_array[12].attr("x");
-					var yS = this.sticky_object_array[12].attr("y");
-					console.log("xS:"+xS);
-					console.log("yS:"+yS);
-
-
-					if(this.toggle == true){
-					this.image_floorPlan = this.paper_main.image(this.resrcPath +"info.png",(this.paper_mainW/4),(this.paper_mainH/4),(this.paper_mainW/2),(this.paper_mainH/2));
-						
-
-						this.toggle = false;
+				
+					if(this.toggleFP == true){
+						this.g_floorPlan = this.paper_main.g();
+						this.shadow_floorPlan = this.paper_main.rect((this.paper_mainW/4),(this.paper_mainH/4),(this.paper_mainH/2),(this.paper_mainH/4)).attr({
+							fill: this.shadowColor,
+							filter: f
+						});
+						this.image_floorPlan = this.paper_main.image(this.resrcPath +"info.png",(this.paper_mainW/4),(this.paper_mainH/4),(this.paper_mainH/2),(this.paper_mainH/4));
+						this.g_floorPlan.add(this.shadow_floorPlan);
+						this.g_floorPlan.add(this.image_floorPlan);
+						this.toggleFP = false;
 					}
 					else{
-					this.image_floorPlan.remove();		
-					this.toggle = true;
+						this.g_floorPlan.remove();		
+						this.toggleFP = true;
 					}
-					// this.sticky_object_array[12].attr({
-					// 	transform: 'translate(-'+xS+',0)'
-					// });
-					// console.log("Modified: ===>"+ JSON.stringify(this.sticky_object_array[12]));
 					console.log("done");
 				}
 
-if(paperX >= 650 && paperX < this.buttonW+650 && paperY >= 50+paper_gridYEnd  && paperY < paper_gridYEnd+this.buttonH+50){
+				// Clicked  on Room Info
+				var button2X = this.buttonPadding + this.buttonW + this.buttonPadding;
+				var button2Y = paper_gridYEnd+this.buttonPadding;
+
+				if(paperX >= button2X && paperX < button2X+ this.buttonW && paperY >= button2Y && paperY < button2Y+this.buttonH){
 					console.log("ButtonClicked ("+ paperX + ","+ paperY +")");
-					console.log(5+6);
-		
-	
-					var xS = this.sticky_object_array[12].attr("x");
-					var yS = this.sticky_object_array[12].attr("y");
-					console.log("xS:"+xS);
-					console.log("yS:"+yS);
-
-
-					if(this.toggle == true){
-					this.image_floorPlan = this.paper_main.image(this.resrcPath +"icon.png",(this.paper_mainW/4),(this.paper_mainH/4),(this.paper_mainW/2),(this.paper_mainH/2));
-						
-
-						this.toggle = false;
+					
+					if(this.toggleRI == true){
+						this.g_roomInfo = this.paper_main.g();
+						this.shadow_roomInfo = this.paper_main.rect((this.paper_mainW/2),(this.paper_mainH/4),(this.paper_mainH/2),(this.paper_mainH/4)).attr({
+							fill: this.shadowColor,
+							filter: f
+						});
+						this.image_roomInfo = this.paper_main.image(this.resrcPath +"icon.png",(this.paper_mainW/2),(this.paper_mainH/4),(this.paper_mainH/2),(this.paper_mainH/4));
+						this.g_roomInfo.add(this.shadow_roomInfo);
+						this.g_roomInfo.add(this.image_roomInfo);
+						this.toggleRI = false;
 					}
 					else{
-					this.image_floorPlan.remove();		
-					this.toggle = true;
+						this.g_roomInfo.remove();		
+						this.toggleRI = true;
 					}
-					// this.sticky_object_array[12].attr({
-					// 	transform: 'translate(-'+xS+',0)'
-					// });
-					// console.log("Modified: ===>"+ JSON.stringify(this.sticky_object_array[12]));
 					console.log("done");
 				}
-
-
-
-
-
-
- 
 			} 
 			else{
 				console.log("Clicked outside zone");
 			}
-
-
 		}
 		// else if (eventType === "pointerMove" && this.dragging) {
 		else if (eventType === "pointerMove") {
@@ -1523,7 +1587,6 @@ if(paperX >= 650 && paperX < this.buttonW+650 && paperY >= 50+paper_gridYEnd  &&
 						// this.sticky_object_array[sid].attr({
 						// 	transform: 'translate('+transX+','+transY+')'
 						// }); //DONOT DELETE . this works if scaling of sticky not required.
-
 
 
 						var myMatrix = new Snap.Matrix();
