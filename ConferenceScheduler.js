@@ -53,14 +53,16 @@ var ConferenceScheduler = SAGE2_App.extend( {
 
 		//Division ratio
 		this.gridWRatio = 0.6;
-		this.gridHRatio = 0.9;
+		this.gridHRatio = 0.8;
 
 		this.toggle = true;
 
 		//Button Width and Height
 
-		this.buttonW = 50;
-		this.buttonH = 25;
+		this.buttonW = 550;
+		this.buttonH = 100;
+		this.buttonwidth = 1000;
+	
 
 		//Post-it Width and Height
 		this.postItW = 0;
@@ -123,7 +125,9 @@ var ConferenceScheduler = SAGE2_App.extend( {
 		// Not adding controls but making the default buttons available
 		this.controls.finishedAddingControls();
 		this.enableControls = true;
+		
 	},
+		
 //==> PLay Area
 	readConferenceInfo: function(){
 		var _this = this;
@@ -364,9 +368,9 @@ var ConferenceScheduler = SAGE2_App.extend( {
 
 				// console.log("Sticky Created at: "+array_sticky[counter][0] +": "+ array_sticky[counter][1] );
 				// var title = "Title: "+ this.catagorizedStickies[theme][k]['title'];
-				// var sticky_text_title = this.paper_main.text(array_sticky[counter][0]+(padding/3),array_sticky[counter][1]+(padding/3),title).attr({fill: "Green", "font-size": "0.2em"});  
+				// var sticky_text_title = this.paper_main.text(array_sticky[counter][0]+(padding/3),array_sticky[counter][1]+(padding/3),title).attr({fill: "White", "font-size": "0.2em"});  
 				// var fobjectSVG = '<svg x='+(array_sticky[counter][0]+(padding/3))+' y='+(array_sticky[counter][1]+(padding/3))+' width='+this.postItW+' height='+this.postItH+'><text fill="red">HI</text></svg>';
-				// var svg_rect = svg_sticky.rect(0,0,10,10).attr({fill: "Green"});
+				// var svg_rect = svg_sticky.rect(0,0,10,10).attr({fill: "White"});
 				// var frag = Snap.parse(fobjectSVG);
 
 				// var g = this.paper_main.append( frag );
@@ -527,7 +531,7 @@ var ConferenceScheduler = SAGE2_App.extend( {
 				stroke:      "rgba(68, 48, 255, 0.80)",
 				strokeWidth: 3
 				});
-			var dayText = this.paper_main.text(cellX+(cellW*0.5),cellY+(dayH*0.5),"Day "+(k+1)+": "+this.array_days[k]+", "+this.array_dates[k]).attr({fill: "Green", "text-anchor" : "middle"});
+			var dayText = this.paper_main.text(cellX+(cellW*0.5),cellY+(dayH*0.5),"Day "+(k+1)+": "+this.array_days[k]+", "+this.array_dates[k]).attr({fill: "White", "text-anchor" : "middle"});
 			//Add header to the group
 			this.g_gridHeaders.add(headRect);
 			this.g_gridHeaders.add(dayPartition);
@@ -561,7 +565,7 @@ var ConferenceScheduler = SAGE2_App.extend( {
 				stroke:      "rgba(68, 48, 255, 0.80)",
 				strokeWidth: 3
 				});
-			var sessionText = this.paper_main.text(cellX+(sessionW*0.5),cellY+(cellH*0.7),this.array_sessions[k]).attr({fill: "Green", "text-anchor" : "middle"});
+			var sessionText = this.paper_main.text(cellX+(sessionW*0.5),cellY+(cellH*0.7),this.array_sessions[k]).attr({fill: "White", "text-anchor" : "middle"});
 			//Add header to the group
 			this.g_gridHeaders.add(sessionRect);
 			this.g_gridHeaders.add(sessionText);
@@ -581,8 +585,8 @@ var ConferenceScheduler = SAGE2_App.extend( {
 				stroke:      "rgba(68, 48, 255, 0.80)",
 				strokeWidth: 3
 				});
-			// var hallText = this.paper_main.text(cellX+(cellW*0.5),cellY+(cellH*0.7),"Hall "+(((k)%this.numberOfHalls)+1)).attr({fill: "Green", "text-anchor" : "middle", fontFamily: "Tahoma, Geneva, sans-serif"});
-			var hallText = this.paper_main.text(cellX+(cellW*0.5),cellY+(cellH*0.7),this.array_halls[k%this.numberOfHalls]).attr({fill: "Green", "text-anchor" : "middle", fontFamily: "Tahoma, Geneva, sans-serif"});
+			// var hallText = this.paper_main.text(cellX+(cellW*0.5),cellY+(cellH*0.7),"Hall "+(((k)%this.numberOfHalls)+1)).attr({fill: "White", "text-anchor" : "middle", fontFamily: "Tahoma, Geneva, sans-serif"});
+			var hallText = this.paper_main.text(cellX+(cellW*0.5),cellY+(cellH*0.7),this.array_halls[k%this.numberOfHalls]).attr({fill: "White", "text-anchor" : "middle", fontFamily: "Tahoma, Geneva, sans-serif"});
 			//Add header to the group
 			this.g_gridHeaders.add(hallRect);
 			this.g_gridHeaders.add(hallText);
@@ -690,7 +694,7 @@ var ConferenceScheduler = SAGE2_App.extend( {
 				stroke:      "rgba(68, 48, 255, 0.80)",
 				strokeWidth: 3
 				});
-			var  themeText = this.paper_main.text(cellX+(cellW*0.5),cellY+(cellH*0.5),this.themeNames[k]).attr({fill: "Green", "text-anchor" : "middle"});
+			var  themeText = this.paper_main.text(cellX+(cellW*0.5),cellY+(cellH*0.5),this.themeNames[k]).attr({fill: "White", "text-anchor" : "middle"});
 			this.g_themeHeaders.add(themeRect);
 			this.g_themeHeaders.add(themeText);
 			cellY += cellH;
@@ -736,10 +740,44 @@ var ConferenceScheduler = SAGE2_App.extend( {
 		var paper_controlW = paper_gridXEnd;
 		var paper_controlH = paper_mainH - paper_gridYEnd;
 
-		this.button_floorPlan = this.paper_main.rect(10,paper_gridYEnd+10,this.buttonW,this.buttonH).attr({
-			fill: "Pink",
-			stroke: "#000000"
+//		var g_button1 = this.paper_main.g();
+//		var g_button2 = this.paper_main.g();
+//		var g_button3 = this.paper_main.g();
+	
+		
+		this.button_floorPlan = this.paper_main.rect(20,paper_gridYEnd+50,this.buttonW,this.buttonH).attr({
+			fill: "#330099",
+			stroke: "#ffffff"
+		
 		});
+
+		this.text_floorPlan = this.paper_main.text(250,paper_gridYEnd+120, "View Floor plan").attr({fill: "White", 'font-size':"50" ,"text-anchor" : "middle"});
+		
+		
+//		this.g_button1.add(button_floorPlan);
+		
+		this.button_roomInfo = this.paper_main.rect(650,paper_gridYEnd+50,this.buttonW,this.buttonH).attr({
+			fill: "#330099",
+			stroke: "#ffffff"
+		
+		});
+		
+		this.text_floorPlan = this.paper_main.text(930,paper_gridYEnd+120, "View Room Information").attr({fill: "White", 'font-size':"50" ,"text-anchor" : "middle"});
+		
+//		this.g_button2.add(button_roomInfo);
+
+		this.button_displayDate = this.paper_main.rect(1300,paper_gridYEnd+50,this.buttonwidth,this.buttonH).attr({
+			fill: "#330099",
+			stroke: "#ffffff"
+		
+		});	
+		var d= new Date();
+		
+		this.text_floorPlan = this.paper_main.text(1700,paper_gridYEnd+120, "Today is" +" "+ d.toDateString()).attr({fill: "White", 'font-size':"50" ,"text-anchor" : "middle"});
+		
+
+//		this.g_button3.add(button_displayDate);		
+
 
 	},
 
@@ -1254,9 +1292,19 @@ var ConferenceScheduler = SAGE2_App.extend( {
 				console.log("Clicked in Control Section("+ x + ","+ y +")");
 				
 				// var offsetY = 0.15 * paper_controlH; //0.15 is half of 0.3 which is 1 - 0.70
-				if(paperX >= 10 && paperX < this.buttonW+10 && paperY >= 10+paper_gridYEnd  && paperY < paper_gridYEnd+this.buttonH+10){
+				if(paperX >= 20 && paperX < this.buttonW+50 && paperY >= 10+paper_gridYEnd  && paperY < paper_gridYEnd+this.buttonH+10){
 					console.log("ButtonClicked ("+ paperX + ","+ paperY +")");
-     //    			this.sticky_object_array[0].attr({
+					console.log(5+6);
+		
+	
+    
+
+
+
+
+
+
+ //    			this.sticky_object_array[0].attr({
 					// 	transform: 'translate(100,10)'
 					// });
 					// Snap.getElementByPoint(paperX, paperY).attr({fill: "Yellow"});
@@ -1327,30 +1375,14 @@ var ConferenceScheduler = SAGE2_App.extend( {
 
 
 					if(this.toggle == true){
-						var myMatrix = new Snap.Matrix();
-						myMatrix.scale(3.5,1);            // play with scaling before and after the rotate 
-						// myMatrix.translate(-(xS-(xS/2)),0);
-						myMatrix.translate(-(xS-(xS/3.5))+(-10),0);
-						// myMatrix.translate(10,0);
+					this.image_floorPlan = this.paper_main.image(this.resrcPath +"info.png",(this.paper_mainW/4),(this.paper_mainH/4),(this.paper_mainW/2),(this.paper_mainH/2));
+						
 
-						this.sticky_object_array[12].attr({
-						transform: myMatrix
-						});
-						console.log("ATTribute:"+ this.sticky_object_array[12].attr().transform);
 						this.toggle = false;
 					}
 					else{
-						var myMatrix = new Snap.Matrix();
-						myMatrix.scale(1,1);
-						myMatrix.translate(0,0); //Not required
-
-						this.sticky_object_array[12].attr({
-						transform: myMatrix
-						});
-						console.log("ATTribute:"+ JSON.stringify(this.sticky_object_array[12]));
-						var child = document.getElementById("g_sticky12").childNodes;
-						console.log("ATTribute:"+ JSON.stringify(child));
-						this.toggle = true;
+					this.image_floorPlan.remove();		
+					this.toggle = true;
 					}
 					// this.sticky_object_array[12].attr({
 					// 	transform: 'translate(-'+xS+',0)'
