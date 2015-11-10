@@ -1382,7 +1382,7 @@ var ConferenceScheduler = SAGE2_App.extend( {
 				
 				var f = this.paper_main.filter(Snap.filter.blur(20,20));
 				// Clicked on View Floor Plan
-				var button1X = this.buttonPadding;
+				var button1X = this.controlsLeftPadding;
 				var button1Y = paper_gridYEnd+this.buttonPadding;
 				
 				if(paperX >= button1X && paperX < button1X+this.buttonW && paperY >= button1Y && paperY < button1Y+this.buttonH){
@@ -1394,7 +1394,7 @@ var ConferenceScheduler = SAGE2_App.extend( {
 							fill: this.shadowColor,
 							filter: f
 						});
-						this.image_floorPlan = this.paper_main.image(this.resrcPath +"info.png",(this.paper_mainW/4),(this.paper_mainH/4),(this.paper_mainH/2),(this.paper_mainH/4));
+						this.image_floorPlan = this.paper_main.image(this.resrcPath +"icon.png",(this.paper_mainW/4),(this.paper_mainH/4),(this.paper_mainH/2),(this.paper_mainH/4));
 						this.g_floorPlan.add(this.shadow_floorPlan);
 						this.g_floorPlan.add(this.image_floorPlan);
 						this.toggleFP = false;
@@ -1407,7 +1407,7 @@ var ConferenceScheduler = SAGE2_App.extend( {
 				}
 
 				// Clicked  on Room Info
-				var button2X = this.buttonPadding + this.buttonW + this.buttonPadding;
+				var button2X = this.controlsLeftPadding + this.buttonW + this.buttonPadding;
 				var button2Y = paper_gridYEnd+this.buttonPadding;
 
 				if(paperX >= button2X && paperX < button2X+ this.buttonW && paperY >= button2Y && paperY < button2Y+this.buttonH){
@@ -1419,7 +1419,7 @@ var ConferenceScheduler = SAGE2_App.extend( {
 							fill: this.shadowColor,
 							filter: f
 						});
-						this.image_roomInfo = this.paper_main.image(this.resrcPath +"icon.png",(this.paper_mainW/2),(this.paper_mainH/4),(this.paper_mainH/2),(this.paper_mainH/4));
+						this.image_roomInfo = this.paper_main.image(this.resrcPath +"info.png",(this.paper_mainW/2),(this.paper_mainH/4),(this.paper_mainH/2),(this.paper_mainH/4));
 						this.g_roomInfo.add(this.shadow_roomInfo);
 						this.g_roomInfo.add(this.image_roomInfo);
 						this.toggleRI = false;
