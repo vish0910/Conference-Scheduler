@@ -81,6 +81,7 @@ var ConferenceScheduler = SAGE2_App.extend( {
 		//Size of HolderCells
 		this.holderW = 0;
 		this.holderH = 0;
+		this.ratioOfCell = 5;
 
 
 		//Get the Window height and width
@@ -146,6 +147,9 @@ var ConferenceScheduler = SAGE2_App.extend( {
 				_this.numberOfSessions = data.numberOfSessions;
 				_this.numberOfThemes = data.numberOfThemes;
 				_this.stickyColor = data.themes;
+				//Grid variables
+				_this.numberOfRows = data.numberOfSessions;
+				_this.numberOfColumns =  data.numberOfDays * data.numberOfHalls;
 				_this.array_days = data.days;
 				_this.array_dates = data.dates;
 				_this.array_sessions = data.sessions;
@@ -634,9 +638,13 @@ var ConferenceScheduler = SAGE2_App.extend( {
 				});
 		this.g_gridHeaders.add(imgRect);
 
-
-		//Holds location where the rectangle has to be created
-		cellX = paper_tableX1;
+//----->
+		var ratioOfCell = this.ratioOfCell;
+		var mhoffset = cellW/ratioOfCell;
+		//Update cellW to new width for hidden rects
+		var hiddencellW = mhoffset;
+		//Holds location where the  hidden rectangle has to be created
+		cellX = paper_tableX1 + (cellW - mhoffset);
 		cellY = paper_tableY1;
 
 		//Set the global Holder Size
@@ -644,8 +652,64 @@ var ConferenceScheduler = SAGE2_App.extend( {
 		this.holderH = cellH;
 
 		//Create a group for grid cell
-		this.g_gridcells = this.paper_main.g();
-		this.g_gridcells.attr({ id : 'g_gridcells'})
+		this.g_gridhiddenholders = this.paper_main.g();
+		this.g_gridhiddenholders.attr({ id : 'g_gridhiddenholders'})
+
+		//Creating array of holders
+		this.hiddenholder_object_array = [];
+		var defaultTransform = 'translate(0,0)';
+		var defaultMatrix = 'matrix(1,0,0,1,0,0)';
+		var cellCounter = 0;
+		var hallCounter = 1; 
+		//Loop that creates rectangles
+		for(i = 0;i<this.numberOfRows;i++){
+			hallCounter = 1;
+			for(j=0;j<this.numberOfColumns-this.numberOfDays;j++ ){
+				if(hallCounter%this.numberOfHalls == 0){
+					cellX +=this.holderW;
+					hallCounter = 1;
+				}
+				//For reference : Paper.rect(x,y,width,height,[rx],[ry])
+				var cellRect = this.paper_main.rect(cellX, cellY, hiddencellW, cellH).attr({
+					id: "HiddenHolder_"+cellCounter,
+					// fill:        "rgba(68, 48, 255, 0.15)",
+					fill:        "pink",
+					stroke:      "rgba(68, 48, 255, 0.80)",
+					strokeWidth: 2,
+					transform: defaultMatrix,
+					holdsSticky: ""
+				});
+				//Add the cell to group
+				this.g_gridhiddenholders.add(cellRect);
+				//Pusing the rect in holder
+				this.hiddenholder_object_array.push(cellRect);
+				//Update value of the x-coordinate
+				cellX +=this.holderW;
+				//Increase the counter value
+				cellCounter++;
+				hallCounter++;
+			}
+			//Update value of the y-coordinate
+			cellY += cellH;
+			//Reset Value of x-coordinate
+			cellX = paper_tableX1+(cellW - mhoffset);
+		}//End of loop that creates rectangles
+
+
+//<-------
+
+
+		//Holds location where the rectangle has to be created
+		cellX = paper_tableX1;
+		cellY = paper_tableY1;
+
+		// //Set the global Holder Size //UNcomment if Hidden Rects are deleted in future
+		// this.holderW = cellW;
+		// this.holderH = cellH;
+
+		//Create a group for grid cell
+		this.g_gridholders = this.paper_main.g();
+		this.g_gridholders.attr({ id : 'g_gridholders'})
 
 		//Creating array of holders
 		this.holder_object_array = [];
@@ -665,7 +729,7 @@ var ConferenceScheduler = SAGE2_App.extend( {
 					holdsSticky: ""
 				});
 				//Add the cell to group
-				this.g_gridcells.add(cellRect);
+				this.g_gridholders.add(cellRect);
 				//Pusing the rect in holder
 				this.holder_object_array.push(cellRect);
 				//Update value of the x-coordinate
@@ -678,7 +742,6 @@ var ConferenceScheduler = SAGE2_App.extend( {
 			//Reset Value of x-coordinate
 			cellX = paper_tableX1;
 		}//End of loop that creates rectangles
-
 	},
 
 	intializeSticky: function(){
@@ -1031,7 +1094,9 @@ var ConferenceScheduler = SAGE2_App.extend( {
 			var rX = holder_X+tX;
 			var rY = holder_Y+tY;
 
+
 			//Find if the mouse click was on sticky
+			// if(paperX >= rX && paperX < rX+holderW && paperY >= rY && paperY < rY+holderH){
 			if(paperX >= rX && paperX < rX+holderW && paperY >= rY && paperY < rY+holderH){
 				// console.log("Found Sticky");
 				// if(holdsSticky == null){
@@ -1047,6 +1112,72 @@ var ConferenceScheduler = SAGE2_App.extend( {
  		}
 
 		return result;
+	},
+
+
+	findNeighbourHolderId: function(paperX,paperY,holderId){
+		var neighbour = parseInt(holderId) +1;
+		console.log("Neighbour Calc:"+neighbour);
+ 		var totalNumberOfCells = this.holder_object_array.length;
+ 		console.log("number of cells:"+totalNumberOfCells);
+ 		if(neighbour >= totalNumberOfCells || neighbour%this.numberOfColumns == 0){
+ 			console.log("Returning this null");
+ 			return null;
+ 		}
+ 		else{
+			var result = null;
+			var holderW = this.holderW;
+			var holderH = this.holderH;
+	 			// console.log(">%^^^^$#%"+ JSON.stringify(this.sticky_object_array[key]));
+
+	 			//Get X and Y co-ordinates
+	 		var holder_X = parseFloat(this.holder_object_array[holderId].attr("x"));
+	 		var holder_Y = parseFloat(this.holder_object_array[holderId].attr("y"));
+
+	 		var neighbourHoldsSticky = this.holder_object_array[holderId].attr("holdsSticky");
+	 		console.log("neighbourHoldsSticky:"+neighbourHoldsSticky);
+
+	 		
+
+
+
+	 		//Get Tranform values
+			var transformString = this.holder_object_array[holderId].attr().transform;
+				// console.log("Total Rect holder tranform matrix:"+transformString);
+				// var tXY = transformString.split(',');
+				// var tX = parseFloat(tXY[0].slice(1),10);
+				// var tY = parseFloat(tXY[1],10);
+
+				// console.log("TX:"+tX+"TY: "+tY);
+				var currentMatrix = transformString.slice(7,-1).split("\,");
+				// console.log("currentMatrix:" +currentMatrix);
+	     
+	      		for(var i=0; i<currentMatrix.length; i++) {
+	      			currentMatrix[i] = parseFloat(currentMatrix[i]);
+	      			// console.log("HI:"+ i+ " ->"+ JSON.stringify(currentMatrix[i]));
+	     		}
+
+	     		var tX = currentMatrix[4];
+				var tY = currentMatrix[5];
+				// console.log("TX:"+tX+"TY: "+tY);
+
+
+				//Find resulting co ordinates by adding location and translation
+				var rX = holder_X+tX;
+				var rY = holder_Y+tY;
+
+				var mhoffset = holderW - (holderW/this.ratioOfCell);
+
+				//Find if the mouse click was on sticky
+				// if(paperX >= rX && paperX < rX+holderW && paperY >= rY && paperY < rY+holderH){
+				if(paperX >= rX + mhoffset && paperX < rX+holderW&& paperY >= rY && paperY < rY+holderH){
+					// if(neighbourHoldsSticky != null){
+						result = neighbour;
+					// }
+
+				}
+			return result;
+		}
 	},
 
 
@@ -1225,6 +1356,40 @@ var ConferenceScheduler = SAGE2_App.extend( {
 								holdsSticky: ""
 							});
 						}
+						//--->
+						var neighbours = [holderId-1,holderId+1];
+						var noS = [];
+						var totalNumberOfCells = this.numberOfRows * this.numberOfColumns;
+						
+							if(neighbours[0] < 0 || neighbours[0]%this.numberOfColumns == (this.numberOfColumns - 1)){
+ 								console.log("Do nothing0");
+ 							}
+ 							else{
+ 								// noS.push(this.holder_object_array[neighbours[n]].attr("holdsSticky"));
+ 								console.log("Neighbour Found0");
+ 								var noS = this.holder_object_array[neighbours[0]].attr("holdsSticky");
+ 								if(hoS == noS){
+ 									this.holder_object_array[neighbours[0]].attr({
+									holdsSticky: ""
+									});
+ 								}
+ 							}
+							if(neighbours[1] >= totalNumberOfCells || neighbours[1]%this.numberOfColumns == 0){
+ 								console.log("Do nothing1");
+ 							}
+ 							else{
+ 								// noS.push(this.holder_object_array[neighbours[1]].attr("holdsSticky"));
+ 								console.log("Neighbour Found1");
+ 								var noS = this.holder_object_array[neighbours[1]].attr("holdsSticky");
+ 								if(hoS == noS){
+ 									this.holder_object_array[neighbours[1]].attr({
+									holdsSticky: ""
+									});
+ 								}
+ 							}
+
+
+						//--->
 					}
 					this.userInteraction[user.id].dragging = true;
 					// this.userInteraction[user.id].position.x = position.x; //DONOT DELETE X  and Y from user were never used.
@@ -1242,7 +1407,7 @@ var ConferenceScheduler = SAGE2_App.extend( {
 
 	//------>^^^^^
 		//Creating default transform property
-				var shadowColor = user.color;
+				var shadowColor = this.shadowColor;
 				var padding = this.padding; 
 				
 				// var defaultMatrix = 'matrix(1,0,0,1,'+transX+','+transY+')';
@@ -1266,7 +1431,7 @@ var ConferenceScheduler = SAGE2_App.extend( {
 
 				//Creating Sticky Shadow
 				var sticky_shadow = this.paper_main.rect(sticky_X+(padding/this.shadowDepth),sticky_Y+(padding/this.shadowDepth),this.postItW,this.postItH).attr({
-					fill: this.shadowColor,
+					fill: shadowColor,
 					filter: f
 				});
 				//Creating a sticky
@@ -1588,6 +1753,32 @@ var ConferenceScheduler = SAGE2_App.extend( {
 						// 	transform: 'translate('+transX+','+transY+')'
 						// }); //DONOT DELETE . this works if scaling of sticky not required.
 
+//>>>>>>
+						//ALSO Duplicate the sticky on neighbour
+
+						var neighbourId = this.findNeighbourHolderId(paperX-this.postItW,paperY-this.postItH,holderId);
+						console.log("Neighbour Returned: "+ neighbourId);
+						if(neighbourId != null){
+
+							var noS = this.holder_object_array[neighbourId].attr("holdsSticky");
+							if(noS == null){
+								//get sticky color
+								// var colorOfSticky = this.sticky_object_array[sid].attr("stickyColor");
+								// this.holder_object_array[neighbourId].attr({
+								// 	fill: colorOfSticky
+								// });
+
+								this.holder_object_array[neighbourId].attr({
+									holdsSticky: sid
+								});
+								scaleX = scaleX * 2;
+							}
+						}
+//>>>>>>>>>
+
+
+
+
 
 						var myMatrix = new Snap.Matrix();
 						myMatrix.scale(scaleX,scaleY);            // play with scaling before and after the rotate 
@@ -1611,6 +1802,8 @@ var ConferenceScheduler = SAGE2_App.extend( {
 						console.log("HOLDER:"+this.holder_object_array[holderId].attr("holdsSticky"));
 
 						// console.log("HOLDER: "+ )
+
+
 
 					}
 
