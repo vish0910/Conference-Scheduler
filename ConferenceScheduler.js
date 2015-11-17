@@ -83,6 +83,8 @@ var ConferenceScheduler = SAGE2_App.extend( {
 		this.holderH = 0;
 		this.ratioOfCell = 5;
 
+		this.overlay_object_array = {};
+
 
 		//Get the Window height and width
 		this.mainDivW = parseInt(this.element.style.width,  10);
@@ -1134,7 +1136,7 @@ var ConferenceScheduler = SAGE2_App.extend( {
 	 		var holder_X = parseFloat(this.holder_object_array[holderId].attr("x"));
 	 		var holder_Y = parseFloat(this.holder_object_array[holderId].attr("y"));
 
-	 		var neighbourHoldsSticky = this.holder_object_array[holderId].attr("holdsSticky");
+	 		var neighbourHoldsSticky = this.holder_object_array[neighbour].attr("holdsSticky");
 	 		console.log("neighbourHoldsSticky:"+neighbourHoldsSticky);
 
 	 		
@@ -1355,39 +1357,48 @@ var ConferenceScheduler = SAGE2_App.extend( {
 							this.holder_object_array[holderId].attr({
 								holdsSticky: ""
 							});
-						}
+						// }
 						//--->
-						var neighbours = [holderId-1,holderId+1];
-						var noS = [];
-						var totalNumberOfCells = this.numberOfRows * this.numberOfColumns;
-						
-							if(neighbours[0] < 0 || neighbours[0]%this.numberOfColumns == (this.numberOfColumns - 1)){
- 								console.log("Do nothing0");
- 							}
- 							else{
- 								// noS.push(this.holder_object_array[neighbours[n]].attr("holdsSticky"));
- 								console.log("Neighbour Found0");
- 								var noS = this.holder_object_array[neighbours[0]].attr("holdsSticky");
- 								if(hoS == noS){
- 									this.holder_object_array[neighbours[0]].attr({
-									holdsSticky: ""
-									});
- 								}
- 							}
-							if(neighbours[1] >= totalNumberOfCells || neighbours[1]%this.numberOfColumns == 0){
- 								console.log("Do nothing1");
- 							}
- 							else{
- 								// noS.push(this.holder_object_array[neighbours[1]].attr("holdsSticky"));
- 								console.log("Neighbour Found1");
- 								var noS = this.holder_object_array[neighbours[1]].attr("holdsSticky");
- 								if(hoS == noS){
- 									this.holder_object_array[neighbours[1]].attr({
-									holdsSticky: ""
-									});
- 								}
- 							}
+							var neighbours = [parseInt(holderId)-1,parseInt(holderId)+1];
+							var noS = [];
+							var totalNumberOfCells = this.numberOfRows * this.numberOfColumns;
+							
+								if(neighbours[0] < 0 || neighbours[0]%this.numberOfColumns == (this.numberOfColumns - 1)){
+	 								console.log("Do nothing0");
+	 							}
+	 							else{
+	 								// noS.push(this.holder_object_array[neighbours[n]].attr("holdsSticky"));
+	 								console.log("Neighbour Found0");
+	 								var noS = this.holder_object_array[neighbours[0]].attr("holdsSticky");
+	 								if(hoS == noS){
+	 									this.holder_object_array[neighbours[0]].attr({
+										holdsSticky: ""
+										});
+	 								}
+	 							}
+								if(neighbours[1] >= totalNumberOfCells || neighbours[1]%this.numberOfColumns == 0){
+	 								console.log("Do nothing1:"+neighbours[1]);
+	 							}
+	 							else{
+	 								// noS.push(this.holder_object_array[neighbours[1]].attr("holdsSticky"));
+	 								console.log("Neighbour Found1:"+neighbours[1]);
+	 								var noS = this.holder_object_array[neighbours[1]].attr("holdsSticky");
+	 								if(hoS == noS){
+	 									this.holder_object_array[neighbours[1]].attr({
+										holdsSticky: ""
+										});
+	 								}
+	 							}
 
+
+	 							// var delta = document.getElementById("g_overlaySticky_"+sid);
+
+	 							this.overlay_object_array[stickyId].remove();
+	 							// this.sticky_object_array[stickyId].remove();
+								delete this.overlay_object_array[stickyId];
+
+
+ 						}
 
 						//--->
 					}
@@ -1803,7 +1814,32 @@ var ConferenceScheduler = SAGE2_App.extend( {
 
 						// console.log("HOLDER: "+ )
 
+						//----->++++
+						var g_overlaySticky = this.paper_main.g().attr({
+							id: "g_overlaySticky_"+sid
+						}); 
+						var padding = this.padding;
+						var htmlText = this.sticky_object_array[sid].attr("htmlText");
+						var stickyColor = this.sticky_object_array[sid].attr("stickyColor");
+						var overlayRect = this.paper_main.rect(hX,hY,scaleX*this.postItW, scaleY*this.postItH).attr({
+							fill: stickyColor
+						});
 
+						//Creating a foreignObject which will have HTML wrappable text
+						var newElement = document.createElementNS("http://www.w3.org/2000/svg", 'foreignObject'); //Create a path in SVG's namespace
+						newElement.setAttribute('x', (hX+(padding/3)));
+       					newElement.setAttribute('y', (hY+(padding/3)));
+       					newElement.setAttribute('width',((scaleX*this.postItW) - (2*padding/3)));
+       					newElement.setAttribute('height',((scaleY*this.postItH) - (2*padding/3)));
+
+						newElement.innerHTML = htmlText;
+						g_overlaySticky.add(overlayRect);
+						g_overlaySticky.append(newElement);
+
+						// if (this.overlay_object_array[sid] === undefined) {
+							this.overlay_object_array[sid] = g_overlaySticky;
+						// }
+						//<----++++
 
 					}
 
