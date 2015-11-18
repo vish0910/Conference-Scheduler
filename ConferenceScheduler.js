@@ -74,8 +74,8 @@ var ConferenceScheduler = SAGE2_App.extend( {
 		this.postItH = 0;
 		this.padding = 0;
 		this.filter = null;
-		this.shadowColor = "black";
-		this.shadowDepth = 4;
+		this.shadowColor = "white";
+		this.shadowDepth = 5;
 		this.stickyFontSize = 5;
 
 		//Size of HolderCells
@@ -83,7 +83,7 @@ var ConferenceScheduler = SAGE2_App.extend( {
 		this.holderH = 0;
 		this.ratioOfCell = 5;
 
-		this.overlay_object_array = {};
+		// this.overlay_object_array = {};
 
 
 		//Get the Window height and width
@@ -303,7 +303,7 @@ var ConferenceScheduler = SAGE2_App.extend( {
 		var stickyColor;
 
 		//Creating Filter for shadow
-		var f = this.paper_main.filter(Snap.filter.blur(padding/2,padding/4));
+		var f = this.paper_main.filter(Snap.filter.blur(padding/2,padding/2));
 		this.filter = f;
 		this.g_allSticky = this.paper_main.g();
 		this.g_allSticky.attr({id: "g_allSticky"});
@@ -365,11 +365,13 @@ var ConferenceScheduler = SAGE2_App.extend( {
 
 				//Creating Sticky Shadow
 				var sticky_shadow = this.paper_main.rect(array_sticky[counter][0]+(padding/this.shadowDepth),array_sticky[counter][1]+(padding/this.shadowDepth),this.postItW,this.postItH).attr({
+					id:"sticky_shadow_"+counter,
 					fill: this.shadowColor,
 					filter: f
 				});
 				//Creating a sticky
 				var sticky_1= this.paper_main.rect(array_sticky[counter][0],array_sticky[counter][1],this.postItW,this.postItH).attr({
+					id:"sticky_rect_"+counter,
 					fill: stickyColor,
 					transform : defaultMatrix
 				});
@@ -407,7 +409,7 @@ var ConferenceScheduler = SAGE2_App.extend( {
        				newElement.setAttribute('y', (array_sticky[counter][1]+(padding/3)));
        				newElement.setAttribute('width',(this.postItW - (2*padding/3)));
        				newElement.setAttribute('height',(this.postItH - (2*padding/3)));
-
+       				newElement.setAttribute('id',"sticky_fobj_"+counter);
 					newElement.innerHTML = htmlText;
 				var nodeFobj = 	g_sticky.append(newElement);
 
@@ -1182,7 +1184,7 @@ var ConferenceScheduler = SAGE2_App.extend( {
 				// if(paperX >= rX && paperX < rX+holderW && paperY >= rY && paperY < rY+holderH){
 				if(paperX >= rX + mhoffset && paperX < rX+holderW&& paperY >= rY && paperY < rY+holderH){
 					// if(neighbourHoldsSticky != null){
-						result = neighbour;
+						result = [neighbour];
 					// }
 
 				}
@@ -1401,9 +1403,9 @@ var ConferenceScheduler = SAGE2_App.extend( {
 
 	 							// var delta = document.getElementById("g_overlaySticky_"+sid);
 
-	 							this.overlay_object_array[stickyId].remove();
-	 							// this.sticky_object_array[stickyId].remove();
-								delete this.overlay_object_array[stickyId];
+	 							// this.overlay_object_array[stickyId].remove();
+	 							// //this.sticky_object_array[stickyId].remove();
+								// delete this.overlay_object_array[stickyId];
 
 
  						}
@@ -1456,11 +1458,13 @@ var ConferenceScheduler = SAGE2_App.extend( {
 
 				//Creating Sticky Shadow
 				var sticky_shadow = this.paper_main.rect(sticky_X+(padding/this.shadowDepth),sticky_Y+(padding/this.shadowDepth),this.postItW,this.postItH).attr({
+					id:"sticky_shadow_"+stickyId,
 					fill: shadowColor,
 					filter: f
 				});
 				//Creating a sticky
 				var sticky_1= this.paper_main.rect(sticky_X,sticky_Y,this.postItW,this.postItH).attr({
+					id:"sticky_rect_"+stickyId,
 					fill: stickyColor,
 					transform : defaultMatrix
 				});
@@ -1481,6 +1485,7 @@ var ConferenceScheduler = SAGE2_App.extend( {
        				newElement.setAttribute('y', (sticky_Y+(padding/3)));
        				newElement.setAttribute('width',(this.postItW - (2*padding/3)));
        				newElement.setAttribute('height',(this.postItH - (2*padding/3)));
+       				newElement.setAttribute('id',"sticky_fobj_"+stickyId);
 
 					newElement.innerHTML = htmlText;
 				var nodeFobj = 	g_sticky.append(newElement);
@@ -1588,10 +1593,69 @@ var ConferenceScheduler = SAGE2_App.extend( {
 						this.g_floorPlan.add(this.shadow_floorPlan);
 						this.g_floorPlan.add(this.image_floorPlan);
 						this.toggleFP = false;
+//----> Testing how to remove child node
+					// var childNs = this.sticky_object_array[12].removeChild(this.sticky_object_array[12].firstChild);;
+
+					// console.log("Hello1 children:"+ JSON.stringify(childNs));
+					// var json = JSON.parse(childNs)
+					// var childNM = json["childNodes"];
+					// console.log("Hello2 children:"+ JSON.stringify(childNM));
+				
+					var myElement = document.getElementById("sticky_fobj_14");
+					if(myElement!=null){
+						myElement.parentNode.removeChild(myElement);
+					}
+
+
+
+//<-------
 					}
 					else{
 						this.g_floorPlan.remove();		
 						this.toggleFP = true;
+
+
+						var myElement = this.sticky_object_array[14];
+						var sticky_X =  parseFloat(myElement.attr("x"));
+ 						var sticky_Y =  parseFloat(myElement.attr("y"));
+
+ 						var transX = parseFloat(myElement.attr("tX")) - this.postItW;
+ 						var transY = parseFloat(myElement.attr("tY")) - this.postItH;
+
+		
+						var shadowColor = this.shadowColor;
+						var padding = this.padding;
+
+
+						// var newElement = this.paper_main.rect(sticky_X+(padding/this.shadowDepth),sticky_Y+(padding/this.shadowDepth),this.postItW,this.postItH).attr({
+						// 	id:"sticky_shadow_14",
+						// 	fill: shadowColor,
+						// 	filter: this.filter
+						// });
+
+
+						//Reading Values for creating the HTML Text
+						var stickyTitle = myElement.attr("stickyTitle");
+						var stickySpeaker = myElement.attr("stickySpeaker");
+						var stickyFontSize = Math.floor(parseInt(myElement.attr("stickyFontSize"))); 
+
+						//Creating innerHTML for the sticky
+						var title =  "<strong>Title:</strong> "+ stickyTitle;
+						var speaker = "<strong>Speaker:</strong> "+ stickySpeaker;
+						var htmlText = '<div xmlns="http://www.w3.org/1999/xhtml" style="color:black; font-size: '+stickyFontSize+'px">'
+									+ title + '<br><br>' + speaker+ '</div>';
+
+						//Creating a foreignObject which will have HTML wrappable text
+						var newElement = document.createElementNS("http://www.w3.org/2000/svg", 'foreignObject'); //Create a path in SVG's namespace
+						newElement.setAttribute('x', (sticky_X+(padding/3)));
+       					newElement.setAttribute('y', (sticky_Y+(padding/3)));
+       					newElement.setAttribute('width',(this.postItW - (2*padding/3)));
+       					newElement.setAttribute('height',(this.postItH - (2*padding/3)));
+       					newElement.setAttribute('id',"sticky_fobj_14");
+						newElement.innerHTML = htmlText;
+						
+						myElement.append(newElement);
+
 					}
 					console.log("done");
 				}
@@ -1785,15 +1849,15 @@ var ConferenceScheduler = SAGE2_App.extend( {
 						console.log("Neighbour Returned: "+ neighbourId);
 						if(neighbourId != null){
 
-							var noS = this.holder_object_array[neighbourId].attr("holdsSticky");
+							var noS = this.holder_object_array[neighbourId[0]].attr("holdsSticky");
 							if(noS == null){
 								//get sticky color
 								// var colorOfSticky = this.sticky_object_array[sid].attr("stickyColor");
-								// this.holder_object_array[neighbourId].attr({
+								// this.holder_object_array[neighbourId[0]].attr({
 								// 	fill: colorOfSticky
 								// });
 
-								this.holder_object_array[neighbourId].attr({
+								this.holder_object_array[neighbourId[0]].attr({
 									holdsSticky: sid
 								});
 								scaleX = scaleX * 2;
@@ -1825,46 +1889,107 @@ var ConferenceScheduler = SAGE2_App.extend( {
 							holdsSticky: sid
 						});
 						console.log("HOLDER:"+this.holder_object_array[holderId].attr("holdsSticky"));
+						//~~~~~~~~~~> RESIZING THE HTML
+
+
+						var stickyFobj = document.getElementById("sticky_fobj_"+sid);
+						if(stickyFobj!=null){
+							console.log("Recreation triggered!");
+							// stickyFobj.parentNode.removeChild(stickyFobj);
+
+
+						// 	var myElement = this.sticky_object_array[sid];	
+						// 	var padding = this.padding;
+
+
+						// //Reading Values for creating the HTML Text
+						// var stickyTitle = myElement.attr("stickyTitle");
+						// var stickySpeaker = myElement.attr("stickySpeaker");
+						// var stickyFontSize = Math.floor(parseInt(myElement.attr("stickyFontSize"))); //Because ScaleY wont change on multi hall 
+						// console.log("Font Size before Release was:" + myElement.attr("stickyFontSize"));
+						// console.log("Font Size on Release:"+stickyFontSize);
+						// //Creating innerHTML for the sticky
+						// var title =  "<strong>Title:</strong> "+ stickyTitle;
+						// var speaker = "<strong>Speaker:</strong> "+ stickySpeaker;
+						// var htmlText = '<div xmlns="http://www.w3.org/1999/xhtml" style="color:black; font-size: '+stickyFontSize+'px">'
+						// 			+ title + '<br><br>' + speaker+ '</div>';
+
+						//Creating a foreignObject which will have HTML wrappable text
+						// var newElement = document.createElementNS("http://www.w3.org/2000/svg", 'foreignObject'); //Create a path in SVG's namespace
+						// newElement.setAttribute('x', (sticky_X+(padding/3)));
+      //  					newElement.setAttribute('y', (sticky_Y+(padding/3)));
+      //  					newElement.setAttribute('width',(this.postItW - (2*padding/3)));
+      //  					newElement.setAttribute('height',(this.postItH - (2*padding/3)));
+      //  					newElement.setAttribute('id',"sticky_fobj_"+sid);
+       					var fobjsX = 0.5;
+       					var fobjtX = (-1*(sticky_X-(sticky_X/fobjsX)));
+       					var fobjMatrix = new Snap.Matrix();
+       					fobjMatrix.scale(fobjsX,1);
+       					fobjMatrix.translate(fobjtX,0);
+       					stickyFobj.setAttribute('transform', fobjMatrix);
+       						
+						// newElement.innerHTML = htmlText;
+						
+						// myElement.append(newElement);
+
+
+
+
+
+						}
+
+
+
+
+						//<~~~~~~~~~~
+
+
+
+
 
 						// console.log("HOLDER: "+ )
 
-						//----->++++
-						var g_overlaySticky = this.paper_main.g().attr({
-							id: "g_overlaySticky_"+sid
-						}); 
-						var padding = this.padding;
-						// var htmlText = this.sticky_object_array[sid].attr("htmlText");
-						//Reading Values for creating the HTML Text
-						var stickyTitle = this.sticky_object_array[sid].attr("stickyTitle");
-						var stickySpeaker = this.sticky_object_array[sid].attr("stickySpeaker");
-						var stickyFontSize = Math.floor(parseInt(this.sticky_object_array[sid].attr("stickyFontSize")) * scaleY); //scaleY because ScaleY wont vary with number of halls
+						// //----->++++
+						// var g_overlaySticky = this.paper_main.g().attr({
+						// 	id: "g_overlaySticky_"+sid
+						// }); 
+						// var padding = this.padding;
+						// // var htmlText = this.sticky_object_array[sid].attr("htmlText");
+						// //Reading Values for creating the HTML Text
+						// var stickyTitle = this.sticky_object_array[sid].attr("stickyTitle");
+						// var stickySpeaker = this.sticky_object_array[sid].attr("stickySpeaker");
+						// var stickyFontSize = Math.floor(parseInt(this.sticky_object_array[sid].attr("stickyFontSize")) * scaleY); //scaleY because ScaleY wont vary with number of halls
 
-						//Creating innerHTML for the sticky
-						var title =  "<strong>Title:</strong> "+ stickyTitle;
-						var speaker = "<strong>Speaker:</strong> "+ stickySpeaker;
-						var htmlText = '<div xmlns="http://www.w3.org/1999/xhtml" style="color:black; font-size: '+stickyFontSize+'px">'
-									+ title + '<br><br>' + speaker+ '</div>';
+						// //Creating innerHTML for the sticky
+						// var title =  "<strong>Title:</strong> "+ stickyTitle;
+						// var speaker = "<strong>Speaker:</strong> "+ stickySpeaker;
+						// var htmlText = '<div xmlns="http://www.w3.org/1999/xhtml" style="color:black; font-size: '+stickyFontSize+'px">'
+						// 			+ title + '<br><br>' + speaker+ '</div>';
 
-						var stickyColor = this.sticky_object_array[sid].attr("stickyColor");
-						var overlayRect = this.paper_main.rect(hX,hY,scaleX*this.postItW, scaleY*this.postItH).attr({
-							fill: stickyColor
-						});
+						// var stickyColor = this.sticky_object_array[sid].attr("stickyColor");
+						// var overlayRect = this.paper_main.rect(hX,hY,scaleX*this.postItW, scaleY*this.postItH).attr({
+						// 	fill: stickyColor
+						// 	// ,stroke: this.shadowColor // For border to sticky
+						// });
 
-						//Creating a foreignObject which will have HTML wrappable text
-						var newElement = document.createElementNS("http://www.w3.org/2000/svg", 'foreignObject'); //Create a path in SVG's namespace
-						newElement.setAttribute('x', (hX+(padding/3)));
-       					newElement.setAttribute('y', (hY+(padding/3)));
-       					newElement.setAttribute('width',((scaleX*this.postItW) - (2*padding/3)));
-       					newElement.setAttribute('height',((scaleY*this.postItH) - (2*padding/3)));
+						// //Creating a foreignObject which will have HTML wrappable text
+						// var newElement = document.createElementNS("http://www.w3.org/2000/svg", 'foreignObject'); //Create a path in SVG's namespace
+						// newElement.setAttribute('x', (hX+(padding/3)));
+      //  					newElement.setAttribute('y', (hY+(padding/3)));
+      //  					newElement.setAttribute('width',((scaleX*this.postItW) - (2*padding/3)));
+      //  					newElement.setAttribute('height',((scaleY*this.postItH) - (2*padding/3)));
 
-						newElement.innerHTML = htmlText;
-						g_overlaySticky.add(overlayRect);
-						g_overlaySticky.append(newElement);
+						// newElement.innerHTML = htmlText;
+						// g_overlaySticky.add(overlayRect);
+						// g_overlaySticky.append(newElement);
 
-						// if (this.overlay_object_array[sid] === undefined) {
-							this.overlay_object_array[sid] = g_overlaySticky;
-						// }
-						//<----++++
+						// //REMOVE THIS IF ANY ERROR: This is added so that the overlay sticky is not on top when another sticky is moved over it.
+						// this.g_allSticky.add(g_overlaySticky);
+
+						// // if (this.overlay_object_array[sid] === undefined) {
+						// 	this.overlay_object_array[sid] = g_overlaySticky;
+						// // }
+						// //<----++++
 
 					}
 
