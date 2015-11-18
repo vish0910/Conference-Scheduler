@@ -1818,10 +1818,11 @@ var ConferenceScheduler = SAGE2_App.extend( {
 
 						var scaleY = this.holderH/this.postItH;
 						console.log("Scale Y Ratio:"+scaleY);
-
+						var fobjsXOld = 1; //Will be updated if sticky width is increased for multihall
+						var fobjW = 1;
 						// var scaTraX = (transX-sticky_X) - ((transX-sticky_X)/3);
 						console.log("Sticky X:"+sticky_X);
-						var scaTraX = transX - ((sticky_X)/3);
+						// var scaTraX = transX - ((sticky_X)/3);
 						// console.log("scaTraX:"+scaTraX);
 						//Translate and Scale 
 						// this.sticky_object_array[sid].attr({
@@ -1861,6 +1862,8 @@ var ConferenceScheduler = SAGE2_App.extend( {
 									holdsSticky: sid
 								});
 								scaleX = scaleX * 2;
+								fobjsXOld = fobjsXOld/2;
+								fobjW = fobjW*2;
 							}
 						}
 //>>>>>>>>>
@@ -1895,42 +1898,42 @@ var ConferenceScheduler = SAGE2_App.extend( {
 						var stickyFobj = document.getElementById("sticky_fobj_"+sid);
 						if(stickyFobj!=null){
 							console.log("Recreation triggered!");
-							// stickyFobj.parentNode.removeChild(stickyFobj);
+							stickyFobj.parentNode.removeChild(stickyFobj);
 
 
-						// 	var myElement = this.sticky_object_array[sid];	
-						// 	var padding = this.padding;
+							var myElement = this.sticky_object_array[sid];	
+							var padding = this.padding;
 
 
-						// //Reading Values for creating the HTML Text
-						// var stickyTitle = myElement.attr("stickyTitle");
-						// var stickySpeaker = myElement.attr("stickySpeaker");
-						// var stickyFontSize = Math.floor(parseInt(myElement.attr("stickyFontSize"))); //Because ScaleY wont change on multi hall 
-						// console.log("Font Size before Release was:" + myElement.attr("stickyFontSize"));
-						// console.log("Font Size on Release:"+stickyFontSize);
-						// //Creating innerHTML for the sticky
-						// var title =  "<strong>Title:</strong> "+ stickyTitle;
-						// var speaker = "<strong>Speaker:</strong> "+ stickySpeaker;
-						// var htmlText = '<div xmlns="http://www.w3.org/1999/xhtml" style="color:black; font-size: '+stickyFontSize+'px">'
-						// 			+ title + '<br><br>' + speaker+ '</div>';
+						//Reading Values for creating the HTML Text
+						var stickyTitle = myElement.attr("stickyTitle");
+						var stickySpeaker = myElement.attr("stickySpeaker");
+						var stickyFontSize = Math.floor(parseInt(myElement.attr("stickyFontSize"))); //Because ScaleY wont change on multi hall 
+						console.log("Font Size before Release was:" + myElement.attr("stickyFontSize"));
+						console.log("Font Size on Release:"+stickyFontSize);
+						//Creating innerHTML for the sticky
+						var title =  "<strong>Title:</strong> "+ stickyTitle;
+						var speaker = "<strong>Speaker:</strong> "+ stickySpeaker;
+						var htmlText = '<div xmlns="http://www.w3.org/1999/xhtml" style="color:black; font-size: '+stickyFontSize+'px">'
+									+ title + '<br><br>' + speaker+ '</div>';
 
-						//Creating a foreignObject which will have HTML wrappable text
-						// var newElement = document.createElementNS("http://www.w3.org/2000/svg", 'foreignObject'); //Create a path in SVG's namespace
-						// newElement.setAttribute('x', (sticky_X+(padding/3)));
-      //  					newElement.setAttribute('y', (sticky_Y+(padding/3)));
-      //  					newElement.setAttribute('width',(this.postItW - (2*padding/3)));
-      //  					newElement.setAttribute('height',(this.postItH - (2*padding/3)));
-      //  					newElement.setAttribute('id',"sticky_fobj_"+sid);
-       					var fobjsX = 0.5;
+						// Creating a foreignObject which will have HTML wrappable text
+						var newElement = document.createElementNS("http://www.w3.org/2000/svg", 'foreignObject'); //Create a path in SVG's namespace
+						newElement.setAttribute('x', (sticky_X+(padding/3)));
+       					newElement.setAttribute('y', (sticky_Y+(padding/3)));
+       					newElement.setAttribute('width',((this.postItW*fobjW) - (2*padding/3)));
+       					newElement.setAttribute('height',(this.postItH - (2*padding/3)));
+       					newElement.setAttribute('id',"sticky_fobj_"+sid);
+       					var fobjsX = fobjsXOld;
        					var fobjtX = (-1*(sticky_X-(sticky_X/fobjsX)));
        					var fobjMatrix = new Snap.Matrix();
        					fobjMatrix.scale(fobjsX,1);
        					fobjMatrix.translate(fobjtX,0);
-       					stickyFobj.setAttribute('transform', fobjMatrix);
+       					newElement.setAttribute('transform', fobjMatrix);
        						
-						// newElement.innerHTML = htmlText;
+						newElement.innerHTML = htmlText;
 						
-						// myElement.append(newElement);
+						myElement.append(newElement);
 
 
 
