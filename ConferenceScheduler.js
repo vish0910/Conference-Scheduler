@@ -337,11 +337,16 @@ var ConferenceScheduler = SAGE2_App.extend( {
 				var defaultTransform = 'translate('+array_sticky[counter][4]+','+array_sticky[counter][5]+')';
 				var defaultMatrix = 'matrix(1,0,0,1,'+array_sticky[counter][4]+','+array_sticky[counter][5]+')';
 
+				//Reading Values for creating the HTML Text
+				var stickyTitle = this.catagorizedStickies[theme][k]['title'];
+				var stickySpeaker = this.catagorizedStickies[theme][k]['speaker'];
+				var stickyFontSize = this.stickyFontSize;
+
 				//Creating innerHTML for the sticky
-				var title =  "<strong>Title:</strong> "+ this.catagorizedStickies[theme][k]['title'];
-				var author = "<strong>Speaker:</strong> "+ this.catagorizedStickies[theme][k]['speaker'];
-				var htmlText = '<div xmlns="http://www.w3.org/1999/xhtml" style="color:black; font-size: '+this.stickyFontSize+'px">'
-									+ title + '<br><br>' + author+ '</div>';
+				var title =  "<strong>Title:</strong> "+ stickyTitle;
+				var speaker = "<strong>Speaker:</strong> "+ stickySpeaker;
+				var htmlText = '<div xmlns="http://www.w3.org/1999/xhtml" style="color:black; font-size: '+stickyFontSize+'px">'
+									+ title + '<br><br>' + speaker+ '</div>';
 
 				//creating a group for group all elements of a sticky
 				var g_sticky = this.paper_main.g().attr({
@@ -351,7 +356,10 @@ var ConferenceScheduler = SAGE2_App.extend( {
 					transform : defaultMatrix,
 					tX:0, tY:0,
 					stickyColor : stickyColor,
-					htmlText: htmlText
+					htmlText: htmlText,
+					stickyTitle: stickyTitle,
+					stickySpeaker: stickySpeaker,
+					stickyFontSize: stickyFontSize
 				});
 				// var svg_sticky = this.paper_main.svg(array_sticky[counter][0],array_sticky[counter][1],this.postItW+(padding/3),this.postItH+(padding/3)).attr({transform : defaultTransform});
 
@@ -1427,6 +1435,9 @@ var ConferenceScheduler = SAGE2_App.extend( {
 				var f = this.filter;
 				var htmlText = this.sticky_object_array[stickyId].attr("htmlText");
 				console.log("HTML TEXT:"+htmlText);
+				var stickyTitle = this.sticky_object_array[stickyId].attr("stickyTitle");
+				var stickySpeaker = this.sticky_object_array[stickyId].attr("stickySpeaker");
+				var stickyFontSize = this.sticky_object_array[stickyId].attr("stickyFontSize");
 				//creating a group for group all elements of a sticky
 				var g_sticky = this.paper_main.g().attr({
 					id: "g_sticky"+stickyId,
@@ -1435,7 +1446,10 @@ var ConferenceScheduler = SAGE2_App.extend( {
 					transform : defaultMatrix,
 					tX:transX, tY:transY,
 					stickyColor: stickyColor,
-					htmlText: htmlText
+					htmlText: htmlText,
+					stickyTitle: stickyTitle,
+					stickySpeaker: stickySpeaker,
+					stickyFontSize: stickyFontSize
 				});
 				
 				// var svg_sticky = this.paper_main.svg(array_sticky[counter][0],array_sticky[counter][1],this.postItW+(padding/3),this.postItH+(padding/3)).attr({transform : defaultTransform});
@@ -1456,9 +1470,9 @@ var ConferenceScheduler = SAGE2_App.extend( {
 				g_sticky.add(sticky_shadow);
 				g_sticky.add(sticky_1);
 				// var title =  "<strong>Title:</strong> "+ this.catagorizedStickies[theme][k]['title'];
-				// var author = "<strong>Speaker:</strong> "+ this.catagorizedStickies[theme][k]['speaker'];
+				// var speaker = "<strong>Speaker:</strong> "+ this.catagorizedStickies[theme][k]['speaker'];
 				// var htmlText = '<div xmlns="http://www.w3.org/1999/xhtml" style="color:black; font-size: 5px">'
-				// 					+ title + '<br><br>' + author+ '</div>';
+				// 					+ title + '<br><br>' + speaker+ '</div>';
 
 
 				//Creating a foreignObject which will have HTML wrappable text
@@ -1819,7 +1833,18 @@ var ConferenceScheduler = SAGE2_App.extend( {
 							id: "g_overlaySticky_"+sid
 						}); 
 						var padding = this.padding;
-						var htmlText = this.sticky_object_array[sid].attr("htmlText");
+						// var htmlText = this.sticky_object_array[sid].attr("htmlText");
+						//Reading Values for creating the HTML Text
+						var stickyTitle = this.sticky_object_array[sid].attr("stickyTitle");
+						var stickySpeaker = this.sticky_object_array[sid].attr("stickySpeaker");
+						var stickyFontSize = Math.floor(parseInt(this.sticky_object_array[sid].attr("stickyFontSize")) * scaleY); //scaleY because ScaleY wont vary with number of halls
+
+						//Creating innerHTML for the sticky
+						var title =  "<strong>Title:</strong> "+ stickyTitle;
+						var speaker = "<strong>Speaker:</strong> "+ stickySpeaker;
+						var htmlText = '<div xmlns="http://www.w3.org/1999/xhtml" style="color:black; font-size: '+stickyFontSize+'px">'
+									+ title + '<br><br>' + speaker+ '</div>';
+
 						var stickyColor = this.sticky_object_array[sid].attr("stickyColor");
 						var overlayRect = this.paper_main.rect(hX,hY,scaleX*this.postItW, scaleY*this.postItH).attr({
 							fill: stickyColor
