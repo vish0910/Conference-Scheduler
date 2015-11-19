@@ -681,8 +681,9 @@ var ConferenceScheduler = SAGE2_App.extend( {
 					cellX +=this.holderW;
 					hallCounter = 1;
 				}
-				//For reference : Paper.rect(x,y,width,height,[rx],[ry])
-				var cellRect = this.paper_main.rect(cellX, cellY, hiddencellW, cellH).attr({
+				var numberOfSubPartitions = this.numberOfHalls - hallCounter;
+				var hiddencellH = cellH/numberOfSubPartitions;
+				var cellRect = this.paper_main.rect(cellX, cellY, hiddencellW, hiddencellH).attr({
 					id: "HiddenHolder_"+cellCounter,
 					// fill:        "rgba(68, 48, 255, 0.15)",
 					fill:        "pink",
@@ -1423,6 +1424,7 @@ var ConferenceScheduler = SAGE2_App.extend( {
  					var sticky_X = parseFloat(this.sticky_object_array[stickyId].attr("x"));
  					var sticky_Y = parseFloat(this.sticky_object_array[stickyId].attr("y"));
 //-------->
+					// var stickyWidth = parseFloat(this.sticky_object_array[stickyId].attr("width"));
  					var transX = parseFloat(this.sticky_object_array[stickyId].attr("tX")) - this.postItW;
  					var transY = parseFloat(this.sticky_object_array[stickyId].attr("tY")) - this.postItH;
 
@@ -1499,7 +1501,7 @@ var ConferenceScheduler = SAGE2_App.extend( {
 
 				
 	//<------^^^^^
-
+				//SCALE on Click 
 					var scaleX = 2;
 					var scaleY = 2;
 					var myMatrix = new Snap.Matrix();
