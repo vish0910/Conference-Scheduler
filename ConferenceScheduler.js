@@ -2303,10 +2303,23 @@ var ConferenceScheduler = SAGE2_App.extend( {
 
 						//---------> Sneha's Code
 						this.turn++;
+						
+						var text_totalmoves = this.paper_main.text(button2X+(this.buttonW*0.5),button2Y+(this.buttonH*0.6), "You are just allowed to move sticky twice").attr({
+			fill: this.textColor,
+			'font-size':"40" ,
+			"text-anchor" : "middle"
+		});
+						var d = new Date();
+						var n = d.getMilliseconds();
+						if(n>500)
+							{
+								var text_totalmoves.remove();
+							}
+							
 						if(this.turn%2==0)
 						{
 							this.text_turns.remove();
-							var turn = this.turn;
+							var turn = this.turn/2;
 							this.text_turns = this.paper_main.text(this.turnInfo[0],this.turnInfo[1], "Turn No: "+turn).attr({
 								fill: this.textColor,
 								'font-size':"40" ,
