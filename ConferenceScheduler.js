@@ -26,7 +26,8 @@ var ConferenceScheduler = SAGE2_App.extend( {
 		// move and resize callbacks
 		this.resizeEvents = "onfinish";
 		this.moveEvents   = "onfinish";
-
+		this.turn = 1;
+		
 		this.defaultFill = "rgba(68, 48, 255, 0.1)";
 		this.defaultStroke = "rgba(68, 48, 255, 0.80)";
 
@@ -64,10 +65,12 @@ var ConferenceScheduler = SAGE2_App.extend( {
 
 		this.textColor = "Gray";
 		this.txtSize = "20";
-
+		this.textColor1 = "White";
 		//Flags for Buttons
 		this.toggleFP = true;
 		this.toggleRI = true;
+		this.toggleTI = true;
+		this.toggleTN = true;
 
 		//Button Width and Height
 		this.buttonW = 0;
@@ -1060,6 +1063,68 @@ var ConferenceScheduler = SAGE2_App.extend( {
 		this.g_button2.add(button_roomInfo);
 		this.g_button2.add(text_roomInfo);
 
+		var button3X = button2X + this.buttonW + this.buttonPadding;
+		var button3Y = paper_gridYEnd+this.buttonPadding;
+
+		var button_turns = this.paper_main.rect(button3X,button3Y,this.buttonW,this.buttonH).attr({
+			// fill: "#330099",
+			// stroke: "#ffffff"
+			fill:        "rgba(68, 48, 255, 0.15)",
+			stroke:      "rgba(68, 48, 255, 0.80)",
+			strokeWidth: 3
+		
+		});
+		var turn=this.turn;
+		this.turnInfo = [button3X+(this.buttonW*0.5),button3Y+(this.buttonH*0.6)];
+		this.text_turns = this.paper_main.text(button3X+(this.buttonW*0.5),button3Y+(this.buttonH*0.6), "Turn No: "+turn).attr({
+			fill: this.textColor,
+			'font-size':"40" ,
+			"text-anchor" : "middle"
+		});
+				
+		
+		var button4X = button3X + this.buttonW + this.buttonPadding;
+		var button4Y = paper_gridYEnd+this.buttonPadding;
+
+		var button_tutorial = this.paper_main.rect(button4X,button4Y,this.buttonW,this.buttonH).attr({
+			// fill: "#330099",
+			// stroke: "#ffffff"
+			fill:        "rgba(68, 48, 255, 0.15)",
+			stroke:      "rgba(68, 48, 255, 0.80)",
+			strokeWidth: 3
+		
+		});
+		
+		var text_tutorial = this.paper_main.text(button4X+(this.buttonW*0.5),button4Y+(this.buttonH*0.6), "Tutorials").attr({
+			fill: this.textColor,
+			'font-size':"40" ,
+			"text-anchor" : "middle"
+		});
+			
+
+		var button5X = button4X + this.buttonW + this.buttonPadding;
+		var button5Y = paper_gridYEnd+this.buttonPadding;
+
+		
+		var button_save = this.paper_main.rect(button5X,button5Y,this.buttonW/2,this.buttonH).attr({
+			// fill: "#330099",
+			// stroke: "#ffffff"
+			fill:        "rgba(68, 48, 255, 0.15)",
+			stroke:      "rgba(68, 48, 255, 0.80)",
+			strokeWidth: 3
+		
+		});
+		
+		
+		var text_save = this.paper_main.text(button5X+(this.buttonW*0.25),button5Y+(this.buttonH*0.6), "Save").attr({
+			fill: this.textColor,
+			'font-size':"40" ,
+			"text-anchor" : "middle"
+		});
+		
+		
+		
+
 		//Date Display
 
 		// this.g_button3 = this.paper_main.g();
@@ -1073,8 +1138,8 @@ var ConferenceScheduler = SAGE2_App.extend( {
 		// var button_displayDate = this.paper_main.rect(button3X,button3Y,(this.buttonW*2),this.buttonH).attr({
 		// 	// fill: "#330099",
 		// 	// stroke: "#ffffff"
-		// 	fill:        this.defaultFill,
-		// 	stroke:      this.defaultStroke,
+		// 	fill:        "rgba(68, 48, 255, 0.15)",
+		// 	stroke:      "rgba(68, 48, 255, 0.80)",
 		// 	strokeWidth: 3
 		
 		// });	
@@ -1092,7 +1157,9 @@ var ConferenceScheduler = SAGE2_App.extend( {
 		});
 		this.g_buttonGroup.add(this.g_button1);
 		this.g_buttonGroup.add(this.g_button2);
-		// this.g_buttonGroup.add(this.g_button3);
+		this.g_buttonGroup.add(this.g_button3);
+		this.g_buttonGroup.add(this.g_button3);
+
 		// this.readSavedSession();
 	},
 
@@ -1726,7 +1793,7 @@ var ConferenceScheduler = SAGE2_App.extend( {
 			}
 			else if(paperX >= 0 && paperX < paper_controlW && paperY >=paper_gridYEnd && paperY <=paper_mainH){ // Control Section
 				console.log("Clicked in Control Section("+ x + ","+ y +")");
-				
+				//Sneha Begin--->
 				var f = this.paper_main.filter(Snap.filter.blur(20,20));
 				// Clicked on View Floor Plan
 				var button1X = this.controlsLeftPadding;
@@ -1737,83 +1804,38 @@ var ConferenceScheduler = SAGE2_App.extend( {
 				
 					if(this.toggleFP == true){
 						this.g_floorPlan = this.paper_main.g();
-						this.shadow_floorPlan = this.paper_main.rect((this.paper_mainW/4),(this.paper_mainH/4),(this.paper_mainH/2),(this.paper_mainH/4)).attr({
+						var shadow_floorPlan = this.paper_main.rect((this.paper_mainW/4),(this.paper_mainH/4),(this.paper_mainH/2),(this.paper_mainH/4)).attr({
 							fill: this.shadowColor,
 							filter: f
 						});
-						this.image_floorPlan = this.paper_main.image(this.resrcPath +"icon.png",(this.paper_mainW/4),(this.paper_mainH/4),(this.paper_mainH/2),(this.paper_mainH/4));
-						this.g_floorPlan.add(this.shadow_floorPlan);
-						this.g_floorPlan.add(this.image_floorPlan);
+						var button_floorPlannew = this.paper_main.rect(button1X,button1Y,this.buttonW,this.buttonH).attr({
+							fill:        "rgba(0, 0, 102, 0.15)",
+							stroke:       this.textColor1,
+							strokeWidth: 3		
+						});
+
+						var text_floorPlannew = this.paper_main.text(button1X+(this.buttonW*0.5),button1Y+(this.buttonH*0.6), "Floor Plan").attr({
+							fill: this.textColor1,
+							'font-size':"40" ,
+							"text-anchor" : "middle"
+						});
+		
+						var image_floorPlan = this.paper_main.image(this.resrcPath +"icon.png",(this.paper_mainW/4),(this.paper_mainH/4),(this.paper_mainH/2),(this.paper_mainH/4));
+						this.g_floorPlan.add(shadow_floorPlan);
+						this.g_floorPlan.add(image_floorPlan);
+						this.g_floorPlan.add(button_floorPlannew);
+						this.g_floorPlan.add(text_floorPlannew);
 						this.toggleFP = false;
-//----> Testing how to remove child node
-					// var childNs = this.sticky_object_array[12].removeChild(this.sticky_object_array[12].firstChild);;
-
-					// console.log("Hello1 children:"+ JSON.stringify(childNs));
-					// var json = JSON.parse(childNs)
-					// var childNM = json["childNodes"];
-					// console.log("Hello2 children:"+ JSON.stringify(childNM));
-				
-					var myElement = document.getElementById("sticky_fobj_14");
-					if(myElement!=null){
-						myElement.parentNode.removeChild(myElement);
-					}
-
-
-
-//<-------
 					}
 					else{
 						this.g_floorPlan.remove();		
 						this.toggleFP = true;
-
-
-						var myElement = this.sticky_object_array[14];
-						var sticky_X =  parseFloat(myElement.attr("x"));
- 						var sticky_Y =  parseFloat(myElement.attr("y"));
-
- 						var transX = parseFloat(myElement.attr("tX")) - this.postItW;
- 						var transY = parseFloat(myElement.attr("tY")) - this.postItH;
-
-		
-						var shadowColor = this.shadowColor;
-						var padding = this.padding;
-
-
-						// var newElement = this.paper_main.rect(sticky_X+(padding/this.shadowDepth),sticky_Y+(padding/this.shadowDepth),this.postItW,this.postItH).attr({
-						// 	id:"sticky_shadow_14",
-						// 	fill: shadowColor,
-						// 	filter: this.filter
-						// });
-
-
-						//Reading Values for creating the HTML Text
-						var stickyTitle = myElement.attr("stickyTitle");
-						var stickySpeaker = myElement.attr("stickySpeaker");
-						var stickyFontSize = Math.floor(parseInt(myElement.attr("stickyFontSize"))); 
-
-						//Creating innerHTML for the sticky
-						var title =  "<strong>Title:</strong> "+ stickyTitle;
-						var speaker = "<strong>Speaker:</strong> "+ stickySpeaker;
-						var htmlText = '<div xmlns="http://www.w3.org/1999/xhtml" style="color:black; font-size: '+stickyFontSize+'px">'
-									+ title + '<br><br>' + speaker+ '</div>';
-
-						//Creating a foreignObject which will have HTML wrappable text
-						var newElement = document.createElementNS("http://www.w3.org/2000/svg", 'foreignObject'); //Create a path in SVG's namespace
-						newElement.setAttribute('x', (sticky_X+(padding/3)));
-       					newElement.setAttribute('y', (sticky_Y+(padding/3)));
-       					newElement.setAttribute('width',(this.postItW - (2*padding/3)));
-       					newElement.setAttribute('height',(this.postItH - (2*padding/3)));
-       					newElement.setAttribute('id',"sticky_fobj_14");
-						newElement.innerHTML = htmlText;
-						
-						myElement.append(newElement);
-
 					}
 					console.log("done");
 				}
 
 				// Clicked  on Room Info
-				var button2X = this.controlsLeftPadding + this.buttonW + this.buttonPadding;
+				var button2X = button1X + this.buttonW + this.buttonPadding;
 				var button2Y = paper_gridYEnd+this.buttonPadding;
 
 				if(paperX >= button2X && paperX < button2X+ this.buttonW && paperY >= button2Y && paperY < button2Y+this.buttonH){
@@ -1821,13 +1843,31 @@ var ConferenceScheduler = SAGE2_App.extend( {
 					
 					if(this.toggleRI == true){
 						this.g_roomInfo = this.paper_main.g();
-						this.shadow_roomInfo = this.paper_main.rect((this.paper_mainW/2),(this.paper_mainH/4),(this.paper_mainH/2),(this.paper_mainH/4)).attr({
+						var shadow_roomInfo = this.paper_main.rect((this.paper_mainW/2),(this.paper_mainH/4),(this.paper_mainH/2),(this.paper_mainH/4)).attr({
 							fill: this.shadowColor,
 							filter: f
 						});
-						this.image_roomInfo = this.paper_main.image(this.resrcPath +"info.png",(this.paper_mainW/2),(this.paper_mainH/4),(this.paper_mainH/2),(this.paper_mainH/4));
-						this.g_roomInfo.add(this.shadow_roomInfo);
-						this.g_roomInfo.add(this.image_roomInfo);
+
+						var button_roomInfonew = this.paper_main.rect(button2X,button2Y,this.buttonW,this.buttonH).attr({
+							
+							fill:       "rgba(0, 0, 102, 0.15)",
+							stroke:       this.textColor1,
+							strokeWidth: 3
+						
+						});
+		
+						var text_roomInfonew = this.paper_main.text(button2X+(this.buttonW*0.5),button2Y+(this.buttonH*0.6), "Room Information").attr({
+							fill: this.textColor1,
+							'font-size':"40" ,
+							"text-anchor" : "middle"
+						});
+					
+						var image_roomInfo = this.paper_main.image(this.resrcPath +"info.png",(this.paper_mainW/2),(this.paper_mainH/4),(this.paper_mainH/2),(this.paper_mainH/4));
+						this.g_roomInfo.add(shadow_roomInfo);
+						this.g_roomInfo.add(image_roomInfo);
+						this.g_roomInfo.add(button_roomInfonew);
+						this.g_roomInfo.add(text_roomInfonew);
+
 						this.toggleRI = false;
 					}
 					else{
@@ -1836,6 +1876,121 @@ var ConferenceScheduler = SAGE2_App.extend( {
 					}
 					console.log("done");
 				}
+
+
+				// Clicked  on Tutorials
+				var button4X = button2X + this.buttonW + this.buttonPadding + this.buttonW + this.buttonPadding;
+				var button4Y = paper_gridYEnd+this.buttonPadding;
+
+				if(paperX >= button4X && paperX < button4X+ this.buttonW*0.75 && paperY >= button4Y && paperY < button4Y+this.buttonH){
+					console.log("ButtonClicked ("+ paperX + ","+ paperY +")");
+					
+					if(this.toggleTI == true){
+						var button_tutorial = this.paper_main.rect(button4X,button4Y,this.buttonW,this.buttonH).attr({
+							fill:        "rgba(0, 0, 102, 0.15)",
+							stroke:       this.textColor1,
+							strokeWidth: 3
+						
+						});
+		
+						var text_tutorial = this.paper_main.text(button4X+(this.buttonW*0.5),button4Y+(this.buttonH*0.6), "Tutorials").attr({
+							fill: this.textColor1,
+							'font-size':"40" ,
+							"text-anchor" : "middle"
+						});
+				
+						this.g_tutorialsImage = this.paper_main.g();		
+						this.g_tutorialsImage.attr({
+							id: "TutorialsImage"
+						});
+		
+						var tutorialsImage = this.paper_main.image(this.resrcPath +"Tutorial.png",(this.paper_mainW/4),(this.paper_mainH/4),(this.paper_mainW/3),(this.paper_mainH/4));
+		
+
+				
+						var text_nexttutorialsign = this.paper_main.text(button4X+(this.buttonW*0.85),button4Y+(this.buttonH*0.7), "→").attr({
+							fill: this.textColor1,
+							'font-size':"80" ,
+							"text-anchor" : "middle"
+						});	
+
+						this.g_tutorialsImage.add(tutorialsImage);
+						this.g_tutorialsImage.add(button_tutorial);
+						this.g_tutorialsImage.add(text_tutorial);
+						this.g_tutorialsImage.add(text_nexttutorialsign);
+						this.toggleTI = false;
+						}
+						else{
+							this.g_tutorialsImage.remove();		
+							this.toggleTI = true;
+						}
+						console.log("done");
+					}
+		
+				//clicked on next arrow
+			
+				var buttonnextX = button4X+(this.buttonW*0.85)
+				var buttonnextY = button4Y+(this.buttonH*0.7)
+
+				if(paperX >= buttonnextX && paperX < button4X+ this.buttonW && paperY >= button4Y && paperY < button4Y+this.buttonH){
+					console.log("ButtonClicked ("+ paperX + ","+ paperY +")");
+					
+					if(this.toggleTN == true){
+						
+						
+						this.g_tutorialsImage.remove();	
+						var tutorialnextImage = this.paper_main.image(this.resrcPath +"Untitled.png",(this.paper_mainW/3),(this.paper_mainH/4),(this.paper_mainH/2),(this.paper_mainH/4));
+
+						this.toggleTN = false;
+					}
+					else{
+						tutorialnextImage.remove();		
+						this.toggleTN = true;
+					}
+					console.log("done");
+				}
+
+				// Clicked on save
+				var button5X = button4X + this.buttonW + this.buttonPadding;
+				var button5Y = paper_gridYEnd+this.buttonPadding;
+
+				if(paperX >= button5X && paperX < button5X+ this.buttonW && paperY >= button5Y && paperY < button5Y+this.buttonH){
+					console.log("ButtonClicked ("+ paperX + ","+ paperY +")");
+					
+					if(this.toggleRI == true){
+						var button_save = this.paper_main.rect(button5X,button5Y,this.buttonW/2,this.buttonH).attr({
+			
+							fill:        "rgba(68, 48, 255, 0.15)",
+							stroke:      this.textColor1,
+							strokeWidth: 3
+		
+						});
+		
+						var text_save = this.paper_main.text(button5X+(this.buttonW*0.25),button5Y+(this.buttonH*0.6), "Save").attr({
+							fill: this.textColor1,
+							'font-size':"40" ,
+							"text-anchor" : "middle"
+						});
+			
+						var canvas = document.getElementById("Paper_main");
+						var img    = canvas.toDataURL("image/png");
+						document.write('<img src="'+img+'"/>');
+
+						//second way
+						var a = document.createElement("a");
+						a.download = "sample.png";
+						a.href = canvasdata;
+						a.click();
+						this.toggleRI = false;
+					}
+					else{
+						this.g_roomInfo.remove();		
+						this.toggleRI = true;
+					}
+					console.log("done");
+				}
+
+		//	-------> Sneha End
 			} 
 			else{
 				console.log("Clicked outside zone");
@@ -2145,6 +2300,20 @@ var ConferenceScheduler = SAGE2_App.extend( {
 						// 	this.overlay_object_array[sid] = g_overlaySticky;
 						// // }
 						// //<----++++
+
+						//---------> Sneha's Code
+						this.turn++;
+						if(this.turn%2==0)
+						{
+							this.text_turns.remove();
+							var turn = this.turn;
+							this.text_turns = this.paper_main.text(this.turnInfo[0],this.turnInfo[1], "Turn No: "+turn).attr({
+								fill: this.textColor,
+								'font-size':"40" ,
+								"text-anchor" : "middle"
+							});
+						}
+						//<------- End of Sneha
 
 					}
 
