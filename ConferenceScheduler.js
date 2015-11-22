@@ -72,6 +72,8 @@ var ConferenceScheduler = SAGE2_App.extend( {
 		this.toggleTI = true;
 		this.toggleTN = true;
 
+		this.movesAllowed = 1;
+
 		//Button Width and Height
 		this.buttonW = 0;
 		this.buttonH = 0;
@@ -307,6 +309,7 @@ var ConferenceScheduler = SAGE2_App.extend( {
 				_this.array_dates = data.dates;
 				_this.array_sessions = data.sessions;
 				_this.array_halls = data.halls;
+				_this.movesAllowed = data.movesAllowed;
 				console.log("StickyColor:"+ JSON.stringify(_this.stickyColor));
 				for(var key in _this.stickyColor){
 					_this.themeNames.push(key);
@@ -838,8 +841,8 @@ var ConferenceScheduler = SAGE2_App.extend( {
 				var hiddencellH = cellH/numberOfSubPartitions;
 				var cellRect = this.paper_main.rect(cellX, cellY, hiddencellW, hiddencellH).attr({
 					id: "HiddenHolder_"+cellCounter,
-					fill:        this.defaultFill,
-					// fill:        "pink",
+					// fill:        this.defaultFill,
+					fill:        "pink",
 					// stroke:      this.defaultStroke,
 					strokeWidth: 2,
 					transform: defaultMatrix,
@@ -1972,9 +1975,9 @@ var ConferenceScheduler = SAGE2_App.extend( {
 							"text-anchor" : "middle"
 						});
 			
-						var canvas = document.getElementById("Paper_main");
-						var img    = canvas.toDataURL("image/png");
-						document.write('<img src="'+img+'"/>');
+						// var canvas = document.getElementById("Paper_main");
+						// var img    = canvas.toDataURL("image/png");
+						// document.write('<img src="'+img+'"/>');
 
 						//second way
 						var a = document.createElement("a");
@@ -2306,7 +2309,7 @@ var ConferenceScheduler = SAGE2_App.extend( {
 						if(this.turn%2==0)
 						{
 							this.text_turns.remove();
-							var turn = this.turn;
+							var turn = this.turn/this.movesAllowed;
 							this.text_turns = this.paper_main.text(this.turnInfo[0],this.turnInfo[1], "Turn No: "+turn).attr({
 								fill: this.textColor,
 								'font-size':"40" ,
