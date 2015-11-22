@@ -1,0 +1,331 @@
+{
+  "stickies": [
+    {
+      "type": "g",
+      "attr": {
+        "id": "g_sticky0",
+        "x": "2868",
+        "y": "120",
+        "transform": "matrix(3.6,0,0,1.8,-8644.8,601.5)",
+        "tX": "-1188",
+        "tY": "697.5",
+        "stickyColor": "#FEBB32",
+        "htmlText": "<div xmlns=\"http://www.w3.org/1999/xhtml\" style=\"color:black; font-size: 7px\"><strong>Title:</strong> Add Visualize<br><br><strong>Speaker:</strong> Dr. Bob Cullars</div>",
+        "stickyTitle": "Ad. Visualization",
+        "stickySpeaker": "Dr. Rob Cullars",
+        "stickyFontSize": "7"
+      },
+      "childNodes": [
+        {
+          "type": "rect",
+          "attr": {
+            "x": "2872",
+            "y": "124",
+            "width": "66.66666666666667",
+            "height": "66.66666666666667",
+            "id": "sticky_shadow_0",
+            "fill": "#ffffff",
+            "filter": "url('#Sih9uzecx78')",
+            "style": ""
+          }
+        },
+        {
+          "type": "rect",
+          "attr": {
+            "x": "2868",
+            "y": "120",
+            "width": "66.66666666666667",
+            "height": "66.66666666666667",
+            "id": "sticky_rect_0",
+            "fill": "#febb32",
+            "transform": "matrix(1,0,0,1,0,0)"
+          }
+        },
+        {
+          "type": "foreignObject",
+          "attr": {
+            "x": "2874.6666666666665",
+            "y": "126.66666666666667",
+            "width": "120.00000000000001",
+            "height": "53.333333333333336",
+            "id": "sticky_fobj_0",
+            "transform": "matrix(0.5,0,0,1,1434,0)"
+          },
+          "childNodes": [
+            {
+              "type": "DIV",
+              "attr": {
+                "xmlns": "http://www.w3.org/1999/xhtml",
+                "style": "color:black; font-size: 7px"
+              },
+              "childNodes": [
+                {
+                  "type": "STRONG",
+                  "attr": {},
+                  "childNodes": [
+                    {
+                      "type": "#text",
+                      "attr": {
+                        "text": "Title:"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "#text",
+                  "attr": {
+                    "text": " Advanced Visualization"
+                  }
+                },
+                {
+                  "type": "BR",
+                  "attr": {}
+                },
+                {
+                  "type": "BR",
+                  "attr": {}
+                },
+                {
+                  "type": "STRONG",
+                  "attr": {},
+                  "childNodes": [
+                    {
+                      "type": "#text",
+                      "attr": {
+                        "text": "Speaker:"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "#text",
+                  "attr": {
+                    "text": " Dr. Bob Cullars"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "g",
+      "attr": {
+        "id": "g_sticky1",
+        "x": "2868",
+        "y": "320",
+        "transform": "matrix(1.8,0,0,1.8,-3002.4,121.5)",
+        "tX": "-708",
+        "tY": "377.5",
+        "stickyColor": "#8EE13E",
+        "htmlText": "<div xmlns=\"http://www.w3.org/1999/xhtml\" style=\"color:black; font-size: 7px\"><strong>Title:</strong> Evo CMP Graphics<br><br><strong>Speaker:</strong> Dr. Foo Bar</div>",
+        "stickyTitle": "Evolution of Computer Graphics",
+        "stickySpeaker": "Dr. Foo Bar",
+        "stickyFontSize": "7"
+      },
+      "childNodes": [
+        {
+          "type": "rect",
+          "attr": {
+            "x": "2872",
+            "y": "324",
+            "width": "66.66666666666667",
+            "height": "66.66666666666667",
+            "id": "sticky_shadow_1",
+            "fill": "#ffffff",
+            "filter": "url('#Sih9uzecx78')",
+            "style": ""
+          }
+        },
+        {
+          "type": "rect",
+          "attr": {
+            "x": "2868",
+            "y": "320",
+            "width": "66.66666666666667",
+            "height": "66.66666666666667",
+            "id": "sticky_rect_1",
+            "fill": "#8ee13e",
+            "transform": "matrix(1,0,0,1,0,0)"
+          }
+        },
+        {
+          "type": "foreignObject",
+          "attr": {
+            "x": "2874.6666666666665",
+            "y": "326.6666666666667",
+            "width": "53.333333333333336",
+            "height": "53.333333333333336",
+            "id": "sticky_fobj_1",
+            "transform": "matrix(1,0,0,1,0,0)"
+          },
+          "childNodes": [
+            {
+              "type": "DIV",
+              "attr": {
+                "xmlns": "http://www.w3.org/1999/xhtml",
+                "style": "color:black; font-size: 7px"
+              },
+              "childNodes": [
+                {
+                  "type": "STRONG",
+                  "attr": {},
+                  "childNodes": [
+                    {
+                      "type": "#text",
+                      "attr": {
+                        "text": "Title:"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "#text",
+                  "attr": {
+                    "text": " Evolution of Computer Graphics"
+                  }
+                },
+                {
+                  "type": "BR",
+                  "attr": {}
+                },
+                {
+                  "type": "BR",
+                  "attr": {}
+                },
+                {
+                  "type": "STRONG",
+                  "attr": {},
+                  "childNodes": [
+                    {
+                      "type": "#text",
+                      "attr": {
+                        "text": "Speaker:"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "#text",
+                  "attr": {
+                    "text": " Dr. Foo Bar"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "g",
+      "attr": {
+        "id": "g_sticky2",
+        "x": "2868",
+        "y": "520",
+        "transform": "matrix(1.8,0,0,1.8,-3002.4,-118.5)",
+        "tX": "-708",
+        "tY": "297.5",
+        "stickyColor": "#76CBC8",
+        "htmlText": "<div xmlns=\"http://www.w3.org/1999/xhtml\" style=\"color:black; font-size: 7px\"><strong>Title:</strong> ECG<br><br><strong>Speaker:</strong> Dr. F B</div>",
+        "stickyTitle": "Ev. of Computer G",
+        "stickySpeaker": "Dr. Var Char",
+        "stickyFontSize": "7"
+      },
+      "childNodes": [
+        {
+          "type": "rect",
+          "attr": {
+            "x": "2872",
+            "y": "524",
+            "width": "66.66666666666667",
+            "height": "66.66666666666667",
+            "id": "sticky_shadow_2",
+            "fill": "#ffffff",
+            "filter": "url('#Sih9uzecx78')",
+            "style": ""
+          }
+        },
+        {
+          "type": "rect",
+          "attr": {
+            "x": "2868",
+            "y": "520",
+            "width": "66.66666666666667",
+            "height": "66.66666666666667",
+            "id": "sticky_rect_2",
+            "fill": "#76cbc8",
+            "transform": "matrix(1,0,0,1,0,0)"
+          }
+        },
+        {
+          "type": "foreignObject",
+          "attr": {
+            "x": "2874.6666666666665",
+            "y": "526.6666666666666",
+            "width": "53.333333333333336",
+            "height": "53.333333333333336",
+            "id": "sticky_fobj_2",
+            "transform": "matrix(1,0,0,1,0,0)"
+          },
+          "childNodes": [
+            {
+              "type": "DIV",
+              "attr": {
+                "xmlns": "http://www.w3.org/1999/xhtml",
+                "style": "color:black; font-size: 7px"
+              },
+              "childNodes": [
+                {
+                  "type": "STRONG",
+                  "attr": {},
+                  "childNodes": [
+                    {
+                      "type": "#text",
+                      "attr": {
+                        "text": "Title:"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "#text",
+                  "attr": {
+                    "text": " Evolution of Computer Graphics"
+                  }
+                },
+                {
+                  "type": "BR",
+                  "attr": {}
+                },
+                {
+                  "type": "BR",
+                  "attr": {}
+                },
+                {
+                  "type": "STRONG",
+                  "attr": {},
+                  "childNodes": [
+                    {
+                      "type": "#text",
+                      "attr": {
+                        "text": "Speaker:"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "#text",
+                  "attr": {
+                    "text": " Dr. Foo Bar"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
