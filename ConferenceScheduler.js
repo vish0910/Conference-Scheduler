@@ -4,7 +4,7 @@
 //
 // Copyright (c) 2015
 //
-//Git Curent Branch: sneha3
+//Git Curent Branch: master
 
 
 var ConferenceScheduler = SAGE2_App.extend( {
@@ -608,6 +608,7 @@ var ConferenceScheduler = SAGE2_App.extend( {
 		//Creating a snap paper.
 		this.paper_main= new Snap(paper_mainW,paper_mainH).attr({ 
 			viewBox: "0 0 "+ paper_mainW.toString()+ " "+ paper_mainH,
+			id: "paper_main",
   			width:   mainDivW,
   			//height:  parseInt(2.6*grid, 10) // DONOT DELETE For future reference
   			height:  mainDivH,
@@ -2111,6 +2112,33 @@ var ConferenceScheduler = SAGE2_App.extend( {
 					var hoS = this.holder_object_array[holderId].attr("holdsSticky");
 					if(hoS != null){
 						console.log("Holds Sticky: "+hoS);
+						//Display Feedback
+						var feedback_W = this.paper_mainW/10;
+						var feedback_H = this.paper_mainH/7;
+						var feedback_X = paperX - feedback_W;
+						var feedback_Y = paperY - feedback_H;
+						
+						var feedback_textSize = this.txtSize*2;
+						var feedback_textColor = "rgb(182,34,32)";
+						var feedback_padding = feedback_textSize;
+						var feedback_rect = this.paper_main.rect(feedback_X,feedback_Y,feedback_W,feedback_H).attr({
+							id: "feedback_rect",
+							fill: "rgba(255,255,255,0.40)",
+							stroke: feedback_textColor
+						});
+						this.g_feedback = this.paper_main.g();
+						this.g_feedback.add(feedback_rect);
+						var htmlText = '<div xmlns="http://www.w3.org/1999/xhtml" style="color:'+feedback_textColor+'; font-size: '+feedback_textSize+'px"> Error: The cell is occupied!<br></div>';
+						var feedback_fObj = document.createElementNS("http://www.w3.org/2000/svg", 'foreignObject'); //Create a path in SVG's namespace
+						feedback_fObj.setAttribute('x',feedback_X + feedback_textSize);
+       					feedback_fObj.setAttribute('y',feedback_Y + feedback_textSize);
+       					feedback_fObj.setAttribute('width',feedback_W - (2*feedback_textSize));
+       					feedback_fObj.setAttribute('height',feedback_H - (2*feedback_textSize));
+       					feedback_fObj.setAttribute('id',"feedback_fobj");
+       					
+						feedback_fObj.innerHTML = htmlText;
+						this.g_feedback.append(feedback_fObj);
+						//End of Display Feedback
 						var myMatrix = new Snap.Matrix();
 						myMatrix.translate(0,0);
 						this.sticky_object_array[sid].attr({
