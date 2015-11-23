@@ -28,7 +28,7 @@ var ConferenceScheduler = SAGE2_App.extend( {
 		// move and resize callbacks
 		this.resizeEvents = "onfinish";
 		this.moveEvents   = "onfinish";
-		this.turn = 1;
+		this.turn = 0;
 		
 		this.defaultFill = "rgba(68, 48, 255, 0.1)";
 		this.defaultStroke = "rgba(68, 48, 255, 0.80)";
@@ -78,6 +78,7 @@ var ConferenceScheduler = SAGE2_App.extend( {
 		this.g_feedback = undefined;
 
 		//Button Width and Height
+		this.numberOfButtons = 5;
 		this.buttonW = 0;
 		this.buttonH = 0;
 		this.buttonPadding = 0;
@@ -89,7 +90,7 @@ var ConferenceScheduler = SAGE2_App.extend( {
 		this.postItH = 0;
 		this.padding = 0;
 		this.filter = null;
-		this.shadowColor = "white";
+		this.shadowColor = "black";
 		this.shadowDepth = 5;
 		this.stickyFontSize = 5;
 
@@ -596,6 +597,8 @@ var ConferenceScheduler = SAGE2_App.extend( {
 			cellX = paper_gridXEnd+sticky_offsetX+cellW;
 			cellY= cellActualY+cellH;
 		}
+		//THIS IS THE RIGHT PLACE
+		// this.readSavedSession();
 		
 	},
 
@@ -1021,11 +1024,13 @@ var ConferenceScheduler = SAGE2_App.extend( {
 		var paper_controlW = paper_gridXEnd;
 		var paper_controlH = paper_mainH - paper_gridYEnd;
 
-		
-		
 		var buttonH = paper_controlH*0.7;
-		var buttonW = buttonH * 5;
 		var buttonPadding = paper_controlH*0.1;
+		var buttonW = ((paper_controlW - this.controlsLeftPadding)/this.numberOfButtons) - (2*buttonPadding);
+		
+		// var buttonH = paper_controlH*0.7;
+		// var buttonW = buttonH * 5;
+		// var buttonPadding = paper_controlH*0.1;
 
 		this.buttonW = buttonW;
 		this.buttonH = buttonH;
@@ -1096,8 +1101,8 @@ var ConferenceScheduler = SAGE2_App.extend( {
 			stroke:      "rgba(68, 48, 255, 0.80)",
 			strokeWidth: 3
 		
-		});
-		var turn=this.turn;
+		}); 
+		var turn=this.turn + 1; //Because we are starting from 0;
 		this.turnInfo = [button3X+(this.buttonW*0.5),button3Y+(this.buttonH*0.6)];
 		this.text_turns = this.paper_main.text(button3X+(this.buttonW*0.5),button3Y+(this.buttonH*0.6), "Turn No: "+turn).attr({
 			fill: this.textColor,
@@ -1129,7 +1134,7 @@ var ConferenceScheduler = SAGE2_App.extend( {
 		var button5Y = paper_gridYEnd+this.buttonPadding;
 
 		
-		var button_save = this.paper_main.rect(button5X,button5Y,this.buttonW/2,this.buttonH).attr({
+		var button_save = this.paper_main.rect(button5X,button5Y,this.buttonW,this.buttonH).attr({
 			// fill: "#330099",
 			// stroke: "#ffffff"
 			fill:        "rgba(68, 48, 255, 0.15)",
@@ -1139,7 +1144,7 @@ var ConferenceScheduler = SAGE2_App.extend( {
 		});
 		
 		
-		var text_save = this.paper_main.text(button5X+(this.buttonW*0.25),button5Y+(this.buttonH*0.6), "Save").attr({
+		var text_save = this.paper_main.text(button5X+(this.buttonW*0.5),button5Y+(this.buttonH*0.6), "Save").attr({
 			fill: this.textColor,
 			'font-size':"40" ,
 			"text-anchor" : "middle"
@@ -1512,7 +1517,44 @@ var ConferenceScheduler = SAGE2_App.extend( {
 
 	},
 
+	//display feedback
 
+	displayFeedback: function(paperX,paperY,message,fw, fh){
+		//Display Feedback
+						var feedback_W = fw;
+						var feedback_H = fh;
+						var feedback_X = paperX - feedback_W;
+						var feedback_Y = paperY - feedback_H;
+						
+						var feedback_filter = this.paper_main.filter(Snap.filter.blur(20,20));
+						var feedback_textSize = this.txtSize*2;
+						var feedback_textColor = "rgb(182,34,32)";
+						var feedback_padding = feedback_textSize;
+						this.g_feedback = this.paper_main.g();
+						var feedback_shadow = this.paper_main.rect(feedback_X,feedback_Y,feedback_W,feedback_H).attr({
+							id: "feedback_shadow",
+							fill: "rgba(255,255,255,0.40)",
+							filter: feedback_filter
+						});
+						this.g_feedback.add(feedback_shadow);
+						var feedback_rect = this.paper_main.rect(feedback_X,feedback_Y,feedback_W,feedback_H).attr({
+							id: "feedback_rect",
+							fill: "rgba(0,0,0,0.70)",
+							stroke: feedback_textColor
+						});
+						this.g_feedback.add(feedback_rect);
+						var htmlText = '<div xmlns="http://www.w3.org/1999/xhtml" style="color:'+feedback_textColor+'; font-size: '+feedback_textSize+'px"> '+message+'<br></div>';
+						var feedback_fObj = document.createElementNS("http://www.w3.org/2000/svg", 'foreignObject'); //Create a path in SVG's namespace
+						feedback_fObj.setAttribute('x',feedback_X + feedback_textSize);
+       					feedback_fObj.setAttribute('y',feedback_Y + feedback_textSize);
+       					feedback_fObj.setAttribute('width',feedback_W - (2*feedback_textSize));
+       					feedback_fObj.setAttribute('height',feedback_H - (2*feedback_textSize));
+       					feedback_fObj.setAttribute('id',"feedback_fobj");
+       					
+						feedback_fObj.innerHTML = htmlText;
+						this.g_feedback.append(feedback_fObj);
+						//End of Display Feedback
+	},
 
 //End of Play Area
 
@@ -1990,7 +2032,7 @@ var ConferenceScheduler = SAGE2_App.extend( {
 					console.log("ButtonClicked ("+ paperX + ","+ paperY +")");
 					
 					if(this.toggleSave == true){
-						var button_save = this.paper_main.rect(button5X,button5Y,this.buttonW/2,this.buttonH).attr({
+						var button_save = this.paper_main.rect(button5X,button5Y,this.buttonW,this.buttonH).attr({
 			
 							fill:        "rgba(68, 48, 255, 0.15)",
 							stroke:      this.textColor1,
@@ -1998,7 +2040,7 @@ var ConferenceScheduler = SAGE2_App.extend( {
 		
 						});
 		
-						var text_save = this.paper_main.text(button5X+(this.buttonW*0.25),button5Y+(this.buttonH*0.6), "Save").attr({
+						var text_save = this.paper_main.text(button5X+(this.buttonW*0.5),button5Y+(this.buttonH*0.6), "Save").attr({
 							fill: this.textColor1,
 							'font-size':"40" ,
 							"text-anchor" : "middle"
@@ -2173,32 +2215,7 @@ var ConferenceScheduler = SAGE2_App.extend( {
 					if(hoS != null){
 						console.log("Holds Sticky: "+hoS);
 						//Display Feedback
-						var feedback_W = this.paper_mainW/10;
-						var feedback_H = this.paper_mainH/7;
-						var feedback_X = paperX - feedback_W;
-						var feedback_Y = paperY - feedback_H;
-						
-						var feedback_textSize = this.txtSize*2;
-						var feedback_textColor = "rgb(182,34,32)";
-						var feedback_padding = feedback_textSize;
-						var feedback_rect = this.paper_main.rect(feedback_X,feedback_Y,feedback_W,feedback_H).attr({
-							id: "feedback_rect",
-							fill: "rgba(255,255,255,0.40)",
-							stroke: feedback_textColor
-						});
-						this.g_feedback = this.paper_main.g();
-						this.g_feedback.add(feedback_rect);
-						var htmlText = '<div xmlns="http://www.w3.org/1999/xhtml" style="color:'+feedback_textColor+'; font-size: '+feedback_textSize+'px"> Error: The cell is occupied!<br></div>';
-						var feedback_fObj = document.createElementNS("http://www.w3.org/2000/svg", 'foreignObject'); //Create a path in SVG's namespace
-						feedback_fObj.setAttribute('x',feedback_X + feedback_textSize);
-       					feedback_fObj.setAttribute('y',feedback_Y + feedback_textSize);
-       					feedback_fObj.setAttribute('width',feedback_W - (2*feedback_textSize));
-       					feedback_fObj.setAttribute('height',feedback_H - (2*feedback_textSize));
-       					feedback_fObj.setAttribute('id',"feedback_fobj");
-       					
-						feedback_fObj.innerHTML = htmlText;
-						this.g_feedback.append(feedback_fObj);
-						//End of Display Feedback
+						this.displayFeedback(paperX,paperY,'ERROR: The cell is occupied!', paper_mainW/10, paper_mainH/7);
 						var myMatrix = new Snap.Matrix();
 						myMatrix.translate(0,0);
 						this.sticky_object_array[sid].attr({
@@ -2405,16 +2422,17 @@ var ConferenceScheduler = SAGE2_App.extend( {
 						this.turn++;
 						
 
-						var text_totalmoves = this.paper_main.text(this.paper_tableX1 + this.paper_tableW/2,this.paper_tableY1 + this.paper_tableH/2, "You are just allowed to move sticky twice").attr({
+						// var text_totalmoves = this.paper_main.text(this.paper_tableX1 + this.paper_tableW/2,this.paper_tableY1 + this.paper_tableH/2, "You are just allowed to move sticky twice").attr({
 
-							fill: this.textColor1,
-							'font-size':"40" ,
-							"text-anchor" : "middle"
-						});
+						// 	fill: this.textColor1,
+						// 	'font-size':"40" ,
+						// 	"text-anchor" : "middle"
+						// });
 
 		
-						this.g_feedback = this.paper_main.g();
-						this.g_feedback.add(text_totalmoves);
+						// this.g_feedback = this.paper_main.g();
+						// this.g_feedback.add(text_totalmoves);
+						
 						
 
 						// var d = new Date();
@@ -2426,11 +2444,13 @@ var ConferenceScheduler = SAGE2_App.extend( {
 						// 	}
 
 							
-						if(this.turn%2==0)
+						if(this.turn%(this.movesAllowed)==0)
 						{
+							var message = "NOTE: You are just allowed to move sticky " + this.movesAllowed+" times.";
+							this.displayFeedback(paperX,paperY,message, paper_mainW/10, paper_mainH/5);
 							this.text_turns.remove();
 
-							var turn = this.turn/this.movesAllowed;
+							var turn = (this.turn/this.movesAllowed) + 1;
 
 							this.text_turns = this.paper_main.text(this.turnInfo[0],this.turnInfo[1], "Turn No: "+turn).attr({
 								fill: this.textColor,
