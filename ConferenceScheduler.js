@@ -885,9 +885,13 @@ var ConferenceScheduler = SAGE2_App.extend( {
 		var defaultTransform = 'translate(0,0)';
 		var defaultMatrix = 'matrix(1,0,0,1,0,0)';
 		var cellCounter = 0;
+		var hallCounter = 0;
 		//Loop that creates rectangles
 		for(i = 0;i<this.numberOfRows;i++){
 			for(j=0;j<this.numberOfColumns;j++ ){
+				if(hallCounter>this.numberOfHalls - 1){
+					hallCounter = 0;
+				}
 				//For reference : Paper.rect(x,y,width,height,[rx],[ry])
 				var cellRect = this.paper_main.rect(cellX, cellY, cellW, cellH).attr({
 					id: "Holder_"+cellCounter,
@@ -895,7 +899,8 @@ var ConferenceScheduler = SAGE2_App.extend( {
 					stroke:      this.defaultStroke,
 					strokeWidth: 2,
 					transform: defaultMatrix,
-					holdsSticky: ""
+					holdsSticky: "",
+					hallNumber: hallCounter
 				});
 				//Add the cell to group
 				this.g_gridholders.add(cellRect);
@@ -905,6 +910,7 @@ var ConferenceScheduler = SAGE2_App.extend( {
 				cellX +=cellW;
 				//Increase the counter value
 				cellCounter++;
+				hallCounter++;
 			}
 			//Update value of the y-coordinate
 			cellY += cellH;
@@ -1353,7 +1359,7 @@ var ConferenceScheduler = SAGE2_App.extend( {
 		console.log("Neighbour Calc:"+neighbour);
  		var totalNumberOfCells = this.holder_object_array.length;
  		console.log("number of cells:"+totalNumberOfCells);
- 		if(neighbour >= totalNumberOfCells || neighbour%this.numberOfColumns == 0){
+ 		if(neighbour >= totalNumberOfCells || neighbour%this.numberOfColumns == 0 || parseInt(this.holder_object_array[neighbour].attr("hallNumber")) == 0){
  			console.log("Returning this null");
  			return null;
  		}
