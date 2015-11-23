@@ -4,7 +4,9 @@
 //
 // Copyright (c) 2015
 //
-//Git Curent Branch: sneha3
+
+//Git Curent Branch: master
+
 
 
 var ConferenceScheduler = SAGE2_App.extend( {
@@ -72,6 +74,7 @@ var ConferenceScheduler = SAGE2_App.extend( {
 		this.toggleTI = true;
 		this.toggleTN = true;
 		this.toggleSave = true;
+		this.movesAllowed = 1;
 		this.g_feedback = undefined;
 
 		//Button Width and Height
@@ -309,6 +312,7 @@ var ConferenceScheduler = SAGE2_App.extend( {
 				_this.array_dates = data.dates;
 				_this.array_sessions = data.sessions;
 				_this.array_halls = data.halls;
+				_this.movesAllowed = data.movesAllowed;
 				console.log("StickyColor:"+ JSON.stringify(_this.stickyColor));
 				for(var key in _this.stickyColor){
 					_this.themeNames.push(key);
@@ -607,6 +611,7 @@ var ConferenceScheduler = SAGE2_App.extend( {
 		//Creating a snap paper.
 		this.paper_main= new Snap(paper_mainW,paper_mainH).attr({ 
 			viewBox: "0 0 "+ paper_mainW.toString()+ " "+ paper_mainH,
+			id: "paper_main",
   			width:   mainDivW,
   			//height:  parseInt(2.6*grid, 10) // DONOT DELETE For future reference
   			height:  mainDivH,
@@ -891,9 +896,13 @@ var ConferenceScheduler = SAGE2_App.extend( {
 		var defaultTransform = 'translate(0,0)';
 		var defaultMatrix = 'matrix(1,0,0,1,0,0)';
 		var cellCounter = 0;
+		var hallCounter = 0;
 		//Loop that creates rectangles
 		for(i = 0;i<this.numberOfRows;i++){
 			for(j=0;j<this.numberOfColumns;j++ ){
+				if(hallCounter>this.numberOfHalls - 1){
+					hallCounter = 0;
+				}
 				//For reference : Paper.rect(x,y,width,height,[rx],[ry])
 				var cellRect = this.paper_main.rect(cellX, cellY, cellW, cellH).attr({
 					id: "Holder_"+cellCounter,
@@ -901,7 +910,8 @@ var ConferenceScheduler = SAGE2_App.extend( {
 					stroke:      this.defaultStroke,
 					strokeWidth: 2,
 					transform: defaultMatrix,
-					holdsSticky: ""
+					holdsSticky: "",
+					hallNumber: hallCounter
 				});
 				//Add the cell to group
 				this.g_gridholders.add(cellRect);
@@ -911,6 +921,7 @@ var ConferenceScheduler = SAGE2_App.extend( {
 				cellX +=cellW;
 				//Increase the counter value
 				cellCounter++;
+				hallCounter++;
 			}
 			//Update value of the y-coordinate
 			cellY += cellH;
@@ -1362,7 +1373,7 @@ var ConferenceScheduler = SAGE2_App.extend( {
 		console.log("Neighbour Calc:"+neighbour);
  		var totalNumberOfCells = this.holder_object_array.length;
  		console.log("number of cells:"+totalNumberOfCells);
- 		if(neighbour >= totalNumberOfCells || neighbour%this.numberOfColumns == 0){
+ 		if(neighbour >= totalNumberOfCells || neighbour%this.numberOfColumns == 0 || parseInt(this.holder_object_array[neighbour].attr("hallNumber")) == 0){
  			console.log("Returning this null");
  			return null;
  		}
@@ -1993,7 +2004,7 @@ var ConferenceScheduler = SAGE2_App.extend( {
 							"text-anchor" : "middle"
 						});
 			
-												
+						
 						var svg = document.querySelector('paper_main');
 						var canvas = document.querySelector('canvas');
 
@@ -2011,6 +2022,11 @@ var ConferenceScheduler = SAGE2_App.extend( {
 
 						  a.dispatchEvent(evt);
 						
+
+						// var canvas = document.getElementById("Paper_main");
+						// var img    = canvas.toDataURL("image/png");
+						// document.write('<img src="'+img+'"/>');
+
 
 						
 						  var canvas = document.getElementById('canvas');
@@ -2156,6 +2172,33 @@ var ConferenceScheduler = SAGE2_App.extend( {
 					var hoS = this.holder_object_array[holderId].attr("holdsSticky");
 					if(hoS != null){
 						console.log("Holds Sticky: "+hoS);
+						//Display Feedback
+						var feedback_W = this.paper_mainW/10;
+						var feedback_H = this.paper_mainH/7;
+						var feedback_X = paperX - feedback_W;
+						var feedback_Y = paperY - feedback_H;
+						
+						var feedback_textSize = this.txtSize*2;
+						var feedback_textColor = "rgb(182,34,32)";
+						var feedback_padding = feedback_textSize;
+						var feedback_rect = this.paper_main.rect(feedback_X,feedback_Y,feedback_W,feedback_H).attr({
+							id: "feedback_rect",
+							fill: "rgba(255,255,255,0.40)",
+							stroke: feedback_textColor
+						});
+						this.g_feedback = this.paper_main.g();
+						this.g_feedback.add(feedback_rect);
+						var htmlText = '<div xmlns="http://www.w3.org/1999/xhtml" style="color:'+feedback_textColor+'; font-size: '+feedback_textSize+'px"> Error: The cell is occupied!<br></div>';
+						var feedback_fObj = document.createElementNS("http://www.w3.org/2000/svg", 'foreignObject'); //Create a path in SVG's namespace
+						feedback_fObj.setAttribute('x',feedback_X + feedback_textSize);
+       					feedback_fObj.setAttribute('y',feedback_Y + feedback_textSize);
+       					feedback_fObj.setAttribute('width',feedback_W - (2*feedback_textSize));
+       					feedback_fObj.setAttribute('height',feedback_H - (2*feedback_textSize));
+       					feedback_fObj.setAttribute('id',"feedback_fobj");
+       					
+						feedback_fObj.innerHTML = htmlText;
+						this.g_feedback.append(feedback_fObj);
+						//End of Display Feedback
 						var myMatrix = new Snap.Matrix();
 						myMatrix.translate(0,0);
 						this.sticky_object_array[sid].attr({
@@ -2361,20 +2404,34 @@ var ConferenceScheduler = SAGE2_App.extend( {
 						//---------> Sneha's Code
 						this.turn++;
 						
+
 						var text_totalmoves = this.paper_main.text(this.paper_tableX1 + this.paper_tableW/2,this.paper_tableY1 + this.paper_tableH/2, "You are just allowed to move sticky twice").attr({
+
 							fill: this.textColor1,
 							'font-size':"40" ,
 							"text-anchor" : "middle"
 						});
+
 		
 						this.g_feedback = this.paper_main.g();
 						this.g_feedback.add(text_totalmoves);
 						
+
+						// var d = new Date();
+						// var n = d.getMilliseconds();
+						// console.log("MILLISECONDS:"+ n);
+						// if(n>900)
+						// 	{
+						// 		text_totalmoves.remove();
+						// 	}
+
 							
 						if(this.turn%2==0)
 						{
 							this.text_turns.remove();
-							var turn = this.turn/2;
+
+							var turn = this.turn/this.movesAllowed;
+
 							this.text_turns = this.paper_main.text(this.turnInfo[0],this.turnInfo[1], "Turn No: "+turn).attr({
 								fill: this.textColor,
 								'font-size':"40" ,
