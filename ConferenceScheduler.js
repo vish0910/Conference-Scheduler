@@ -1975,7 +1975,7 @@ var ConferenceScheduler = SAGE2_App.extend( {
 				if(paperX >= button5X && paperX < button5X+ this.buttonW && paperY >= button5Y && paperY < button5Y+this.buttonH){
 					console.log("ButtonClicked ("+ paperX + ","+ paperY +")");
 					
-					if(this.toggleRI == true){
+					if(this.toggleSave == true){
 						var button_save = this.paper_main.rect(button5X,button5Y,this.buttonW/2,this.buttonH).attr({
 			
 							fill:        "rgba(68, 48, 255, 0.15)",
@@ -1990,20 +1990,56 @@ var ConferenceScheduler = SAGE2_App.extend( {
 							"text-anchor" : "middle"
 						});
 			
-						var canvas = document.getElementById("Paper_main");
-						var img    = canvas.toDataURL("image/png");
-						document.write('<img src="'+img+'"/>');
+												
+						var svg = document.querySelector('paper_main');
+						var canvas = document.querySelector('canvas');
 
+						
+						  var evt = new MouseEvent('click', {
+						    view: window,
+						    bubbles: false,
+						    cancelable: true
+						  });
+
+						  var a = document.createElement('a');
+						  a.setAttribute('download', 'IMAGE.png');
+						  a.setAttribute('href', imgURI);
+						  a.setAttribute('target', '_blank');
+
+						  a.dispatchEvent(evt);
+						
+
+						
+						  var canvas = document.getElementById('canvas');
+						  var ctx = canvas.getContext('2d');
+						  var data = (new XMLSerializer()).serializeToString(svg);
+						  var DOMURL = window.URL || window.webkitURL || window;
+
+						  var img = new Image();
+						  var svgBlob = new Blob([data], {type: 'image/svg+xml;charset=utf-8'});
+						  var url = DOMURL.createObjectURL(svgBlob);
+
+						 
+						    ctx.drawImage(img, 0, 0);
+						    DOMURL.revokeObjectURL(url);
+
+						    var imgURI = canvas
+							.toDataURL('image/png')
+							.replace('image/png', 'image/octet-stream');
+
+						    triggerDownload(imgURI);
+						 
+						  img.src = url;
+						
 						//second way
-						var a = document.createElement("a");
-						a.download = "sample.png";
-						a.href = canvasdata;
-						a.click();
-						this.toggleRI = false;
+						val = document.paper_main.value; 
+						mydoc = document.open(); 
+						mydoc.write(val); 
+						mydoc.execCommand("saveAs",true,".ext"); 
 					}
 					else{
 						this.g_roomInfo.remove();		
-						this.toggleRI = true;
+						this.toggleSave = true;
 					}
 					console.log("done");
 				}
