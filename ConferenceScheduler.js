@@ -1956,12 +1956,15 @@ var ConferenceScheduler = SAGE2_App.extend( {
 					if(this.toggleTN == true){
 						
 						
-						var tutorialsImage.remove();	
-						var text_nexttutorialsign.remove();
+						this.tutorialsImage.remove();	
+						this.text_nexttutorialsign.remove();
 
 						this.toggleTN = false;
 					}
-					
+					else{
+						tutorialnextImage.remove();		
+						this.toggleTN = true;
+					}
 					console.log("done");
 				}
 
