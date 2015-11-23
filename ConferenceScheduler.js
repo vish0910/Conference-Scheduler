@@ -71,6 +71,7 @@ var ConferenceScheduler = SAGE2_App.extend( {
 		this.toggleRI = true;
 		this.toggleTI = true;
 		this.toggleTN = true;
+		this.toggleSave = true;
 		this.g_feedback = undefined;
 
 		//Button Width and Height
@@ -1920,12 +1921,12 @@ var ConferenceScheduler = SAGE2_App.extend( {
 						
 						var tutorialnextImage = this.paper_main.image(this.resrcPath +"Untitled.png",(this.paper_mainW/4),(this.paper_mainH/4),(this.paper_mainH),(this.paper_mainH/4));					
 	
-						var tutorialsImage = this.paper_main.image(this.resrcPath +"Tutorial.png",(this.paper_mainW/4),(this.paper_mainH/4),(this.paper_mainW/3),(this.paper_mainH/4));
+						this.tutorialsImage = this.paper_main.image(this.resrcPath +"Tutorial.png",(this.paper_mainW/4),(this.paper_mainH/4),(this.paper_mainW/3),(this.paper_mainH/4));
 					
 
 
 				
-						var text_nexttutorialsign = this.paper_main.text(button4X+(this.buttonW*0.85),button4Y+(this.buttonH*0.7), "→").attr({
+						this.text_nexttutorialsign = this.paper_main.text(button4X+(this.buttonW*0.85),button4Y+(this.buttonH*0.7), "→").attr({
 							fill: this.textColor1,
 							'font-size':"80" ,
 							"text-anchor" : "middle"
@@ -1935,7 +1936,8 @@ var ConferenceScheduler = SAGE2_App.extend( {
 						this.g_tutorialsImage.add(tutorialnextImage);
 						this.g_tutorialsImage.add(button_tutorial);
 						this.g_tutorialsImage.add(text_tutorial);
-						this.g_tutorialsImage.add(text_nexttutorialsign);
+						this.g_tutorialsImage.add(this.tutorialsImage);
+						this.g_tutorialsImage.add(this.text_nexttutorialsign);
 						this.toggleTI = false;
 						}
 						else{
@@ -1962,7 +1964,8 @@ var ConferenceScheduler = SAGE2_App.extend( {
 						this.toggleTN = false;
 					}
 					else{
-						tutorialnextImage.remove();		
+						this.g_tutorialsImage.remove();
+						this.toggleTI = true;
 						this.toggleTN = true;
 					}
 					console.log("done");
@@ -2038,7 +2041,7 @@ var ConferenceScheduler = SAGE2_App.extend( {
 						mydoc.execCommand("saveAs",true,".ext"); 
 					}
 					else{
-						this.g_roomInfo.remove();		
+						// this.g_roomInfo.remove();		
 						this.toggleSave = true;
 					}
 					console.log("done");
