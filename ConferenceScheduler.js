@@ -4,7 +4,7 @@
 //
 // Copyright (c) 2015
 //
-//Git Curent Branch: revampstickydrop
+//Git Curent Branch: sneha3
 
 
 var ConferenceScheduler = SAGE2_App.extend( {
@@ -71,8 +71,8 @@ var ConferenceScheduler = SAGE2_App.extend( {
 		this.toggleRI = true;
 		this.toggleTI = true;
 		this.toggleTN = true;
-
 		this.movesAllowed = 1;
+		this.g_feedback = undefined;
 
 		//Button Width and Height
 		this.buttonW = 0;
@@ -841,8 +841,8 @@ var ConferenceScheduler = SAGE2_App.extend( {
 				var hiddencellH = cellH/numberOfSubPartitions;
 				var cellRect = this.paper_main.rect(cellX, cellY, hiddencellW, hiddencellH).attr({
 					id: "HiddenHolder_"+cellCounter,
-					// fill:        this.defaultFill,
-					fill:        "pink",
+					fill:        this.defaultFill,
+					// fill:        "pink",
 					// stroke:      this.defaultStroke,
 					strokeWidth: 2,
 					transform: defaultMatrix,
@@ -1553,7 +1553,10 @@ var ConferenceScheduler = SAGE2_App.extend( {
 		if (this.userInteraction[user.id] === undefined) {
 			this.userInteraction[user.id] = {dragging: false, position: {x: 0, y: 0, tX: 0, tY: 0}, stickyId: null,stickyPast: emptyArray};
 		}
-
+		//Remove FeedBack Group
+		if(this.g_feedback != undefined){
+			this.g_feedback.remove();
+		}
 		if (eventType === "pointerPress" && (data.button === "left")) {
 			// console.log("Width:=>"+mainDivW);
 			// this.paper_main.rect(paperX,paperY,10,10).attr({id: 'touch', stroke: 'White', fill: 'rgba(12,13,44,0.1)'});
@@ -2306,6 +2309,22 @@ var ConferenceScheduler = SAGE2_App.extend( {
 
 						//---------> Sneha's Code
 						this.turn++;
+						
+						var text_totalmoves = this.paper_main.text(500,500, "You are just allowed to move sticky twice").attr({
+							fill: this.textColor1,
+							'font-size':"40" ,
+							"text-anchor" : "middle"
+						});
+						this.g_feedback = this.paper_main.g();
+						this.g_feedback.add(text_totalmoves);
+						// var d = new Date();
+						// var n = d.getMilliseconds();
+						// console.log("MILLISECONDS:"+ n);
+						// if(n>900)
+						// 	{
+						// 		text_totalmoves.remove();
+						// 	}
+							
 						if(this.turn%2==0)
 						{
 							this.text_turns.remove();
