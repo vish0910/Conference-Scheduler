@@ -675,6 +675,13 @@ var ConferenceScheduler = SAGE2_App.extend( {
 		var paper_tableW = paper_tableX2 - paper_tableX1;
 		var paper_tableH = paper_tableY2 - paper_tableY1;
 
+		//sneha code start		
+		this.paper_tableW = paper_tableW;
+		this.paper_tableH = paper_tableH;
+
+		this.paper_tableX1 = paper_tableX1;
+		this.paper_tableY1 = paper_tableY1;
+		//sneha code end
 
 		//Creating table
 		//Varibles for looping
@@ -1055,6 +1062,9 @@ var ConferenceScheduler = SAGE2_App.extend( {
 		
 		});
 		
+			
+
+						
 		var text_roomInfo = this.paper_main.text(button2X+(this.buttonW*0.5),button2Y+(this.buttonH*0.6), "Room Information").attr({
 			fill: this.textColor,
 			'font-size':"40" ,
@@ -1907,9 +1917,12 @@ var ConferenceScheduler = SAGE2_App.extend( {
 						this.g_tutorialsImage.attr({
 							id: "TutorialsImage"
 						});
-		
+						
+						var tutorialnextImage = this.paper_main.image(this.resrcPath +"Untitled.png",(this.paper_mainW/4),(this.paper_mainH/4),(this.paper_mainH),(this.paper_mainH/4));					
+	
 						var tutorialsImage = this.paper_main.image(this.resrcPath +"Tutorial.png",(this.paper_mainW/4),(this.paper_mainH/4),(this.paper_mainW/3),(this.paper_mainH/4));
-		
+					
+
 
 				
 						var text_nexttutorialsign = this.paper_main.text(button4X+(this.buttonW*0.85),button4Y+(this.buttonH*0.7), "→").attr({
@@ -1918,7 +1931,8 @@ var ConferenceScheduler = SAGE2_App.extend( {
 							"text-anchor" : "middle"
 						});	
 
-						this.g_tutorialsImage.add(tutorialsImage);
+						
+						this.g_tutorialsImage.add(tutorialnextImage);
 						this.g_tutorialsImage.add(button_tutorial);
 						this.g_tutorialsImage.add(text_tutorial);
 						this.g_tutorialsImage.add(text_nexttutorialsign);
@@ -1942,15 +1956,12 @@ var ConferenceScheduler = SAGE2_App.extend( {
 					if(this.toggleTN == true){
 						
 						
-						this.g_tutorialsImage.remove();	
-						var tutorialnextImage = this.paper_main.image(this.resrcPath +"Untitled.png",(this.paper_mainW/3),(this.paper_mainH/4),(this.paper_mainH/2),(this.paper_mainH/4));
+						var tutorialsImage.remove();	
+						var text_nexttutorialsign.remove();
 
 						this.toggleTN = false;
 					}
-					else{
-						tutorialnextImage.remove();		
-						this.toggleTN = true;
-					}
+					
 					console.log("done");
 				}
 
@@ -2308,20 +2319,15 @@ var ConferenceScheduler = SAGE2_App.extend( {
 						//---------> Sneha's Code
 						this.turn++;
 						
-						var text_totalmoves = this.paper_main.text(500,500, "You are just allowed to move sticky twice").attr({
+						var text_totalmoves = this.paper_main.text(this.paper_tableX1 + this.paper_tableW/2,this.paper_tableY1 + this.paper_tableH/2, "You are just allowed to move sticky twice").attr({
 							fill: this.textColor1,
 							'font-size':"40" ,
 							"text-anchor" : "middle"
 						});
+		
 						this.g_feedback = this.paper_main.g();
 						this.g_feedback.add(text_totalmoves);
-						// var d = new Date();
-						// var n = d.getMilliseconds();
-						// console.log("MILLISECONDS:"+ n);
-						// if(n>900)
-						// 	{
-						// 		text_totalmoves.remove();
-						// 	}
+						
 							
 						if(this.turn%2==0)
 						{
