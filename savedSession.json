@@ -1,41 +1,50 @@
 {
+  "dimensions": {
+    "width": 800,
+    "height": 250
+  },
+  "viewportDimensions": {
+    "paper_mainW": 4000,
+    "paper_mainH": 1250
+  },
   "stickies": [
     {
       "type": "g",
       "attr": {
         "id": "g_sticky0",
-        "x": "2869.2",
-        "y": "127.27734806629836",
-        "transform": "matrix(1.6981,0,0,1.6981,-2712.2264,381.8797)",
-        "tX": "-709.1999999999998",
-        "tY": "470.7337016574586",
+        "x": "2864.6",
+        "y": "116.6",
+        "transform": "matrix(1,0,0,1,0,0)",
+        "tX": "0",
+        "tY": "0",
+        "stickyTheme": "Robotics",
         "stickyColor": "#FEBB32",
-        "htmlText": "<div xmlns=\"http://www.w3.org/1999/xhtml\" style=\"color:black; font-size: 7px\"><strong>Title:</strong> Advanced Visualization<br><br><strong>Speaker:</strong> Dr. Bob Cullars</div>",
+        "htmlText": "<div xmlns=\"http://www.w3.org/1999/xhtml\" style=\"color:black; font-size: 6px\"><strong>Title:</strong> Advanced Visualization<br><br><strong>Speaker:</strong> Dr. Bob Cullars</div>",
         "stickyTitle": "Advanced Visualization",
         "stickySpeaker": "Dr. Bob Cullars",
-        "stickyFontSize": "7"
+        "stickyFontSize": "6"
       },
       "childNodes": [
         {
           "type": "rect",
           "attr": {
-            "x": "2873.4399999999996",
-            "y": "131.51734806629835",
-            "width": "70.66666666666667",
-            "height": "70.66666666666667",
+            "x": "2867.92",
+            "y": "119.91999999999999",
+            "width": "55.333333333333336",
+            "height": "55.333333333333336",
             "id": "sticky_shadow_0",
-            "fill": "#ffffff",
-            "filter": "url('#Sihbclfac7e')",
-            "style": ""
+            "style": "",
+            "fill": "#000000",
+            "filter": "url('#Sihmjvwvr7v')"
           }
         },
         {
           "type": "rect",
           "attr": {
-            "x": "2869.2",
-            "y": "127.27734806629836",
-            "width": "70.66666666666667",
-            "height": "70.66666666666667",
+            "x": "2864.6",
+            "y": "116.6",
+            "width": "55.333333333333336",
+            "height": "55.333333333333336",
             "id": "sticky_rect_0",
             "fill": "#febb32",
             "transform": "matrix(1,0,0,1,0,0)"
@@ -44,19 +53,18 @@
         {
           "type": "foreignObject",
           "attr": {
-            "x": "2876.2666666666664",
-            "y": "134.34401473296504",
-            "width": "56.53333333333334",
-            "height": "56.53333333333334",
-            "id": "sticky_fobj_0",
-            "transform": "matrix(1,0,0,1,0,0)"
+            "x": "2870.133333333333",
+            "y": "122.13333333333333",
+            "width": "44.266666666666666",
+            "height": "44.266666666666666",
+            "id": "sticky_fobj_0"
           },
           "childNodes": [
             {
               "type": "DIV",
               "attr": {
                 "xmlns": "http://www.w3.org/1999/xhtml",
-                "style": "color:black; font-size: 7px"
+                "style": "color:black; font-size: 6px"
               },
               "childNodes": [
                 {
@@ -113,38 +121,39 @@
       "type": "g",
       "attr": {
         "id": "g_sticky1",
-        "x": "2869.2",
-        "y": "339.2773480662983",
-        "transform": "matrix(3.3962,0,0,1.6981,-7824.4528,141.8797)",
-        "tX": "-949.1999999999998",
-        "tY": "378.73370165745865",
+        "x": "2864.6",
+        "y": "282.6",
+        "transform": "matrix(1,0,0,1,0,0)",
+        "tX": "0",
+        "tY": "0",
+        "stickyTheme": "Visualization",
         "stickyColor": "#8EE13E",
-        "htmlText": "<div xmlns=\"http://www.w3.org/1999/xhtml\" style=\"color:black; font-size: 7px\"><strong>Title:</strong> Evolution of Computer Graphics<br><br><strong>Speaker:</strong> Dr. Foo Bar</div>",
+        "htmlText": "<div xmlns=\"http://www.w3.org/1999/xhtml\" style=\"color:black; font-size: 6px\"><strong>Title:</strong> Evolution of Computer Graphics<br><br><strong>Speaker:</strong> Dr. Foo Bar</div>",
         "stickyTitle": "Evolution of Computer Graphics",
         "stickySpeaker": "Dr. Foo Bar",
-        "stickyFontSize": "7"
+        "stickyFontSize": "6"
       },
       "childNodes": [
         {
           "type": "rect",
           "attr": {
-            "x": "2873.4399999999996",
-            "y": "343.5173480662983",
-            "width": "70.66666666666667",
-            "height": "70.66666666666667",
+            "x": "2867.92",
+            "y": "285.92",
+            "width": "55.333333333333336",
+            "height": "55.333333333333336",
             "id": "sticky_shadow_1",
-            "fill": "#ffffff",
-            "filter": "url('#Sihbclfac7e')",
+            "fill": "#000000",
+            "filter": "url('#Sihmjvwvr7v')",
             "style": ""
           }
         },
         {
           "type": "rect",
           "attr": {
-            "x": "2869.2",
-            "y": "339.2773480662983",
-            "width": "70.66666666666667",
-            "height": "70.66666666666667",
+            "x": "2864.6",
+            "y": "282.6",
+            "width": "55.333333333333336",
+            "height": "55.333333333333336",
             "id": "sticky_rect_1",
             "fill": "#8ee13e",
             "transform": "matrix(1,0,0,1,0,0)"
@@ -153,19 +162,18 @@
         {
           "type": "foreignObject",
           "attr": {
-            "x": "2876.2666666666664",
-            "y": "346.344014732965",
-            "width": "127.20000000000002",
-            "height": "56.53333333333334",
-            "id": "sticky_fobj_1",
-            "transform": "matrix(0.5,0,0,1,1434.6,0)"
+            "x": "2870.133333333333",
+            "y": "288.1333333333334",
+            "width": "44.266666666666666",
+            "height": "44.266666666666666",
+            "id": "sticky_fobj_1"
           },
           "childNodes": [
             {
               "type": "DIV",
               "attr": {
                 "xmlns": "http://www.w3.org/1999/xhtml",
-                "style": "color:black; font-size: 7px"
+                "style": "color:black; font-size: 6px"
               },
               "childNodes": [
                 {
@@ -222,38 +230,39 @@
       "type": "g",
       "attr": {
         "id": "g_sticky2",
-        "x": "2869.2",
-        "y": "551.2773480662984",
-        "transform": "matrix(1.6981,0,0,1.6981,-2832.2264,-458.1203)",
-        "tX": "-829.1999999999998",
-        "tY": "-73.26629834254146",
+        "x": "2864.6",
+        "y": "448.6",
+        "transform": "matrix(2.1687,0,0,2.1687,-4052.3855,-635.3675)",
+        "tX": "-704.5999999999999",
+        "tY": "-111.10000000000002",
+        "stickyTheme": "Neural Networks",
         "stickyColor": "#76CBC8",
-        "htmlText": "<div xmlns=\"http://www.w3.org/1999/xhtml\" style=\"color:black; font-size: 7px\"><strong>Title:</strong> Evolution of Computer Graphics<br><br><strong>Speaker:</strong> Dr. Foo Bar</div>",
+        "htmlText": "<div xmlns=\"http://www.w3.org/1999/xhtml\" style=\"color:black; font-size: 6px\"><strong>Title:</strong> Evolution of Computer Graphics<br><br><strong>Speaker:</strong> Dr. Foo Bar</div>",
         "stickyTitle": "Evolution of Computer Graphics",
         "stickySpeaker": "Dr. Foo Bar",
-        "stickyFontSize": "7"
+        "stickyFontSize": "6"
       },
       "childNodes": [
         {
           "type": "rect",
           "attr": {
-            "x": "2873.4399999999996",
-            "y": "555.5173480662984",
-            "width": "70.66666666666667",
-            "height": "70.66666666666667",
+            "x": "2867.92",
+            "y": "451.92",
+            "width": "55.333333333333336",
+            "height": "55.333333333333336",
             "id": "sticky_shadow_2",
-            "fill": "#ffffff",
-            "filter": "url('#Sihbclfac7e')",
+            "fill": "#000000",
+            "filter": "url('#Sihmjvwvr7v')",
             "style": ""
           }
         },
         {
           "type": "rect",
           "attr": {
-            "x": "2869.2",
-            "y": "551.2773480662984",
-            "width": "70.66666666666667",
-            "height": "70.66666666666667",
+            "x": "2864.6",
+            "y": "448.6",
+            "width": "55.333333333333336",
+            "height": "55.333333333333336",
             "id": "sticky_rect_2",
             "fill": "#76cbc8",
             "transform": "matrix(1,0,0,1,0,0)"
@@ -262,10 +271,10 @@
         {
           "type": "foreignObject",
           "attr": {
-            "x": "2876.2666666666664",
-            "y": "558.3440147329651",
-            "width": "56.53333333333334",
-            "height": "56.53333333333334",
+            "x": "2870.133333333333",
+            "y": "454.1333333333334",
+            "width": "44.266666666666666",
+            "height": "44.266666666666666",
             "id": "sticky_fobj_2",
             "transform": "matrix(1,0,0,1,0,0)"
           },
@@ -274,7 +283,7 @@
               "type": "DIV",
               "attr": {
                 "xmlns": "http://www.w3.org/1999/xhtml",
-                "style": "color:black; font-size: 7px"
+                "style": "color:black; font-size: 6px"
               },
               "childNodes": [
                 {
@@ -319,6 +328,226 @@
                   "type": "#text",
                   "attr": {
                     "text": " Dr. Foo Bar"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "g",
+      "attr": {
+        "id": "g_sticky3",
+        "x": "2864.6",
+        "y": "780.6",
+        "transform": "matrix(4.3373,0,0,2.1687,-10384.7711,-1235.3675)",
+        "tX": "-824.5999999999999",
+        "tY": "-323.1",
+        "stickyTheme": "Session Chairs",
+        "stickyColor": "#FDF490",
+        "htmlText": "<div xmlns=\"http://www.w3.org/1999/xhtml\" style=\"color:black; font-size: 6px\"><strong>Title:</strong>  - <br><br><strong>Speaker:</strong> Dr. Han Solo</div>",
+        "stickyTitle": " - ",
+        "stickySpeaker": "Dr. Han Solo",
+        "stickyFontSize": "6"
+      },
+      "childNodes": [
+        {
+          "type": "rect",
+          "attr": {
+            "x": "2867.92",
+            "y": "783.9200000000001",
+            "width": "55.333333333333336",
+            "height": "55.333333333333336",
+            "id": "sticky_shadow_3",
+            "fill": "#000000",
+            "filter": "url('#Sihmjvwvr7v')",
+            "style": ""
+          }
+        },
+        {
+          "type": "rect",
+          "attr": {
+            "x": "2864.6",
+            "y": "780.6",
+            "width": "55.333333333333336",
+            "height": "55.333333333333336",
+            "id": "sticky_rect_3",
+            "fill": "#fdf490",
+            "transform": "matrix(1,0,0,1,0,0)"
+          }
+        },
+        {
+          "type": "foreignObject",
+          "attr": {
+            "x": "2870.133333333333",
+            "y": "786.1333333333333",
+            "width": "99.60000000000001",
+            "height": "44.266666666666666",
+            "id": "sticky_fobj_3",
+            "transform": "matrix(0.5,0,0,1,1432.3,0)"
+          },
+          "childNodes": [
+            {
+              "type": "DIV",
+              "attr": {
+                "xmlns": "http://www.w3.org/1999/xhtml",
+                "style": "color:black; font-size: 6px"
+              },
+              "childNodes": [
+                {
+                  "type": "STRONG",
+                  "attr": {},
+                  "childNodes": [
+                    {
+                      "type": "#text",
+                      "attr": {
+                        "text": "Title:"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "#text",
+                  "attr": {
+                    "text": "  - "
+                  }
+                },
+                {
+                  "type": "BR",
+                  "attr": {}
+                },
+                {
+                  "type": "BR",
+                  "attr": {}
+                },
+                {
+                  "type": "STRONG",
+                  "attr": {},
+                  "childNodes": [
+                    {
+                      "type": "#text",
+                      "attr": {
+                        "text": "Speaker:"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "#text",
+                  "attr": {
+                    "text": " Dr. Han Solo"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "g",
+      "attr": {
+        "id": "g_sticky4",
+        "x": "2864.6",
+        "y": "946.6",
+        "transform": "matrix(2.1687,0,0,2.1687,-4052.3855,-1475.3675)",
+        "tX": "-704.5999999999999",
+        "tY": "-369.1",
+        "stickyTheme": "Lunch",
+        "stickyColor": "#DE8FD1",
+        "htmlText": "<div xmlns=\"http://www.w3.org/1999/xhtml\" style=\"color:black; font-size: 6px\"><strong>Title:</strong> Lunch<br><br><strong>Speaker:</strong> -</div>",
+        "stickyTitle": "Lunch",
+        "stickySpeaker": "-",
+        "stickyFontSize": "6"
+      },
+      "childNodes": [
+        {
+          "type": "rect",
+          "attr": {
+            "x": "2867.92",
+            "y": "949.9200000000001",
+            "width": "55.333333333333336",
+            "height": "55.333333333333336",
+            "id": "sticky_shadow_4",
+            "fill": "#000000",
+            "filter": "url('#Sihmjvwvr7v')",
+            "style": ""
+          }
+        },
+        {
+          "type": "rect",
+          "attr": {
+            "x": "2864.6",
+            "y": "946.6",
+            "width": "55.333333333333336",
+            "height": "55.333333333333336",
+            "id": "sticky_rect_4",
+            "fill": "#de8fd1",
+            "transform": "matrix(1,0,0,1,0,0)"
+          }
+        },
+        {
+          "type": "foreignObject",
+          "attr": {
+            "x": "2870.133333333333",
+            "y": "952.1333333333333",
+            "width": "44.266666666666666",
+            "height": "44.266666666666666",
+            "id": "sticky_fobj_4",
+            "transform": "matrix(1,0,0,1,0,0)"
+          },
+          "childNodes": [
+            {
+              "type": "DIV",
+              "attr": {
+                "xmlns": "http://www.w3.org/1999/xhtml",
+                "style": "color:black; font-size: 6px"
+              },
+              "childNodes": [
+                {
+                  "type": "STRONG",
+                  "attr": {},
+                  "childNodes": [
+                    {
+                      "type": "#text",
+                      "attr": {
+                        "text": "Title:"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "#text",
+                  "attr": {
+                    "text": " Lunch"
+                  }
+                },
+                {
+                  "type": "BR",
+                  "attr": {}
+                },
+                {
+                  "type": "BR",
+                  "attr": {}
+                },
+                {
+                  "type": "STRONG",
+                  "attr": {},
+                  "childNodes": [
+                    {
+                      "type": "#text",
+                      "attr": {
+                        "text": "Speaker:"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "#text",
+                  "attr": {
+                    "text": " -"
                   }
                 }
               ]
