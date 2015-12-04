@@ -872,7 +872,14 @@ var ConferenceScheduler = SAGE2_App.extend( {
 				stroke: this.defaultStroke,
 				strokeWidth: 3
 				});
-		var imgImage = this.paper_main.image(this.resrcPath +"ConferenceScheduler.png",imgX, imgY, imgW, imgH);					
+		imgX=imgX+((imgW-imgH)/2);
+		var imgImage = this.paper_main.image(this.resrcPath +"ConferenceScheduler.png",imgX, imgY+1.5, imgH, imgH-3);	
+		// var s = Snap("#paper_main");	
+		// Snap.load(this.resrcPath +"logo.svg", onSVGLoaded ) ;
+
+		// function onSVGLoaded( data ){ 
+		//     this.g_gridHeaders.append( data );
+		// }			
 
 		this.g_gridHeaders.add(imgRect);
 		this.g_gridHeaders.add(imgImage);
