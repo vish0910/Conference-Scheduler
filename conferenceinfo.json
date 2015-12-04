@@ -9,5 +9,6 @@
 	"sessions": ["8am - 10.30am","10.30am - 12pm ","12pm - 2pm (Lunch)","2pm - 3.30pm","3.30pm - 4pm", "Session Chairs"],
 	"halls": ["Grand Hall", "Ballroom", "Red Hall"],
 	"movesAllowed": 3,
-	"sessionConstraints": ["","","Lunch","","","Session Chairs"]
+	"sessionConstraints": ["","","Lunch","","","Session Chairs"],
+	"conferenceSchedulers":  [{"Name":"John", "Theme":"Robotics"},{"Name":"Mary","Theme":"Visualization"}, {"Name":"Alice","Theme":"Neural Networks"}, {"Name":"Bob","Theme":"Keynote"}]
 }

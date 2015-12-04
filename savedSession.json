@@ -1,11 +1,15 @@
 {
   "dimensions": {
-    "width": 800,
-    "height": 250
+    "width": 1517,
+    "height": 474
   },
   "viewportDimensions": {
     "paper_mainW": 4000,
     "paper_mainH": 1250
+  },
+  "workableDimensions": {
+    "workablePixelW": 1516.8,
+    "workablePixelH": 474
   },
   "stickies": [
     {
@@ -35,7 +39,7 @@
             "id": "sticky_shadow_0",
             "style": "",
             "fill": "#000000",
-            "filter": "url('#Sihmjvwvr7v')"
+            "filter": "url('#Sihp887uy7w')"
           }
         },
         {
@@ -143,7 +147,7 @@
             "height": "55.333333333333336",
             "id": "sticky_shadow_1",
             "fill": "#000000",
-            "filter": "url('#Sihmjvwvr7v')",
+            "filter": "url('#Sihp887uy7w')",
             "style": ""
           }
         },
@@ -232,9 +236,9 @@
         "id": "g_sticky2",
         "x": "2864.6",
         "y": "448.6",
-        "transform": "matrix(2.1687,0,0,2.1687,-4052.3855,-635.3675)",
-        "tX": "-704.5999999999999",
-        "tY": "-111.10000000000002",
+        "transform": "matrix(2.1687,0,0,2.1687,-4172.3855,-515.3675)",
+        "tX": "-824.5999999999999",
+        "tY": "8.899999999999977",
         "stickyTheme": "Neural Networks",
         "stickyColor": "#76CBC8",
         "htmlText": "<div xmlns=\"http://www.w3.org/1999/xhtml\" style=\"color:black; font-size: 6px\"><strong>Title:</strong> Evolution of Computer Graphics<br><br><strong>Speaker:</strong> Dr. Foo Bar</div>",
@@ -252,7 +256,7 @@
             "height": "55.333333333333336",
             "id": "sticky_shadow_2",
             "fill": "#000000",
-            "filter": "url('#Sihmjvwvr7v')",
+            "filter": "url('#Sihp887uy7w')",
             "style": ""
           }
         },
@@ -342,9 +346,9 @@
         "id": "g_sticky3",
         "x": "2864.6",
         "y": "780.6",
-        "transform": "matrix(4.3373,0,0,2.1687,-10384.7711,-1235.3675)",
-        "tX": "-824.5999999999999",
-        "tY": "-323.1",
+        "transform": "matrix(2.1687,0,0,2.1687,-4052.3855,-995.3675)",
+        "tX": "-704.5999999999999",
+        "tY": "-83.10000000000002",
         "stickyTheme": "Session Chairs",
         "stickyColor": "#FDF490",
         "htmlText": "<div xmlns=\"http://www.w3.org/1999/xhtml\" style=\"color:black; font-size: 6px\"><strong>Title:</strong>  - <br><br><strong>Speaker:</strong> Dr. Han Solo</div>",
@@ -362,7 +366,7 @@
             "height": "55.333333333333336",
             "id": "sticky_shadow_3",
             "fill": "#000000",
-            "filter": "url('#Sihmjvwvr7v')",
+            "filter": "url('#Sihp887uy7w')",
             "style": ""
           }
         },
@@ -383,10 +387,10 @@
           "attr": {
             "x": "2870.133333333333",
             "y": "786.1333333333333",
-            "width": "99.60000000000001",
+            "width": "44.266666666666666",
             "height": "44.266666666666666",
             "id": "sticky_fobj_3",
-            "transform": "matrix(0.5,0,0,1,1432.3,0)"
+            "transform": "matrix(1,0,0,1,0,0)"
           },
           "childNodes": [
             {
@@ -452,8 +456,8 @@
         "id": "g_sticky4",
         "x": "2864.6",
         "y": "946.6",
-        "transform": "matrix(2.1687,0,0,2.1687,-4052.3855,-1475.3675)",
-        "tX": "-704.5999999999999",
+        "transform": "matrix(4.3373,0,0,2.1687,-10384.7711,-1475.3675)",
+        "tX": "-824.5999999999999",
         "tY": "-369.1",
         "stickyTheme": "Lunch",
         "stickyColor": "#DE8FD1",
@@ -472,7 +476,7 @@
             "height": "55.333333333333336",
             "id": "sticky_shadow_4",
             "fill": "#000000",
-            "filter": "url('#Sihmjvwvr7v')",
+            "filter": "url('#Sihp887uy7w')",
             "style": ""
           }
         },
@@ -493,10 +497,10 @@
           "attr": {
             "x": "2870.133333333333",
             "y": "952.1333333333333",
-            "width": "44.266666666666666",
+            "width": "99.60000000000001",
             "height": "44.266666666666666",
             "id": "sticky_fobj_4",
-            "transform": "matrix(1,0,0,1,0,0)"
+            "transform": "matrix(0.5,0,0,1,1432.3,0)"
           },
           "childNodes": [
             {
