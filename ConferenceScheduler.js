@@ -872,8 +872,10 @@ var ConferenceScheduler = SAGE2_App.extend( {
 				stroke: this.defaultStroke,
 				strokeWidth: 3
 				});
-		this.g_gridHeaders.add(imgRect);
+		var imgImage = this.paper_main.image(this.resrcPath +"ConferenceScheduler.png",imgX, imgY, imgW, imgH);					
 
+		this.g_gridHeaders.add(imgRect);
+		this.g_gridHeaders.add(imgImage);
 //-----> hidden rects
 		var ratioOfCell = this.ratioOfCell;
 		var mhoffset = cellW/ratioOfCell;
