@@ -84,6 +84,8 @@ var ConferenceScheduler = SAGE2_App.extend( {
 		this.txtSize = "20";
 		// this.textColor1 = "rgb(180,180,180)";
 		this.textColor1 = "rgb(182,34,32)";
+
+		// this.fontFamily ="Tahoma, Geneva, sans-serif";
 		//Flags for Buttons
 		this.toggleFP = true;
 		this.toggleRI = true;
@@ -670,6 +672,7 @@ var ConferenceScheduler = SAGE2_App.extend( {
   			height:  mainDivH,
   			// preserveAspectRatio: "xMinYMin meet" //For top left. Default is center.
   			// preserveAspectRatio: 'none'
+  			fontFamily:"Tahoma, Geneva, sans-serif"
 		});
 
 		//Add the snap container to the div
@@ -1766,16 +1769,20 @@ var ConferenceScheduler = SAGE2_App.extend( {
 		if (this.userInteraction[user.id] === undefined) {
 			this.userInteraction[user.id] = {dragging: false, position: {x: 0, y: 0, tX: 0, tY: 0}, stickyId: null,stickyPast: emptyArray};
 		}
-		//Remove FeedBack Group
-		if(this.g_feedback != undefined){
-			this.g_feedback.remove();
-		}
+		// //Remove FeedBack Group
+		// if(this.g_feedback != undefined){
+		// 	this.g_feedback.remove();
+		// }
 		if (eventType === "pointerPress" && (data.button === "left")) {
 			// console.log("Width:=>"+mainDivW);
 			// this.paper_main.rect(paperX,paperY,10,10).attr({id: 'touch', stroke: 'White', fill: 'rgba(12,13,44,0.1)'});
 
 			console.log("Mouse Clicked at: ("+paperX+"),("+paperY+") User:"+ JSON.stringify(user));
 
+			//Remove FeedBack Group
+			if(this.g_feedback != undefined){
+				this.g_feedback.remove();
+			}
 			// console.log("User:"+JSON.stringify(user));
 
 
@@ -2093,10 +2100,17 @@ var ConferenceScheduler = SAGE2_App.extend( {
 						});
 				
 						
+						var shadow_next = this.paper_main.rect((this.paper_mainW/4),(this.paper_mainH/4),(this.paper_mainW/3),(this.paper_mainH/1.8)).attr({
+							fill: this.shadowColor,
+							filter: f
+						});
+						var tutorialnextImage = this.paper_main.image(this.resrcPath +"Untitled.png",(this.paper_mainW/4),(this.paper_mainH/4),(this.paper_mainW/3),(this.paper_mainH/1.8));					
 						
-						var tutorialnextImage = this.paper_main.image(this.resrcPath +"Untitled.png",(this.paper_mainW/6),(this.paper_mainH/4),(this.paper_mainW/1.5),(this.paper_mainH/2));					
-	
-						this.tutorialsImage = this.paper_main.image(this.resrcPath +"Tutorial.png",(this.paper_mainW/6),(this.paper_mainH/4),(this.paper_mainW/1.5),(this.paper_mainH/2));
+						this.shadow_tutorials = this.paper_main.rect((this.paper_mainW/4),(this.paper_mainH/4),(this.paper_mainW/3),(this.paper_mainH/1.8)).attr({
+							fill: this.shadowColor,
+							filter: f
+						});
+						this.tutorialsImage = this.paper_main.image(this.resrcPath +"Tutorial.png",(this.paper_mainW/4),(this.paper_mainH/4),(this.paper_mainW/3),(this.paper_mainH/1.8));
 					
 
 
@@ -2106,13 +2120,15 @@ var ConferenceScheduler = SAGE2_App.extend( {
 							'font-size':"80" ,
 							// "text-anchor" : "middle"
 						});	
-
+						this.g_tutorialsImage.add(this.shadow_tutorials);
+						this.g_tutorialsImage.add(shadow_next);
 						
 						this.g_tutorialsImage.add(tutorialnextImage);
 						this.g_tutorialsImage.add(button_tutorial);
 						this.g_tutorialsImage.add(text_tutorial);
 						this.g_tutorialsImage.add(this.tutorialsImage);
 						this.g_tutorialsImage.add(this.text_nexttutorialsign);
+						
 						this.toggleTI = false;
 						}
 						else{
@@ -2135,6 +2151,7 @@ var ConferenceScheduler = SAGE2_App.extend( {
 						
 						
 						this.tutorialsImage.remove();	
+						this.shadow_tutorials.remove();
 						this.text_nexttutorialsign.remove();
 
 						this.toggleTN = false;
@@ -2547,7 +2564,7 @@ var ConferenceScheduler = SAGE2_App.extend( {
 					if(hoS != null){
 						console.log("Holds Sticky: "+hoS);
 						//Display Feedback
-						this.displayFeedback(paperX,paperY,'ERROR: The cell is occupied!', paper_mainW/10, paper_mainH/7);
+						this.displayFeedback(paperX,paperY,'ERROR: The cell is occupied!', paper_mainW/10, (paper_mainW/10)*0.5);
 						var myMatrix = new Snap.Matrix();
 						myMatrix.translate(0,0);
 						this.sticky_object_array[sid].attr({
@@ -2559,8 +2576,8 @@ var ConferenceScheduler = SAGE2_App.extend( {
 					else if(cS != null && stickyTheme != cS){
 						console.log("Constraint Violated: "+ cS + "Sticky theme:"+stickyTheme);
 						//Display Feedback
-						var message = "Violation: <strong>" + cS + "</strong> contraint encountered.";
-						this.displayFeedback(paperX,paperY,message, paper_mainW/10, paper_mainH/7);
+						var message = "Violation: <strong>" + cS + "</strong> constraint encountered.";
+						this.displayFeedback(paperX,paperY,message, paper_mainW/10, (paper_mainW/10)*0.7);
 						var myMatrix = new Snap.Matrix();
 						myMatrix.translate(0,0);
 						this.sticky_object_array[sid].attr({
