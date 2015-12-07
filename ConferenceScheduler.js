@@ -36,7 +36,8 @@ var ConferenceScheduler = SAGE2_App.extend( {
 		// this.defaultStroke = "rgba(68, 48, 255, 0.80)";
 		this.defaultFill = "rgba(10,10,10, 0.1)";
 		this.defaultStroke = "rgba(180, 180, 180, 0.80)";
-
+		this.defaultButtonFill = "rgba(100,100,100,0.5)";
+		this.defaultButtonPressedFill = "rgba(0,0,0,1)";
 		this.numberOfDays = 5;
 		this.numberOfHalls = 3;
 		this.numberOfSessions = 6;
@@ -79,7 +80,7 @@ var ConferenceScheduler = SAGE2_App.extend( {
 		this.gridWRatio = 0.6;
 		this.gridHRatio = 0.9;
 
-		this.textColor = "Gray";
+		this.textColor = "rgba(150, 150, 150, 1)";
 		// this.textColor = "rgb(182,34,32)";
 		this.txtSize = "20";
 		// this.textColor1 = "rgb(180,180,180)";
@@ -90,7 +91,7 @@ var ConferenceScheduler = SAGE2_App.extend( {
 		this.toggleFP = true;
 		this.toggleRI = true;
 		this.toggleTI = true;
-		this.toggleTN = true;
+		this.toggleTN = false;
 		this.toggleSave = true;
 		this.movesAllowed = 1;
 		this.g_feedback = undefined;
@@ -731,7 +732,7 @@ var ConferenceScheduler = SAGE2_App.extend( {
 
 		var paper_tableX1 = paper_gridXEnd * 0.2;
 		var paper_tableX2 = paper_gridXEnd *(1-0.05);
-		var paper_tableY1 = paper_gridYEnd * 0.30;
+		var paper_tableY1 = paper_gridYEnd * 0.3;
 		var paper_tableY2 = paper_gridYEnd*(1-0.05);
 
 		var paper_tableW = paper_tableX2 - paper_tableX1;
@@ -779,7 +780,7 @@ var ConferenceScheduler = SAGE2_App.extend( {
 		for(var k = 0;k<this.numberOfDays;k++){
 			var dayPartition = this.paper_main.line(cellX, cellY,cellX,partitionLength).attr({ stroke:partitionColor, strokeWidth: 6});
 			var headRect = this.paper_main.rect(cellX, cellY, cellW, dayH).attr({
-				fill:        this.defaultFill,
+				fill:        this.defaultButtonFill,
 				stroke:      this.defaultStroke,
 				strokeWidth: 3
 				});
@@ -1124,7 +1125,7 @@ var ConferenceScheduler = SAGE2_App.extend( {
 		var button1Y = paper_gridYEnd+this.buttonPadding;
 
 		var button_tutorial = this.paper_main.rect(button1X,button1Y,this.buttonW,this.buttonH).attr({
-			fill:        this.defaultFill,
+			fill:        this.defaultButtonFill,
 			stroke:      this.defaultStroke,
 			strokeWidth: 3		
 		});
@@ -1151,7 +1152,7 @@ var ConferenceScheduler = SAGE2_App.extend( {
 		var button_roomInfo = this.paper_main.rect(button2X,button2Y,this.buttonW,this.buttonH).attr({
 			// fill: "#330099",
 			// stroke: "#ffffff"
-			fill:        this.defaultFill,
+			fill:        this.defaultButtonFill,
 			stroke:      this.defaultStroke,
 			strokeWidth: 3
 		
@@ -1178,7 +1179,7 @@ var ConferenceScheduler = SAGE2_App.extend( {
 		var button_floorPlan = this.paper_main.rect(button3X,button3Y,this.buttonW,this.buttonH).attr({
 			// fill: "#330099",
 			// stroke: "#ffffff"
-			fill:        this.defaultFill,
+			fill:        this.defaultButtonFill,
 			stroke:      this.defaultStroke,
 			strokeWidth: 3
 		
@@ -1206,7 +1207,7 @@ var ConferenceScheduler = SAGE2_App.extend( {
 		var button_next = this.paper_main.rect(button4X,button4Y,this.buttonW,this.buttonH).attr({
 			// fill: "#330099",
 			// stroke: "#ffffff"
-			fill:        this.defaultFill,
+			fill:        this.defaultButtonFill,
 			stroke:      this.defaultStroke,
 			strokeWidth: 3
 		
@@ -1236,7 +1237,8 @@ var ConferenceScheduler = SAGE2_App.extend( {
 			// stroke: "#ffffff"
 			fill:        this.defaultFill,
 			stroke:      this.defaultStroke,
-			strokeWidth: 3
+			strokeWidth: 3,
+			'stroke-dasharray':"5,5"
 		
 		});
 		
@@ -2086,7 +2088,7 @@ var ConferenceScheduler = SAGE2_App.extend( {
 				var button1X = this.controlsLeftPadding;
 				var button1Y = paper_gridYEnd+this.buttonPadding;
 
-				if(paperX >= button1X && paperX < button1X+ this.buttonW*0.75 && paperY >= button1Y && paperY < button1Y+this.buttonH){
+				if(paperX >= button1X && paperX < button1X+ this.buttonW*0.8 && paperY >= button1Y && paperY < button1Y+this.buttonH){
 					console.log("ButtonClicked ("+ paperX + ","+ paperY +")");
 					
 					if(this.toggleTI == true){
@@ -2096,7 +2098,7 @@ var ConferenceScheduler = SAGE2_App.extend( {
 						});
 
 						var button_tutorial = this.paper_main.rect(button1X,button1Y,this.buttonW,this.buttonH).attr({
-							fill:        this.defaultFill,
+							fill:        this.defaultButtonPressedFill,
 							stroke:       this.textColor,
 							strokeWidth: 3
 						
@@ -2124,11 +2126,17 @@ var ConferenceScheduler = SAGE2_App.extend( {
 
 
 				
-						this.text_nexttutorialsign = this.paper_main.text(button1X+(this.buttonW*0.75),button1Y+(this.buttonH*0.7), "→").attr({
+						// this.text_nexttutorialsign = this.paper_main.text(button1X+(this.buttonW*0.75),button1Y+(this.buttonH*0.7), "→").attr({
+						// 	fill: this.textColor1,
+						// 	'font-size':"80" ,
+						// 	// "text-anchor" : "middle"
+						// });	
+						//Creating a sticky Triangle
+						this.text_nexttutorialsign= this.paper_main.polyline([button1X+(this.buttonW*0.8),button1Y+(this.buttonH*0.3),button1X+(this.buttonW*0.95),button1Y+(this.buttonH*0.5),button1X+(this.buttonW*0.8),button1Y+(this.buttonH*0.7)]).attr({
+							// id:"sticky_triangle_"+stickyId,
 							fill: this.textColor1,
-							'font-size':"80" ,
-							// "text-anchor" : "middle"
-						});	
+							// transform : defaultMatrix
+						});
 						this.g_tutorialsImage.add(this.shadow_tutorials);
 						this.g_tutorialsImage.add(shadow_next);
 						
@@ -2139,6 +2147,7 @@ var ConferenceScheduler = SAGE2_App.extend( {
 						this.g_tutorialsImage.add(this.text_nexttutorialsign);
 						
 						this.toggleTI = false;
+						this.toggleTN = true;
 						}
 						else{
 							this.g_tutorialsImage.remove();		
@@ -2150,7 +2159,7 @@ var ConferenceScheduler = SAGE2_App.extend( {
 
 				//clicked on next arrow
 			
-				var buttonnextX = button1X+(this.buttonW*0.75)
+				var buttonnextX = button1X+(this.buttonW*0.8)
 				var buttonnextY = button1Y+(this.buttonH*0.7)
 
 				if(paperX >= buttonnextX && paperX < button1X+ this.buttonW && paperY >= button1Y && paperY < button1Y+this.buttonH){
@@ -2168,7 +2177,7 @@ var ConferenceScheduler = SAGE2_App.extend( {
 					else{
 						this.g_tutorialsImage.remove();
 						this.toggleTI = true;
-						this.toggleTN = true;
+						this.toggleTN = false;
 					}
 					console.log("done");
 				}
@@ -2193,7 +2202,7 @@ var ConferenceScheduler = SAGE2_App.extend( {
 						
 						var button_roomInfonew = this.paper_main.rect(button2X,button2Y,this.buttonW,this.buttonH).attr({
 							
-							fill:       this.defaultFill,
+							fill:        this.defaultButtonPressedFill,
 							stroke:       this.textColor,
 							strokeWidth: 3
 						
@@ -2236,7 +2245,7 @@ var ConferenceScheduler = SAGE2_App.extend( {
 		
 						var image_floorPlan = this.paper_main.image(this.resrcPath +"icon.png",(this.paper_mainW/6)+(this.paper_mainW/3),(this.paper_mainH/4),(this.paper_mainW/3)-this.imagePadding,(this.paper_mainH/2));
 						var button_floorPlannew = this.paper_main.rect(button3X,button3Y,this.buttonW,this.buttonH).attr({
-							fill:        this.defaultFill,
+							fill:         this.defaultButtonPressedFill,
 							stroke:       this.textColor,
 							strokeWidth: 3		
 						});
