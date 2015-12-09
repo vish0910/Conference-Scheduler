@@ -310,6 +310,8 @@ var ConferenceScheduler = SAGE2_App.extend( {
 
 	},
 
+	//Function to Save session. Replace this.saveState with this.state when the save session in SAGE2 is working
+
 	saveSession: function(){
 
 		console.log("Saving session to file");
@@ -322,13 +324,6 @@ var ConferenceScheduler = SAGE2_App.extend( {
 		this.saveState["workableDimensions"] = workableDimensions;
 		this.saveState["stickies"] = this.sticky_object_array;
 		console.log("Save this:"+JSON.stringify(this.saveState));
-		// var fs            = require('fs'); 
-		// // fs.writeFile(this.resrcPath+'message.txt', 'Hello Node.js', function (err) {
-  // // 			if (err) throw err;
-  // // 			console.log('It\'s saved!');
-		// // });
-
-		// localStorage.setItem(this.resrcPath+'gameStorage', JSON.stringify(this.saveState));
 
 	},
 	
@@ -369,8 +364,8 @@ var ConferenceScheduler = SAGE2_App.extend( {
 				_this.readPaperList();
 				//_this.calculateVariables;
 				_this.intializeGrid();
-				_this.intializeSticky();
 				_this.intializeControl();
+				_this.intializeSticky();
 				// _this.readSavedSession();
 
 			}
@@ -421,13 +416,6 @@ var ConferenceScheduler = SAGE2_App.extend( {
 			}
 			this.longestPostItText = longestPostItText;
 			this.drawPostIts(postitinfo);
-
-			//Printing stickies on console
-			// for (var key in this.catagorizedStickies) {
- 		// 		// console.log(a[key][Object.keys(a[key])[0]].p); // 81.25
- 		// 		for(var k = 0; k< this.catagorizedStickies[key].length;k++)
- 		// 			console.log("Theme Objects "+JSON.stringify(this.catagorizedStickies[key][k]));
-			// }
 			
 		}
 
@@ -579,33 +567,6 @@ var ConferenceScheduler = SAGE2_App.extend( {
 					transform : defaultMatrix
 				});
 
-				// //Creating a sticky Triangle
-				// var sticky_triangle = this.paper_main.polyline([array_sticky[counter][0],array_sticky[counter][1],array_sticky[counter][0]+(padding/2),array_sticky[counter][1],array_sticky[counter][0],array_sticky[counter][1]+(padding/2)]).attr({
-				// 	id:"sticky_triangle_"+counter,
-				// 	fill: this.textColor1,
-				// 	transform : defaultMatrix
-				// });
-
-				
-				//Creating within  and svg
-				// //Creating Sticky Shadow
-				// var sticky_shadow = g_sticky.rect((padding/3),(padding/3),this.postItW,this.postItH).attr({fill: "gray", filter: f});
-				// //Creating a sticky
-				// var sticky_1= g_sticky.rect(0,0,this.postItW,this.postItH).attr({fill: stickyColor, transform : defaultTransform});
-				// // console.log("Sticky Created at: "+array_sticky[counter][0] +": "+ array_sticky[counter][1] );
-
-
-
-
-
-				// console.log("Sticky Created at: "+array_sticky[counter][0] +": "+ array_sticky[counter][1] );
-				// var title = "Title: "+ this.catagorizedStickies[theme][k]['title'];
-				// var sticky_text_title = this.paper_main.text(array_sticky[counter][0]+(padding/3),array_sticky[counter][1]+(padding/3),title).attr({fill: this.textColor, "font-size": "0.2em"});  
-				// var fobjectSVG = '<svg x='+(array_sticky[counter][0]+(padding/3))+' y='+(array_sticky[counter][1]+(padding/3))+' width='+this.postItW+' height='+this.postItH+'><text fill="red">HI</text></svg>';
-				// var svg_rect = svg_sticky.rect(0,0,10,10).attr({fill: this.textColor});
-				// var frag = Snap.parse(fobjectSVG);
-
-				// var g = this.paper_main.append( frag );
 
 				//Add sticky and shadow to group.
 				g_sticky.add(sticky_shadow);
@@ -624,12 +585,6 @@ var ConferenceScheduler = SAGE2_App.extend( {
        				newElement.setAttribute('id',"sticky_fobj_"+counter);
 					newElement.innerHTML = htmlText;
 				var nodeFobj = 	g_sticky.append(newElement);
-
-
-				
-				// g_sticky.add(frag);
-				// g_sticky.add(sticky_text_title);
-				// g_sticky.add(nodeFobj);
 
 				// console.log("Following SVG Group is created: "+ JSON.stringify(g_sticky));
 				//Pushing into sticky group object
@@ -884,7 +839,9 @@ var ConferenceScheduler = SAGE2_App.extend( {
 
 		this.g_gridHeaders.add(imgRect);
 		this.g_gridHeaders.add(imgImage);
-//-----> hidden rects
+
+		// hidden rects: the dotted rectangles between two days
+
 		var ratioOfCell = this.ratioOfCell;
 		var mhoffset = cellW/ratioOfCell;
 		//Update cellW to new width for hidden rects
@@ -945,9 +902,7 @@ var ConferenceScheduler = SAGE2_App.extend( {
 		}//End of loop that creates rectangles
 
 
-//<-------
-
-
+		//CREATING CELLS
 		//Holds location where the rectangle has to be created
 		cellX = paper_tableX1;
 		cellY = paper_tableY1;
@@ -1311,37 +1266,7 @@ var ConferenceScheduler = SAGE2_App.extend( {
 		// });
 		
 		// this.g_button7.add(button_load);
-		// this.g_button7.add(text_load);
-
-
-
-
-
-		//Date Display
-
-		// this.g_button3 = this.paper_main.g();
-		// this.g_button3.attr({
-		// 	id: "Button3"
-		// });
-
-		// var button3X = button2X + this.buttonW + this.buttonPadding;
-		// var button3Y = paper_gridYEnd+this.buttonPadding;
-
-		// var button_displayDate = this.paper_main.rect(button3X,button3Y,(this.buttonW*2),this.buttonH).attr({
-		// 	// fill: "#330099",
-		// 	// stroke: "#ffffff"
-		// 	fill:        "rgba(68, 48, 255, 0.15)",
-		// 	stroke:      "rgba(68, 48, 255, 0.80)",
-		// 	strokeWidth: 3
-		
-		// });	
-
-		// var d= new Date();
-		// var text_displayDate = this.paper_main.text(button3X+(this.buttonW),button3Y+(this.buttonH*0.6), "Today is" +" "+ d.toDateString()).attr({fill: this.textColor, 'font-size':"40" ,"text-anchor" : "middle"});
-		
-
-		// this.g_button3.add(button_displayDate);	
-		// this.g_button3.add(text_displayDate);	
+		// this.g_button7.add(text_load);	
 
 		this.g_buttonGroup = this.paper_main.g();
 		this.g_buttonGroup.attr({
@@ -1404,20 +1329,6 @@ var ConferenceScheduler = SAGE2_App.extend( {
 	},
 
 //==> Play Area
-	// findStickyId: function(paperX,paperY){
-	// 	var array_sticky_size = this.array_sticky.length;
-	// 	console.log("Array length:"+array_sticky_size);
-	// 	var i;
-	// 	var result = null;
-	// 	var array_sticky = this.array_sticky;
-	// 	for(i=0;i<array_sticky_size;i++){
-	// 		if(paperX >= array_sticky[i][0] && paperX < array_sticky[i][2] && paperY >= array_sticky[i][1] && paperY < array_sticky[i][3]){
-	// 			result = i;
-	// 			break;
-	// 		}
-	// 	}
-	// 	return result;
-	// },
 
 	findStickyId: function(paperX,paperY){
 		var result = null;
@@ -1559,10 +1470,6 @@ var ConferenceScheduler = SAGE2_App.extend( {
 
 	 		var neighbourHoldsSticky = this.holder_object_array[neighbour].attr("holdsSticky");
 	 		console.log("neighbourHoldsSticky:"+neighbourHoldsSticky);
-
-	 		
-
-
 
 	 		//Get Tranform values
 			var transformString = this.holder_object_array[holderId].attr().transform;
@@ -1723,8 +1630,6 @@ var ConferenceScheduler = SAGE2_App.extend( {
 
 //End of Play Area
 
-
-
 	event: function(eventType, position, user, data, date) {
 		var emptyArray = [0,0,0,0];
 
@@ -1796,16 +1701,7 @@ var ConferenceScheduler = SAGE2_App.extend( {
 			}
 			// console.log("User:"+JSON.stringify(user));
 
-
-			// if( paperX >= 0 && paperX < paper_gridXEnd && paperY>=0 && paperY<=paper_gridYEnd){ // Grid Section
-			// 	console.log("Clicked in Grid Section("+ x + ","+ y +")");
-			// 	// var holderId = this.findHolderId(paperX,paperY);
-			// 	// console.log("Returned: "+ holderId);
-			// 	// // if(stickyId != null){
-			// 	// // console.log("")}
-			// }
-			// else if(paperX >= paper_gridXEnd && paperX < paper_mainW && paperY>=0 && paperY<=paper_mainH){ // Sticky Section
-				//Grid section or sticky section
+			//Grid section or sticky section
 			if(( paperX >= 0 && paperX < paper_gridXEnd && paperY>=0 && paperY<=paper_gridYEnd) ||  (paperX >= paper_gridXEnd && paperX < paper_mainW && paperY>=0 && paperY<=paper_mainH)){
 				console.log("Clicked in Sticky Section("+ x+ ","+ y +")");
 
@@ -1856,13 +1752,6 @@ var ConferenceScheduler = SAGE2_App.extend( {
 	 							}
 
 
-	 							// var delta = document.getElementById("g_overlaySticky_"+sid);
-
-	 							// this.overlay_object_array[stickyId].remove();
-	 							// //this.sticky_object_array[stickyId].remove();
-								// delete this.overlay_object_array[stickyId];
-
-
  						}
 
 						//--->
@@ -1885,10 +1774,9 @@ var ConferenceScheduler = SAGE2_App.extend( {
  					var transY = parseFloat(this.sticky_object_array[stickyId].attr("tY")) - this.postItH;
 
 	//------>^^^^^
-		//Creating default transform property
 				var shadowColor = this.shadowColor;
 				var padding = this.padding; 
-				
+				//Creating default transform property
 				// var defaultMatrix = 'matrix(1,0,0,1,'+transX+','+transY+')';
 				var defaultMatrix = 'matrix(1,0,0,1,0,0)';
 				var stickyColor = this.sticky_object_array[stickyId].attr("stickyColor");
@@ -1914,8 +1802,6 @@ var ConferenceScheduler = SAGE2_App.extend( {
 					stickyFontSize: stickyFontSize
 				});
 				
-				// var svg_sticky = this.paper_main.svg(array_sticky[counter][0],array_sticky[counter][1],this.postItW+(padding/3),this.postItH+(padding/3)).attr({transform : defaultTransform});
-
 				//Creating Sticky Shadow
 				var sticky_shadow = this.paper_main.rect(sticky_X+(padding/this.shadowDepth),sticky_Y+(padding/this.shadowDepth),this.postItW,this.postItH).attr({
 					id:"sticky_shadow_"+stickyId,
@@ -1941,11 +1827,7 @@ var ConferenceScheduler = SAGE2_App.extend( {
 				g_sticky.add(sticky_shadow);
 				g_sticky.add(sticky_1);
 				g_sticky.add(sticky_triangle);
-				// var title =  "<strong>Title:</strong> "+ this.catagorizedStickies[theme][k]['title'];
-				// var speaker = "<strong>Speaker:</strong> "+ this.catagorizedStickies[theme][k]['speaker'];
-				// var htmlText = '<div xmlns="http://www.w3.org/1999/xhtml" style="color:black; font-size: 5px">'
-				// 					+ title + '<br><br>' + speaker+ '</div>';
-
+				
 
 				//Creating a foreignObject which will have HTML wrappable text
 				var newElement = document.createElementNS("http://www.w3.org/2000/svg", 'foreignObject'); //Create a path in SVG's namespace
@@ -1982,8 +1864,6 @@ var ConferenceScheduler = SAGE2_App.extend( {
 						console.log("ATTribute:"+ this.sticky_object_array[stickyId].attr().transform);
 
 //<-------
-
-
 
  					//Get Tranform values
 					// var transformString = this.sticky_object_array[stickyId].attr("transform")+'';
@@ -2042,49 +1922,10 @@ var ConferenceScheduler = SAGE2_App.extend( {
 			}
 			else if(paperX >= 0 && paperX < paper_controlW && paperY >=paper_gridYEnd && paperY <=paper_mainH){ // Control Section
 				console.log("Clicked in Control Section("+ x + ","+ y +")");
-				//Sneha Begin--->
 				var f = this.paper_main.filter(Snap.filter.blur(20,20));
-				// // Clicked on View Floor Plan
-				// var button1X = this.controlsLeftPadding;
-				// var button1Y = paper_gridYEnd+this.buttonPadding;
 				
-				// if(paperX >= button1X && paperX < button1X+this.buttonW && paperY >= button1Y && paperY < button1Y+this.buttonH){
-				// 	console.log("ButtonClicked ("+ paperX + ","+ paperY +")");
-				
-				// 	if(this.toggleFP == true){
-				// 		this.g_floorPlan = this.paper_main.g();
-				// 		var shadow_floorPlan = this.paper_main.rect((this.paper_mainW/4),(this.paper_mainH/4),(this.paper_mainH/2),(this.paper_mainH/4)).attr({
-				// 			fill: this.shadowColor,
-				// 			filter: f
-				// 		});
-		
-				// 		var image_floorPlan = this.paper_main.image(this.resrcPath +"icon.png",(this.paper_mainW/4),(this.paper_mainH/4),(this.paper_mainH/2),(this.paper_mainH/4));
-				// 		var button_floorPlannew = this.paper_main.rect(button1X,button1Y,this.buttonW,this.buttonH).attr({
-				// 			fill:        this.defaultFill,
-				// 			stroke:       this.textColor,
-				// 			strokeWidth: 3		
-				// 		});
 
-				// 		var text_floorPlannew = this.paper_main.text(button1X+(this.buttonW*0.5),button1Y+(this.buttonH*0.6), "Floor Plan").attr({
-				// 			fill: this.textColor1,
-				// 			'font-size':"40" ,
-				// 			"text-anchor" : "middle"
-				// 		});
-
-				// 		this.g_floorPlan.add(shadow_floorPlan);
-				// 		this.g_floorPlan.add(image_floorPlan);
-				// 		this.g_floorPlan.add(button_floorPlannew);
-				// 		this.g_floorPlan.add(text_floorPlannew);
-				// 		this.toggleFP = false;
-				// 	}
-				// 	else{
-				// 		this.g_floorPlan.remove();		
-				// 		this.toggleFP = true;
-				// 	}
-				// 	console.log("done");
-				// }
-
-								// Clicked  on Tutorials
+				// Clicked  on Tutorials
 				var button1X = this.controlsLeftPadding;
 				var button1Y = paper_gridYEnd+this.buttonPadding;
 
@@ -2122,15 +1963,7 @@ var ConferenceScheduler = SAGE2_App.extend( {
 							filter: f
 						});
 						this.tutorialsImage = this.paper_main.image(this.resrcPath +"Tutorial.png",(this.paper_mainW/4),(this.paper_mainH/4),(this.paper_mainW/3),(this.paper_mainH/1.8));
-					
-
-
-				
-						// this.text_nexttutorialsign = this.paper_main.text(button1X+(this.buttonW*0.75),button1Y+(this.buttonH*0.7), "→").attr({
-						// 	fill: this.textColor1,
-						// 	'font-size':"80" ,
-						// 	// "text-anchor" : "middle"
-						// });	
+						
 						//Creating a sticky Triangle
 						this.text_nexttutorialsign= this.paper_main.polyline([button1X+(this.buttonW*0.8),button1Y+(this.buttonH*0.3),button1X+(this.buttonW*0.95),button1Y+(this.buttonH*0.5),button1X+(this.buttonW*0.8),button1Y+(this.buttonH*0.7)]).attr({
 							// id:"sticky_triangle_"+stickyId,
@@ -2158,7 +1991,6 @@ var ConferenceScheduler = SAGE2_App.extend( {
 
 
 				//clicked on next arrow
-			
 				var buttonnextX = button1X+(this.buttonW*0.8)
 				var buttonnextY = button1Y+(this.buttonH*0.7)
 
@@ -2268,10 +2100,6 @@ var ConferenceScheduler = SAGE2_App.extend( {
 					}
 					console.log("done");
 				}
-
-
-
-
 
 
 				// Clicked on Next Schedular
@@ -2467,9 +2295,6 @@ var ConferenceScheduler = SAGE2_App.extend( {
 					
 				// 	console.log("done");
 				// }
-
-
-		//	-------> Sneha End
 			} 
 			else{
 				console.log("Clicked outside zone");
@@ -2539,8 +2364,6 @@ var ConferenceScheduler = SAGE2_App.extend( {
 				this.sticky_object_array[sid].attr({
 					transform: myMatrix
 				});
-
-
 
 				// this.sticky_object_array[sid].attr({
 				// 		transform: 'translate('+transX+','+transY+')'
@@ -2698,7 +2521,6 @@ var ConferenceScheduler = SAGE2_App.extend( {
 						console.log("HOLDER:"+this.holder_object_array[holderId].attr("holdsSticky"));
 						//~~~~~~~~~~> RESIZING THE HTML
 
-
 						var stickyFobj = document.getElementById("sticky_fobj_"+sid);
 						var stickyTriangle = document.getElementById("sticky_triangle_"+sid);
 						if(stickyFobj!=null){
@@ -2799,27 +2621,6 @@ var ConferenceScheduler = SAGE2_App.extend( {
 						// 	this.overlay_object_array[sid] = g_overlaySticky;
 						// // }
 						// //<----++++
-
-						//---------> Sneha's Code
-						// this.turn++;
-					
-
-							
-						// if(this.turn%(this.movesAllowed)==0)
-						// {
-						// 	var message = "NOTE: You are just allowed to move sticky " + this.movesAllowed+" times.";
-						// 	this.displayFeedback(paperX,paperY,message, paper_mainW/10, paper_mainH/5);
-						// 	this.text_turns.remove();
-
-						// 	var turn = (this.turn/this.movesAllowed) + 1;
-
-						// 	this.text_turns = this.paper_main.text(this.turnInfo[0],this.turnInfo[1], "Turn No: "+turn).attr({
-						// 		fill: this.textColor,
-						// 		'font-size':"40" ,
-						// 		"text-anchor" : "middle"
-						// 	});
-						// }
-						//<------- End of Sneha
 
 					}
 
